@@ -23,7 +23,7 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        #map { height: 320px; border-radius: 1rem; z-index: 1; }
+        #map { height: 320px; border-radius: 1rem; z-index: 1; cursor: crosshair; }
     </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col bg-slate-50">
@@ -249,103 +249,108 @@
                 </section>
 
 
-                <!-- 2. TAB PORTAL ABSENSI (DENGAN SURAT KETERANGAN JAM KERJA) -->
+                <!-- 2. TAB PORTAL ABSENSI -->
                 <section id="tab-absensi" class="space-y-6 hidden">
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="p-4 bg-gradient-to-r from-teal-500/10 to-emerald-500/10 border border-teal-200/80 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-700">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-teal-600 text-white rounded-xl flex items-center justify-center text-lg shrink-0">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-extrabold text-slate-800">Ketentuan Jam Kerja UPT Puskesmas Sentolo II:</h4>
+                                <p class="text-slate-600 mt-0.5">
+                                    • <strong>Jam Masuk:</strong> Maksimal <strong>07:30 WIB</strong> (Setiap Hari) <br>
+                                    • <strong>Jam Pulang Minimal:</strong> Senin–Kamis: <strong>14:30 WIB</strong> | Jum'at: <strong>11:30 WIB</strong> | Sabtu: <strong>13:00 WIB</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                            <h3 class="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
-                                <i class="fa-solid fa-camera text-teal-600"></i> Presensi GPS & Jam Kerja
+                            <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-camera text-teal-600"></i> Form Presensi / Surat Keterangan
                             </h3>
 
-                            <!-- Ketentuan Jam Kerja Info Box -->
-                            <div class="p-3 mb-4 rounded-xl text-[11px] bg-slate-100 border border-slate-200 text-slate-700 space-y-1">
-                                <p class="font-bold text-slate-800"><i class="fa-solid fa-clock text-teal-600 mr-1"></i> Ketentuan Jam Kerja Resmi:</p>
-                                <ul class="list-disc list-inside space-y-0.5 text-slate-600">
-                                    <li><strong>Jam Masuk:</strong> Maksimal 07.30 WIB</li>
-                                    <li><strong>Jam Pulang Senin-Kamis:</strong> Minimal 14.30 WIB</li>
-                                    <li><strong>Jam Pulang Jum'at:</strong> Minimal 11.30 WIB</li>
-                                    <li><strong>Jam Pulang Sabtu:</strong> Minimal 13.00 WIB</li>
-                                </ul>
-                            </div>
-
-                            <!-- Dynamic GPS Status Box -->
-                            <div id="gpsStatusBox" class="p-3 mb-3 rounded-xl text-xs font-semibold space-y-1 bg-amber-50 border border-amber-200 text-amber-800">
+                            <div id="gpsStatusBox" class="p-3.5 mb-4 rounded-xl text-xs font-semibold space-y-1 bg-amber-50 border border-amber-200 text-amber-800">
                                 <div class="flex items-center justify-between">
-                                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-spinner animate-spin"></i> GPS Check...</span>
+                                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-spinner animate-spin"></i> Memeriksa GPS...</span>
                                     <span id="currentDistanceText" class="font-bold">-- m</span>
                                 </div>
-                                <p id="gpsNotifMessage" class="text-[11px] font-normal text-slate-600">Mendeteksi posisi Anda...</p>
+                                <p id="gpsNotifMessage" class="text-[11px] font-normal text-slate-600">Mendeteksi koordinat Anda...</p>
                             </div>
 
                             <form onsubmit="submitAbsensi(event)" class="space-y-3">
                                 <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Status Kehadiran</label>
-                                    <select id="absensiStatus" onchange="checkWorkHoursTime()" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:ring-2 focus:ring-teal-500">
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Status Kehadiran / Opsi Presensi</label>
+                                    <select id="absensiStatus" onchange="toggleSuratKeteranganFields()" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:ring-2 focus:ring-teal-500">
                                         <option value="Hadir Masuk">Hadir Masuk (Pagi)</option>
                                         <option value="Hadir Pulang">Hadir Pulang (Sore)</option>
+                                        <option value="Dinas Luar">Dinas Luar / Fieldwork</option>
+                                        <option value="Surat Keterangan">Surat Keterangan (Izin / Terlambat / Pulang Awal)</option>
                                     </select>
                                 </div>
 
-                                <!-- Dynamic Indicator Keterangan Terlambat/Mendahului -->
-                                <div id="timeCheckBadge" class="p-2.5 rounded-xl text-xs font-bold flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-800">
-                                    <i class="fa-solid fa-circle-check text-emerald-600"></i>
-                                    <span id="timeCheckBadgeText">Sesuai Jam Kerja</span>
-                                </div>
-
-                                <!-- Surat Keterangan Alasan Form (Opsi Tambahan) -->
-                                <div id="suratKeteranganBox" class="hidden p-3.5 bg-rose-50/70 border border-rose-200 rounded-xl space-y-2">
-                                    <label class="block text-xs font-bold text-rose-800 flex items-center gap-1.5">
-                                        <i class="fa-solid fa-file-signature"></i> Surat Keterangan Alasan (Wajib Isi)
-                                    </label>
-                                    <textarea id="absensiAlasanSurat" rows="2" placeholder="Tuliskan alasan lengkap tidak datang tepat waktu atau pulang lebih awal..." class="w-full px-3 py-2 border border-rose-300 rounded-xl text-xs focus:ring-2 focus:ring-rose-500 bg-white"></textarea>
+                                <div id="suratKeteranganGroup" class="hidden space-y-3 p-3 bg-amber-50/50 border border-amber-200 rounded-xl">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-amber-900 mb-1">Alasan Tidak Datang / Pulang Awal / Terlambat</label>
+                                        <textarea id="suratAlasan" rows="2" placeholder="Tuliskan alasan keperluan/sakit/dinas..." class="w-full px-3 py-2 border border-amber-200 rounded-xl text-xs focus:ring-2 focus:ring-amber-500"></textarea>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-amber-900 mb-1">Upload Dokumen / Surat Keterangan</label>
+                                        <input type="file" id="suratDokumen" accept="image/*,application/pdf" onchange="handleSuratUpload(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-100 file:text-amber-800">
+                                        <span id="suratFileName" class="text-[10px] text-amber-700 font-mono mt-1 block"></span>
+                                    </div>
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Catatan Tambahan (Opsional)</label>
-                                    <input type="text" id="absensiKet" placeholder="Catatan ringkas..." class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Catatan Kegiatan / Keterangan Tambahan</label>
+                                    <textarea id="absensiKet" rows="2" placeholder="Catatan tugas hari ini..." class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-teal-500"></textarea>
                                 </div>
 
-                                <div class="p-2.5 bg-slate-100 rounded-xl text-[11px] text-slate-500 space-y-1">
+                                <div class="p-3 bg-slate-100 rounded-xl text-[11px] text-slate-500 space-y-1">
                                     <p class="flex items-center justify-between">
-                                        <span><i class="fa-solid fa-clock text-teal-600"></i> Waktu Sekarang:</span>
+                                        <span><i class="fa-solid fa-building text-teal-600"></i> Puskesmas Sentolo II:</span>
+                                        <span class="font-mono text-slate-700">-7.8680, 110.1510</span>
+                                    </p>
+                                    <p class="flex items-center justify-between">
+                                        <span><i class="fa-solid fa-clock text-teal-600"></i> Waktu Server:</span>
                                         <span id="clockDisplay" class="font-mono font-bold text-slate-800">--:--:-- WIB</span>
                                     </p>
                                 </div>
 
                                 <button type="submit" id="btnSubmitAbsensi" disabled class="w-full py-2.5 bg-slate-300 text-slate-500 font-semibold rounded-xl text-xs transition-all cursor-not-allowed">
-                                    Kirim Presensi
+                                    Kirim Presensi (Diluar Radius)
                                 </button>
                             </form>
 
-                            <!-- GPS Simulator Buttons -->
-                            <div class="mt-4 pt-3 border-t border-slate-200">
-                                <p class="text-[11px] font-bold text-slate-500 mb-1.5">Simulasi Lokasi GPS:</p>
+                            <div class="mt-5 pt-4 border-t border-slate-200">
+                                <p class="text-[11px] font-bold text-slate-500 mb-2">Simulasi Lokasi GPS:</p>
                                 <div class="grid grid-cols-2 gap-2 text-xs">
-                                    <button onclick="setSimulatedLocation(5)" class="px-2 py-1.5 bg-teal-50 hover:bg-teal-100 text-teal-700 font-bold rounded-lg border border-teal-200">
-                                        <i class="fa-solid fa-location-dot"></i> Puskesmas (5m)
+                                    <button onclick="setSimulatedLocation(5)" class="px-2.5 py-1.5 bg-teal-50 hover:bg-teal-100 text-teal-700 font-bold rounded-lg border border-teal-200">
+                                        <i class="fa-solid fa-location-dot"></i> Di Puskesmas (5m)
                                     </button>
-                                    <button onclick="setSimulatedLocation(25)" class="px-2 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold rounded-lg border border-rose-200">
+                                    <button onclick="setSimulatedLocation(25)" class="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold rounded-lg border border-rose-200">
                                         <i class="fa-solid fa-ban"></i> Di Luar (25m)
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Log Presensi Table with Keterangan Terlambat/Mendahului -->
-                        <div class="glass-card p-6 rounded-2xl border border-slate-200 lg:col-span-2">
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200 md:col-span-2">
                             <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center justify-between">
-                                <span><i class="fa-solid fa-list-check text-emerald-600 mr-2"></i> Log Presensi Staf & Surat Keterangan</span>
+                                <span><i class="fa-solid fa-list-check text-emerald-600 mr-2"></i> Log Presensi & Keterangan Waktu</span>
                                 <button onclick="exportAbsensiCSV()" class="text-xs text-teal-600 hover:underline font-semibold"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
                             </h3>
                             <div class="overflow-x-auto rounded-xl border border-slate-200 max-h-96 custom-scrollbar">
                                 <table class="w-full text-left border-collapse text-xs">
                                     <thead class="bg-slate-100 text-[10px] font-bold text-slate-600 uppercase">
                                         <tr>
-                                            <th class="p-2.5 border-b">Waktu & Tipe</th>
+                                            <th class="p-2.5 border-b">Waktu</th>
                                             <th class="p-2.5 border-b">Nama Staf</th>
-                                            <th class="p-2.5 border-b">Status Jam Kerja</th>
-                                            <th class="p-2.5 border-b">Surat Keterangan Alasan</th>
-                                            <th class="p-2.5 border-b">GPS Distance</th>
+                                            <th class="p-2.5 border-b">Tipe</th>
+                                            <th class="p-2.5 border-b">Keterangan Jam Kerja</th>
+                                            <th class="p-2.5 border-b">Dokumen / Lampiran</th>
                                         </tr>
                                     </thead>
                                     <tbody id="absensiLogsBody" class="divide-y divide-slate-100"></tbody>
@@ -356,17 +361,34 @@
                 </section>
 
 
-                <!-- 3. TAB LAPORAN KEGIATAN & VISUALISASI MAPS -->
+                <!-- 3. TAB LAPORAN KEGIATAN & VISUALISASI MAPS (WITH MAP CLICK PICKER) -->
                 <section id="tab-kegiatan" class="space-y-6 hidden">
+                    <div id="kegiatanRoleBanner" class="p-3 bg-teal-50 border border-teal-200 rounded-xl text-xs text-teal-800 flex items-center justify-between">
+                        <span id="kegiatanRoleBannerText" class="font-medium"><i class="fa-solid fa-shield-halved text-teal-600 mr-1.5"></i> Menampilkan Laporan Kegiatan</span>
+                        <span id="kegiatanRoleBadge" class="px-2 py-0.5 bg-teal-200 text-teal-900 rounded font-bold text-[10px] uppercase">Role: Staf</span>
+                    </div>
+
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Form Laporkan Kegiatan -->
                         <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                            <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <h3 class="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
                                 <i class="fa-solid fa-file-pen text-emerald-600"></i> Form Laporkan Kegiatan
                             </h3>
+                            <p class="text-[11px] text-slate-500 mb-4">Pilih titik lokasi kegiatan dengan <strong>mengeklik area pada peta</strong> di samping kanan.</p>
+
                             <form onsubmit="submitKegiatan(event)" class="space-y-3">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Kegiatan</label>
-                                    <input type="text" id="kegNama" placeholder="Contoh: Posyandu Lansia / PTM" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
+                                    <input type="text" id="kegNama" placeholder="Contoh: Posyandu Lansia / Penyelidikan PTM" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
+                                </div>
+
+                                <!-- Display Selected Coordinates from Map Click -->
+                                <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs flex items-center justify-between">
+                                    <div>
+                                        <span class="text-[10px] font-bold text-emerald-800 block uppercase"><i class="fa-solid fa-location-dot text-rose-500 mr-1"></i> Titik Lokasi Dipilih:</span>
+                                        <span id="selectedCoordsText" class="font-mono text-emerald-900 text-[11px] font-bold">-7.86800, 110.15100</span>
+                                    </div>
+                                    <span class="text-[10px] bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded font-semibold">Map Clicked</span>
                                 </div>
 
                                 <div class="grid grid-cols-2 gap-2">
@@ -416,11 +438,12 @@
                             </form>
                         </div>
 
+                        <!-- Dashboard Map (Interaktif Klik Tempat) & Grafik -->
                         <div class="glass-card p-6 rounded-2xl border border-slate-200 lg:col-span-2 space-y-5">
                             <div>
-                                <h3 class="text-base font-bold text-slate-800 mb-2 flex items-center justify-between">
-                                    <span><i class="fa-solid fa-map-marked-alt text-teal-600 mr-2"></i> Peta Sebaran Kegiatan Lapangan</span>
-                                    <span class="text-xs text-slate-500 font-normal">UPT Puskesmas Sentolo II</span>
+                                <h3 class="text-base font-bold text-slate-800 mb-1 flex items-center justify-between">
+                                    <span><i class="fa-solid fa-map-marked-alt text-teal-600 mr-2"></i> Peta Pilihan Lokasi & Sebaran Kegiatan</span>
+                                    <span class="text-xs text-teal-600 font-bold bg-teal-50 px-2.5 py-1 rounded-lg border border-teal-200"><i class="fa-solid fa-hand-pointer mr-1"></i> Klik Pada Peta Untuk Memilih Lokasi</span>
                                 </h3>
                                 <div id="map"></div>
                             </div>
@@ -432,6 +455,7 @@
                         </div>
                     </div>
 
+                    <!-- Tabel Riwayat Kegiatan -->
                     <div class="glass-card p-6 rounded-2xl border border-slate-200">
                         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
                             <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-list-check text-teal-600 mr-2"></i> Riwayat Laporan Kegiatan</h3>
@@ -444,7 +468,7 @@
                                         <th class="p-3 border-b">Tanggal</th>
                                         <th class="p-3 border-b">Foto</th>
                                         <th class="p-3 border-b">Nama Kegiatan</th>
-                                        <th class="p-3 border-b">Wilayah (Dusun, Kalurahan)</th>
+                                        <th class="p-3 border-b">Wilayah & Koordinat (Map)</th>
                                         <th class="p-3 border-b">Tim Pelaksana (Maks 5)</th>
                                     </tr>
                                 </thead>
@@ -712,7 +736,7 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        const PUSKESMAS_COORDS = { lat: -7.8485695, lng: 110.2175086 };
+        const PUSKESMAS_COORDS = { lat: -7.8680, lng: 110.1510 };
         const MAX_ABSENSI_RADIUS_METERS = 10;
 
         const wilayahData = {
@@ -778,12 +802,14 @@
         let driveScriptUrl = localStorage.getItem('portal_drive_url') || '';
 
         let currentDistanceMeters = 0;
-        let currentWorkHourStatus = { isViolation: false, text: "Tepat Waktu", code: "ON_TIME" };
         let selectedPelaksanaList = [];
         let mapInstance = null;
         let mapMarkers = [];
+        let pickedLocationMarker = null;
+        let selectedCoords = { lat: -7.8680, lng: 110.1510 };
         let chartSebaranInstance = null;
         let currentFotoBase64 = '';
+        let currentSuratDocName = '';
 
         window.onload = function() {
             saveToStorage();
@@ -805,62 +831,7 @@
             localStorage.setItem('portal_aduan_list', JSON.stringify(aduanList));
         }
 
-        // LOGIKA PENGECEKAN JAM KERJA RESMI PUSKESMAS
-        function checkWorkHoursTime() {
-            const now = new Date();
-            const day = now.getDay(); // 0: Sun, 1: Mon, 2: Tue, 3: Wed, 4: Thu, 5: Fri, 6: Sat
-            const hh = String(now.getHours()).padStart(2, '0');
-            const mm = String(now.getMinutes()).padStart(2, '0');
-            const timeStr = `${hh}:${mm}`;
-
-            const absensiType = document.getElementById('absensiStatus')?.value || 'Hadir Masuk';
-            const badge = document.getElementById('timeCheckBadge');
-            const badgeText = document.getElementById('timeCheckBadgeText');
-            const suratBox = document.getElementById('suratKeteranganBox');
-
-            let isViolation = false;
-            let statusText = "Tepat Waktu";
-
-            if (absensiType === 'Hadir Masuk') {
-                // Maksimal 07.30
-                if (timeStr > "07:30") {
-                    isViolation = true;
-                    statusText = `Terlambat Masuk (Jam ${timeStr} WIB > 07:30 WIB)`;
-                } else {
-                    statusText = "Masuk Tepat Waktu (<= 07.30 WIB)";
-                }
-            } else if (absensiType === 'Hadir Pulang') {
-                // Cek jam pulang sesuai hari
-                let minPulang = "14:30"; // Senin-Kamis
-                let dayName = "Senin-Kamis";
-
-                if (day === 5) { minPulang = "11:30"; dayName = "Jum'at"; }
-                else if (day === 6) { minPulang = "13:00"; dayName = "Sabtu"; }
-
-                if (timeStr < minPulang) {
-                    isViolation = true;
-                    statusText = `Mendahului Jam Pulang (Jam ${timeStr} WIB < Min ${minPulang} WIB ${dayName})`;
-                } else {
-                    statusText = `Sesuai Jam Pulang (>= ${minPulang} WIB ${dayName})`;
-                }
-            }
-
-            currentWorkHourStatus = { isViolation, text: statusText };
-
-            if (isViolation) {
-                badge.className = "p-2.5 rounded-xl text-xs font-bold flex items-center gap-2 bg-rose-50 border border-rose-200 text-rose-800";
-                badgeText.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600"></i> ${statusText}`;
-                suratBox.classList.remove('hidden');
-                document.getElementById('absensiAlasanSurat').required = true;
-            } else {
-                badge.className = "p-2.5 rounded-xl text-xs font-bold flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-800";
-                badgeText.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> ${statusText}`;
-                suratBox.classList.add('hidden');
-                document.getElementById('absensiAlasanSurat').required = false;
-            }
-        }
-
-        // HAVERSINE FORMULA DISTANCE CALCULATOR
+        // HAVERSINE DISTANCE CALCULATOR
         function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
             const R = 6371e3;
             const φ1 = lat1 * Math.PI/180;
@@ -895,20 +866,24 @@
             const msgEl = document.getElementById('gpsNotifMessage');
             const distText = document.getElementById('currentDistanceText');
             const btnSubmit = document.getElementById('btnSubmitAbsensi');
+            const absensiStatus = document.getElementById('absensiStatus')?.value;
 
             if (distText) distText.innerText = `${currentDistanceMeters} m`;
 
-            if (currentDistanceMeters <= MAX_ABSENSI_RADIUS_METERS) {
-                if (statusBox) statusBox.className = "p-3 mb-3 rounded-xl text-xs font-semibold space-y-1 bg-emerald-50 border border-emerald-200 text-emerald-800";
-                if (msgEl) msgEl.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Lokasi Valid (<= 10m dari Puskesmas).`;
+            if (absensiStatus === 'Surat Keterangan' || currentDistanceMeters <= MAX_ABSENSI_RADIUS_METERS) {
+                if (statusBox) statusBox.className = "p-3.5 mb-4 rounded-xl text-xs font-semibold space-y-1 bg-emerald-50 border border-emerald-200 text-emerald-800";
+                if (msgEl) msgEl.innerHTML = absensiStatus === 'Surat Keterangan' 
+                    ? `<i class="fa-solid fa-file-check text-emerald-600 mr-1"></i> Opsi Surat Keterangan / Izin Aktif.`
+                    : `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Lokasi valid! Anda berada dalam radius absensi (${MAX_ABSENSI_RADIUS_METERS}m).`;
+                
                 if (btnSubmit) {
                     btnSubmit.disabled = false;
                     btnSubmit.className = "w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md cursor-pointer transition-all";
-                    btnSubmit.innerText = "Kirim Presensi Sekarang";
+                    btnSubmit.innerText = "Kirim Presensi / Surat Keterangan";
                 }
             } else {
-                if (statusBox) statusBox.className = "p-3 mb-3 rounded-xl text-xs font-semibold space-y-1 bg-rose-50 border border-rose-200 text-rose-800";
-                if (msgEl) msgEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600 mr-1"></i> <strong>Anda diluar batas absensi</strong> (Jarak: ${currentDistanceMeters}m).`;
+                if (statusBox) statusBox.className = "p-3.5 mb-4 rounded-xl text-xs font-semibold space-y-1 bg-rose-50 border border-rose-200 text-rose-800";
+                if (msgEl) msgEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600 mr-1"></i> <strong>Anda diluar batas absensi</strong> (Jarak: ${currentDistanceMeters}m dari Puskesmas).`;
                 if (btnSubmit) {
                     btnSubmit.disabled = true;
                     btnSubmit.className = "w-full py-2.5 bg-slate-300 text-slate-500 font-semibold rounded-xl text-xs transition-all cursor-not-allowed";
@@ -917,7 +892,109 @@
             }
         }
 
-        // LOGIN / LOGOUT
+        function toggleSuratKeteranganFields() {
+            const status = document.getElementById('absensiStatus').value;
+            const group = document.getElementById('suratKeteranganGroup');
+            if (status === 'Surat Keterangan') {
+                group.classList.remove('hidden');
+            } else {
+                group.classList.add('hidden');
+            }
+            updateAbsensiGpsUI(currentDistanceMeters);
+        }
+
+        function handleSuratUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                currentSuratDocName = file.name;
+                document.getElementById('suratFileName').innerText = `📄 ${file.name}`;
+            }
+        }
+
+        function evaluateWorkTimeStatus(statusType, now) {
+            const hours = now.getHours();
+            const mins = now.getMinutes();
+            const totalMins = hours * 60 + mins;
+            const dayOfWeek = now.getDay();
+
+            if (statusType === "Hadir Masuk") {
+                const maxMasukMins = 7 * 60 + 30; // 07:30
+                if (totalMins > maxMasukMins) {
+                    const diff = totalMins - maxMasukMins;
+                    return { text: `Terlambat (${diff} menit)`, badgeClass: "bg-rose-100 text-rose-700 font-bold" };
+                } else {
+                    return { text: "Tepat Waktu", badgeClass: "bg-emerald-100 text-emerald-700 font-bold" };
+                }
+            } else if (statusType === "Hadir Pulang") {
+                let minPulangMins = 14 * 60 + 30; // Mon-Thu 14:30
+                if (dayOfWeek === 5) minPulangMins = 11 * 60 + 30; // Fri 11:30
+                else if (dayOfWeek === 6) minPulangMins = 13 * 60; // Sat 13:00
+
+                if (totalMins < minPulangMins) {
+                    const diff = minPulangMins - totalMins;
+                    return { text: `Pulang Mendahului (${diff} menit)`, badgeClass: "bg-amber-100 text-amber-700 font-bold" };
+                } else {
+                    return { text: "Tepat Waktu", badgeClass: "bg-emerald-100 text-emerald-700 font-bold" };
+                }
+            } else if (statusType === "Surat Keterangan") {
+                return { text: "Izin / Surat Keterangan", badgeClass: "bg-indigo-100 text-indigo-700 font-bold" };
+            } else {
+                return { text: "Dinas Luar", badgeClass: "bg-teal-100 text-teal-700 font-bold" };
+            }
+        }
+
+        function submitAbsensi(e) {
+            e.preventDefault();
+            const statusType = document.getElementById('absensiStatus').value;
+            const now = new Date();
+
+            if (statusType !== 'Surat Keterangan' && currentDistanceMeters > MAX_ABSENSI_RADIUS_METERS) {
+                alert(`Anda diluar batas absensi! Jarak Anda ${currentDistanceMeters} meter (Maksimal 10m).`);
+                return;
+            }
+
+            const timeEvaluation = evaluateWorkTimeStatus(statusType, now);
+            const alasan = document.getElementById('suratAlasan')?.value || '';
+            const ketUser = document.getElementById('absensiKet')?.value || '';
+
+            const newLog = {
+                waktu: now.toLocaleTimeString('id-ID'),
+                nama: currentUser.nama,
+                tipe: statusType,
+                keteranganJam: timeEvaluation.text,
+                badgeClass: timeEvaluation.badgeClass,
+                jarak: `${currentDistanceMeters}m`,
+                alasan: statusType === 'Surat Keterangan' ? alasan : ketUser,
+                dokumen: currentSuratDocName ? `📄 ${currentSuratDocName}` : '-'
+            };
+
+            absensiLogs.unshift(newLog);
+            saveToStorage();
+            renderAbsensiLogs();
+
+            document.getElementById('absensiKet').value = '';
+            if (document.getElementById('suratAlasan')) document.getElementById('suratAlasan').value = '';
+            currentSuratDocName = '';
+            document.getElementById('suratFileName').innerText = '';
+
+            alert(`Presensi berhasil dicatat! Status: ${timeEvaluation.text}`);
+        }
+
+        function renderAbsensiLogs() {
+            const tbody = document.getElementById('absensiLogsBody');
+            if (!tbody) return;
+            tbody.innerHTML = absensiLogs.slice(0, 15).map(l => `
+                <tr class="hover:bg-slate-50">
+                    <td class="p-2.5 font-mono text-slate-500">${l.waktu}</td>
+                    <td class="p-2.5 font-bold text-slate-800">${l.nama}</td>
+                    <td class="p-2.5"><span class="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-[10px] font-semibold">${l.tipe}</span></td>
+                    <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[10px] ${l.badgeClass}">${l.keteranganJam}</span></td>
+                    <td class="p-2.5 text-slate-600 font-medium">${l.dokumen !== '-' ? `<span class="text-indigo-600 font-bold">${l.dokumen}</span> (${l.alasan})` : (l.alasan || '-')}</td>
+                </tr>
+            `).join('');
+        }
+
+        // LOGIN / LOGOUT & SYSTEM HANDLERS
         function quickFill(u, p) {
             document.getElementById('loginUsername').value = u;
             document.getElementById('loginPassword').value = p;
@@ -952,7 +1029,6 @@
             document.getElementById('userRoleBadge').innerText = `${currentUser.jabatan} (${currentUser.role})`;
             document.getElementById('userAvatar').innerText = currentUser.nama.substring(0, 2).toUpperCase();
 
-            // Populate Dropdowns
             const selectPelimpahan = document.getElementById('cutiPelimpahanTo');
             const selectPelaksana = document.getElementById('kegPelaksanaSelect');
 
@@ -966,7 +1042,6 @@
             renderAduanList();
             renderKegiatanTable();
             checkGpsLocation();
-            checkWorkHoursTime();
             initCharts();
             switchTab('dashboard');
         }
@@ -984,10 +1059,13 @@
             const activeNav = document.getElementById(`nav-${tabId}`);
             if (activeNav) activeNav.classList.add('sidebar-item-active');
 
-            if (tabId === 'absensi') {
-                checkWorkHoursTime();
-            } else if (tabId === 'kegiatan') {
-                setTimeout(() => { initLeafletMap(); }, 200);
+            if (tabId === 'kegiatan') {
+                updateKegiatanRoleBanner();
+                setTimeout(() => { 
+                    renderKegiatanTable();
+                    initLeafletMap();
+                    updateSebaranChart();
+                }, 200);
             }
         }
 
@@ -1065,72 +1143,7 @@
             }
         }
 
-        // ABSENSI SUBMISSION WITH SURAT KETERANGAN
-        function submitAbsensi(e) {
-            e.preventDefault();
-            if (currentDistanceMeters > MAX_ABSENSI_RADIUS_METERS) {
-                alert(`Anda diluar batas absensi! Jarak Anda ${currentDistanceMeters} meter (Maksimal 10m).`);
-                return;
-            }
-
-            const status = document.getElementById('absensiStatus').value;
-            const alasanSurat = document.getElementById('absensiAlasanSurat')?.value.trim() || '';
-
-            if (currentWorkHourStatus.isViolation && !alasanSurat) {
-                alert('Wajib mengisi Surat Keterangan Alasan untuk keterlambatan / mendahului jam pulang!');
-                return;
-            }
-
-            const newLog = {
-                waktu: `${new Date().toLocaleTimeString('id-ID')} WIB`,
-                nama: currentUser.nama,
-                tipe: status,
-                statusJamKerja: currentWorkHourStatus.text,
-                isViolation: currentWorkHourStatus.isViolation,
-                alasanSurat: alasanSurat || '-',
-                jarak: `${currentDistanceMeters}m`
-            };
-
-            absensiLogs.unshift(newLog);
-            saveToStorage();
-            renderAbsensiLogs();
-            document.getElementById('absensiKet').value = '';
-            if (document.getElementById('absensiAlasanSurat')) document.getElementById('absensiAlasanSurat').value = '';
-            alert('Presensi Berhasil Dicatat!');
-        }
-
-        function renderAbsensiLogs() {
-            const tbody = document.getElementById('absensiLogsBody');
-            if (!tbody) return;
-            tbody.innerHTML = absensiLogs.slice(0, 15).map(l => `
-                <tr class="hover:bg-slate-50">
-                    <td class="p-2.5">
-                        <div class="font-mono text-slate-700 font-bold">${l.waktu}</div>
-                        <span class="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-[10px] font-semibold">${l.tipe}</span>
-                    </td>
-                    <td class="p-2.5 font-bold text-slate-800">${l.nama}</td>
-                    <td class="p-2.5">
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${l.isViolation ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
-                            ${l.statusJamKerja}
-                        </span>
-                    </td>
-                    <td class="p-2.5 text-slate-600 font-medium">${l.alasanSurat}</td>
-                    <td class="p-2.5 font-mono text-slate-500">${l.jarak}</td>
-                </tr>
-            `).join('');
-        }
-
-        function exportAbsensiCSV() {
-            let csv = "Waktu,Nama,Tipe,StatusJamKerja,SuratKeteranganAlasan,JarakGPS\n";
-            absensiLogs.forEach(l => { csv += `"${l.waktu}","${l.nama}","${l.tipe}","${l.statusJamKerja}","${l.alasanSurat}","${l.jarak}"\n`; });
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const a = document.createElement('a');
-            a.href = window.URL.createObjectURL(blob);
-            a.download = `Presensi_SentoloII_${new Date().toISOString().slice(0,10)}.csv`;
-            a.click();
-        }
-
-        // LAPORAN KEGIATAN & MAPS LOGIC
+        // LAPORAN KEGIATAN & MAP CLICK LOCATION PICKER
         function updateDusunOptions() {
             const kal = document.getElementById('kegKalurahan').value;
             const dusunSelect = document.getElementById('kegDusun');
@@ -1195,17 +1208,6 @@
             const kal = document.getElementById('kegKalurahan').value;
             const dusun = document.getElementById('kegDusun').value;
 
-            const baseCoords = {
-                "Sentolo": [-7.8680, 110.1510],
-                "Kaliagung": [-7.8520, 110.1380],
-                "Sukoreno": [-7.8820, 110.1620],
-                "Banguncipto": [-7.8450, 110.1650],
-                "Demangrejo": [-7.8910, 110.1320],
-                "Salamrejo": [-7.8720, 110.1780],
-                "Tuksono": [-7.8980, 110.1750]
-            };
-            const center = baseCoords[kal] || [-7.8680, 110.1510];
-
             const newKeg = {
                 id: Date.now(),
                 nama: document.getElementById('kegNama').value,
@@ -1214,8 +1216,8 @@
                 tanggal: document.getElementById('kegTanggal').value,
                 foto: currentFotoBase64 || 'https://via.placeholder.com/150?text=Foto+Kegiatan',
                 pelaksana: [...selectedPelaksanaList],
-                lat: center[0] + (Math.random() - 0.5) * 0.012,
-                lng: center[1] + (Math.random() - 0.5) * 0.012
+                lat: selectedCoords.lat,
+                lng: selectedCoords.lng
             };
 
             kegiatanList.unshift(newKeg);
@@ -1229,7 +1231,32 @@
             renderKegiatanTable();
             initLeafletMap();
             updateSebaranChart();
-            alert('Laporan Kegiatan Berhasil Disimpan!');
+            alert(`Laporan Kegiatan Berhasil Disimpan pada koordinat: ${selectedCoords.lat.toFixed(5)}, ${selectedCoords.lng.toFixed(5)}!`);
+        }
+
+        function getFilteredKegiatanList() {
+            if (!currentUser) return [];
+            if (currentUser.role === 'Admin' || currentUser.role === 'Kepala Puskesmas') {
+                return kegiatanList;
+            } else {
+                return kegiatanList.filter(k => k.pelaksana.includes(currentUser.nama));
+            }
+        }
+
+        function updateKegiatanRoleBanner() {
+            const bannerText = document.getElementById('kegiatanRoleBannerText');
+            const badge = document.getElementById('kegiatanRoleBadge');
+            if (!bannerText || !badge) return;
+
+            if (currentUser.role === 'Admin' || currentUser.role === 'Kepala Puskesmas') {
+                bannerText.innerHTML = `<i class="fa-solid fa-users text-teal-600 mr-1.5"></i> <strong>Mode Akses Pimpinan/Admin:</strong> Menampilkan seluruh laporan kegiatan dari <strong>semua pegawai Puskesmas</strong>.`;
+                badge.innerText = `Role: ${currentUser.role}`;
+                badge.className = "px-2 py-0.5 bg-purple-100 text-purple-800 rounded font-bold text-[10px] uppercase";
+            } else {
+                bannerText.innerHTML = `<i class="fa-solid fa-user-check text-emerald-600 mr-1.5"></i> <strong>Mode Akses Staf:</strong> Menampilkan laporan kegiatan khusus atas nama <strong>${currentUser.nama}</strong>.`;
+                badge.innerText = `Role: ${currentUser.role}`;
+                badge.className = "px-2 py-0.5 bg-teal-100 text-teal-800 rounded font-bold text-[10px] uppercase";
+            }
         }
 
         function renderKegiatanTable() {
@@ -1237,30 +1264,40 @@
             if (!tbody) return;
             const search = (document.getElementById('searchKegiatan')?.value || '').toLowerCase();
 
-            const filtered = kegiatanList.filter(k =>
+            const scopedList = getFilteredKegiatanList();
+
+            const filtered = scopedList.filter(k =>
                 k.nama.toLowerCase().includes(search) ||
                 k.kalurahan.toLowerCase().includes(search) ||
                 k.dusun.toLowerCase().includes(search)
             );
 
-            tbody.innerHTML = filtered.map(k => `
-                <tr class="hover:bg-slate-50">
-                    <td class="p-3 font-mono text-slate-500">${k.tanggal}</td>
-                    <td class="p-3"><img src="${k.foto}" class="w-10 h-10 object-cover rounded-lg border border-slate-200"></td>
-                    <td class="p-3 font-bold text-slate-800">${k.nama}</td>
-                    <td class="p-3 text-slate-600"><span class="font-semibold text-teal-700">${k.dusun}</span>, Kal. ${k.kalurahan}</td>
-                    <td class="p-3">
-                        <div class="flex flex-wrap gap-1">
-                            ${k.pelaksana.map(p => `<span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded text-[10px] font-medium">${p}</span>`).join('')}
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 italic">Belum ada laporan kegiatan untuk akses akun Anda.</td></tr>`;
+            } else {
+                tbody.innerHTML = filtered.map(k => `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-mono text-slate-500">${k.tanggal}</td>
+                        <td class="p-3"><img src="${k.foto}" class="w-10 h-10 object-cover rounded-lg border border-slate-200"></td>
+                        <td class="p-3 font-bold text-slate-800">${k.nama}</td>
+                        <td class="p-3 text-slate-600">
+                            <span class="font-semibold text-teal-700">${k.dusun}</span>, Kal. ${k.kalurahan}<br>
+                            <span class="font-mono text-[10px] text-slate-400">📍 ${k.lat.toFixed(5)}, ${k.lng.toFixed(5)}</span>
+                        </td>
+                        <td class="p-3">
+                            <div class="flex flex-wrap gap-1">
+                                ${k.pelaksana.map(p => `<span class="px-2 py-0.5 ${p === currentUser.nama ? 'bg-teal-600 text-white font-bold' : 'bg-slate-100 text-slate-700'} rounded text-[10px]">${p}</span>`).join('')}
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
 
             const statKeg = document.getElementById('statKegiatanCount');
-            if (statKeg) statKeg.innerText = kegiatanList.length;
+            if (statKeg) statKeg.innerText = scopedList.length;
         }
 
+        // LEAFLET MAP & CLICK LOCATION PICKER HANDLER
         function initLeafletMap() {
             const container = document.getElementById('map');
             if (!container) return;
@@ -1271,21 +1308,51 @@
                     attribution: '© OpenStreetMap UPT Puskesmas Sentolo II'
                 }).addTo(mapInstance);
 
+                // Marker Kantor Pusat Puskesmas Sentolo II
                 L.marker([-7.8680, 110.1510]).addTo(mapInstance)
                     .bindPopup("<b>UPT Puskesmas Sentolo II</b><br>Kantor Pusat Utama")
                     .openPopup();
+
+                // EVENT LISTENER KLIK PADA PETA UNTUK MEMILIH LOKASI KEGIATAN
+                mapInstance.on('click', function(e) {
+                    selectedCoords = { lat: e.latlng.lat, lng: e.latlng.lng };
+                    
+                    // Update Tampilan Text Coordinates
+                    document.getElementById('selectedCoordsText').innerText = `${selectedCoords.lat.toFixed(5)}, ${selectedCoords.lng.toFixed(5)}`;
+
+                    // Single Picked Location Marker (Pin Merah)
+                    if (pickedLocationMarker) {
+                        mapInstance.removeLayer(pickedLocationMarker);
+                    }
+
+                    const redIcon = L.icon({
+                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowSize: [41, 41]
+                    });
+
+                    pickedLocationMarker = L.marker([selectedCoords.lat, selectedCoords.lng], { icon: redIcon }).addTo(mapInstance);
+                    pickedLocationMarker.bindPopup("<b>Titik Lokasi Kegiatan Dipilih!</b><br>Siap Disimpan.").openPopup();
+                });
             }
 
+            // Remove previous markers
             mapMarkers.forEach(m => mapInstance.removeLayer(m));
             mapMarkers = [];
 
-            kegiatanList.forEach(k => {
+            const scopedList = getFilteredKegiatanList();
+
+            scopedList.forEach(k => {
                 const marker = L.marker([k.lat, k.lng]).addTo(mapInstance);
                 marker.bindPopup(`
                     <div class="text-xs p-1">
                         <img src="${k.foto}" class="w-full h-20 object-cover rounded mb-2">
                         <strong class="text-teal-700">${k.nama}</strong><br>
                         <span>📍 ${k.dusun}, Kal. ${k.kalurahan}</span><br>
+                        <span class="text-slate-500 font-mono">Co: ${k.lat.toFixed(4)}, ${k.lng.toFixed(4)}</span><br>
                         <span class="text-slate-500">🗓️ ${k.tanggal}</span><br>
                         <div class="mt-1 text-[10px] text-slate-600"><strong>Tim:</strong> ${k.pelaksana.join(', ')}</div>
                     </div>
@@ -1297,7 +1364,9 @@
         function updateSebaranChart() {
             const counts = {};
             Object.keys(wilayahData).forEach(k => counts[k] = 0);
-            kegiatanList.forEach(k => { if (counts[k.kalurahan] !== undefined) counts[k.kalurahan]++; });
+
+            const scopedList = getFilteredKegiatanList();
+            scopedList.forEach(k => { if (counts[k.kalurahan] !== undefined) counts[k.kalurahan]++; });
 
             if (chartSebaranInstance) {
                 chartSebaranInstance.data.datasets[0].data = Object.values(counts);
@@ -1375,6 +1444,16 @@
                     </div>
                 </div>
             `).join('');
+        }
+
+        function exportAbsensiCSV() {
+            let csv = "Waktu,Nama,Tipe,Keterangan Jam Kerja,Dokumen/Lampiran\n";
+            absensiLogs.forEach(l => { csv += `"${l.waktu}","${l.nama}","${l.tipe}","${l.keteranganJam}","${l.dokumen}"\n`; });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = window.URL.createObjectURL(blob);
+            a.download = `Presensi_SentoloII_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
         }
 
         // DRIVE CONFIG MODAL
