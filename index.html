@@ -182,7 +182,7 @@
 
             <div class="p-8 space-y-6 flex-1">
 
-                <!-- 1. TAB DASHBOARD (KAYA VISUAL & METRICS AWAL) -->
+                <!-- 1. TAB DASHBOARD -->
                 <section id="tab-dashboard" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
                         <div class="glass-card p-5 rounded-2xl border border-slate-200 flex items-center gap-4">
@@ -249,68 +249,103 @@
                 </section>
 
 
-                <!-- 2. TAB PORTAL ABSENSI (WITH 10m RADIUS GEOFENCING) -->
+                <!-- 2. TAB PORTAL ABSENSI (DENGAN SURAT KETERANGAN JAM KERJA) -->
                 <section id="tab-absensi" class="space-y-6 hidden">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                            <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
-                                <i class="fa-solid fa-camera text-teal-600"></i> Presensi GPS (Max Radius 10m)
+                            <h3 class="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                <i class="fa-solid fa-camera text-teal-600"></i> Presensi GPS & Jam Kerja
                             </h3>
 
-                            <!-- Dynamic Distance Notification -->
-                            <div id="gpsStatusBox" class="p-3.5 mb-4 rounded-xl text-xs font-semibold space-y-1 bg-amber-50 border border-amber-200 text-amber-800">
+                            <!-- Ketentuan Jam Kerja Info Box -->
+                            <div class="p-3 mb-4 rounded-xl text-[11px] bg-slate-100 border border-slate-200 text-slate-700 space-y-1">
+                                <p class="font-bold text-slate-800"><i class="fa-solid fa-clock text-teal-600 mr-1"></i> Ketentuan Jam Kerja Resmi:</p>
+                                <ul class="list-disc list-inside space-y-0.5 text-slate-600">
+                                    <li><strong>Jam Masuk:</strong> Maksimal 07.30 WIB</li>
+                                    <li><strong>Jam Pulang Senin-Kamis:</strong> Minimal 14.30 WIB</li>
+                                    <li><strong>Jam Pulang Jum'at:</strong> Minimal 11.30 WIB</li>
+                                    <li><strong>Jam Pulang Sabtu:</strong> Minimal 13.00 WIB</li>
+                                </ul>
+                            </div>
+
+                            <!-- Dynamic GPS Status Box -->
+                            <div id="gpsStatusBox" class="p-3 mb-3 rounded-xl text-xs font-semibold space-y-1 bg-amber-50 border border-amber-200 text-amber-800">
                                 <div class="flex items-center justify-between">
-                                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-spinner animate-spin"></i> Memeriksa GPS...</span>
+                                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-spinner animate-spin"></i> GPS Check...</span>
                                     <span id="currentDistanceText" class="font-bold">-- m</span>
                                 </div>
-                                <p id="gpsNotifMessage" class="text-[11px] font-normal text-slate-600">Mendeteksi koordinat Anda...</p>
+                                <p id="gpsNotifMessage" class="text-[11px] font-normal text-slate-600">Mendeteksi posisi Anda...</p>
                             </div>
 
                             <form onsubmit="submitAbsensi(event)" class="space-y-3">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-600 mb-1">Status Kehadiran</label>
-                                    <select id="absensiStatus" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:ring-2 focus:ring-teal-500">
+                                    <select id="absensiStatus" onchange="checkWorkHoursTime()" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:ring-2 focus:ring-teal-500">
                                         <option value="Hadir Masuk">Hadir Masuk (Pagi)</option>
                                         <option value="Hadir Pulang">Hadir Pulang (Sore)</option>
-                                        <option value="Dinas Luar">Dinas Luar / Fieldwork</option>
                                     </select>
                                 </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Catatan Kegiatan</label>
-                                    <textarea id="absensiKet" rows="2" placeholder="Catatan kegiatan hari ini..." class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-teal-500"></textarea>
+
+                                <!-- Dynamic Indicator Keterangan Terlambat/Mendahului -->
+                                <div id="timeCheckBadge" class="p-2.5 rounded-xl text-xs font-bold flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-800">
+                                    <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                                    <span id="timeCheckBadgeText">Sesuai Jam Kerja</span>
                                 </div>
 
-                                <div class="p-3 bg-slate-100 rounded-xl text-[11px] text-slate-500 space-y-1">
+                                <!-- Surat Keterangan Alasan Form (Opsi Tambahan) -->
+                                <div id="suratKeteranganBox" class="hidden p-3.5 bg-rose-50/70 border border-rose-200 rounded-xl space-y-2">
+                                    <label class="block text-xs font-bold text-rose-800 flex items-center gap-1.5">
+                                        <i class="fa-solid fa-file-signature"></i> Surat Keterangan Alasan (Wajib Isi)
+                                    </label>
+                                    <textarea id="absensiAlasanSurat" rows="2" placeholder="Tuliskan alasan lengkap tidak datang tepat waktu atau pulang lebih awal..." class="w-full px-3 py-2 border border-rose-300 rounded-xl text-xs focus:ring-2 focus:ring-rose-500 bg-white"></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Catatan Tambahan (Opsional)</label>
+                                    <input type="text" id="absensiKet" placeholder="Catatan ringkas..." class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
+                                </div>
+
+                                <div class="p-2.5 bg-slate-100 rounded-xl text-[11px] text-slate-500 space-y-1">
                                     <p class="flex items-center justify-between">
-                                        <span><i class="fa-solid fa-building text-teal-600"></i> Titik Puskesmas Sentolo II:</span>
-                                        <span class="font-mono text-slate-700">-7.8485695,110.2175086,16</span>
-                                    </p>
-                                    <p class="flex items-center justify-between">
-                                        <span><i class="fa-solid fa-clock text-teal-600"></i> Waktu Server:</span>
+                                        <span><i class="fa-solid fa-clock text-teal-600"></i> Waktu Sekarang:</span>
                                         <span id="clockDisplay" class="font-mono font-bold text-slate-800">--:--:-- WIB</span>
                                     </p>
                                 </div>
 
                                 <button type="submit" id="btnSubmitAbsensi" disabled class="w-full py-2.5 bg-slate-300 text-slate-500 font-semibold rounded-xl text-xs transition-all cursor-not-allowed">
-                                    Kirim Presensi (Diluar Radius)
+                                    Kirim Presensi
                                 </button>
                             </form>
+
+                            <!-- GPS Simulator Buttons -->
+                            <div class="mt-4 pt-3 border-t border-slate-200">
+                                <p class="text-[11px] font-bold text-slate-500 mb-1.5">Simulasi Lokasi GPS:</p>
+                                <div class="grid grid-cols-2 gap-2 text-xs">
+                                    <button onclick="setSimulatedLocation(5)" class="px-2 py-1.5 bg-teal-50 hover:bg-teal-100 text-teal-700 font-bold rounded-lg border border-teal-200">
+                                        <i class="fa-solid fa-location-dot"></i> Puskesmas (5m)
+                                    </button>
+                                    <button onclick="setSimulatedLocation(25)" class="px-2 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold rounded-lg border border-rose-200">
+                                        <i class="fa-solid fa-ban"></i> Di Luar (25m)
+                                    </button>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="glass-card p-6 rounded-2xl border border-slate-200 md:col-span-2">
+                        <!-- Log Presensi Table with Keterangan Terlambat/Mendahului -->
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200 lg:col-span-2">
                             <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center justify-between">
-                                <span><i class="fa-solid fa-list-check text-emerald-600 mr-2"></i> Log Presensi Staf</span>
+                                <span><i class="fa-solid fa-list-check text-emerald-600 mr-2"></i> Log Presensi Staf & Surat Keterangan</span>
                                 <button onclick="exportAbsensiCSV()" class="text-xs text-teal-600 hover:underline font-semibold"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
                             </h3>
-                            <div class="overflow-x-auto rounded-xl border border-slate-200 max-h-80 custom-scrollbar">
+                            <div class="overflow-x-auto rounded-xl border border-slate-200 max-h-96 custom-scrollbar">
                                 <table class="w-full text-left border-collapse text-xs">
                                     <thead class="bg-slate-100 text-[10px] font-bold text-slate-600 uppercase">
                                         <tr>
-                                            <th class="p-2.5 border-b">Waktu</th>
+                                            <th class="p-2.5 border-b">Waktu & Tipe</th>
                                             <th class="p-2.5 border-b">Nama Staf</th>
-                                            <th class="p-2.5 border-b">Tipe</th>
-                                            <th class="p-2.5 border-b">Jarak saat Absensi</th>
-                                            <th class="p-2.5 border-b">Status Verified</th>
+                                            <th class="p-2.5 border-b">Status Jam Kerja</th>
+                                            <th class="p-2.5 border-b">Surat Keterangan Alasan</th>
+                                            <th class="p-2.5 border-b">GPS Distance</th>
                                         </tr>
                                     </thead>
                                     <tbody id="absensiLogsBody" class="divide-y divide-slate-100"></tbody>
@@ -324,7 +359,6 @@
                 <!-- 3. TAB LAPORAN KEGIATAN & VISUALISASI MAPS -->
                 <section id="tab-kegiatan" class="space-y-6 hidden">
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <!-- Form Laporan -->
                         <div class="glass-card p-6 rounded-2xl border border-slate-200">
                             <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
                                 <i class="fa-solid fa-file-pen text-emerald-600"></i> Form Laporkan Kegiatan
@@ -332,7 +366,7 @@
                             <form onsubmit="submitKegiatan(event)" class="space-y-3">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Kegiatan</label>
-                                    <input type="text" id="kegNama" placeholder="Contoh: Posyandu Lansia / Penyelidikan PTM" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
+                                    <input type="text" id="kegNama" placeholder="Contoh: Posyandu Lansia / PTM" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
                                 </div>
 
                                 <div class="grid grid-cols-2 gap-2">
@@ -382,7 +416,6 @@
                             </form>
                         </div>
 
-                        <!-- Dashboard Map & Grafik Sebaran -->
                         <div class="glass-card p-6 rounded-2xl border border-slate-200 lg:col-span-2 space-y-5">
                             <div>
                                 <h3 class="text-base font-bold text-slate-800 mb-2 flex items-center justify-between">
@@ -399,7 +432,6 @@
                         </div>
                     </div>
 
-                    <!-- Tabel Riwayat Kegiatan -->
                     <div class="glass-card p-6 rounded-2xl border border-slate-200">
                         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
                             <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-list-check text-teal-600 mr-2"></i> Riwayat Laporan Kegiatan</h3>
@@ -680,7 +712,7 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        const PUSKESMAS_COORDS = { lat: -7.8485695, lng: 110.2175086 };
+        const PUSKESMAS_COORDS = { lat: -7.8680, lng: 110.1510 };
         const MAX_ABSENSI_RADIUS_METERS = 10;
 
         const wilayahData = {
@@ -746,6 +778,7 @@
         let driveScriptUrl = localStorage.getItem('portal_drive_url') || '';
 
         let currentDistanceMeters = 0;
+        let currentWorkHourStatus = { isViolation: false, text: "Tepat Waktu", code: "ON_TIME" };
         let selectedPelaksanaList = [];
         let mapInstance = null;
         let mapMarkers = [];
@@ -770,6 +803,61 @@
             localStorage.setItem('portal_kegiatan_list', JSON.stringify(kegiatanList));
             localStorage.setItem('portal_cuti_list', JSON.stringify(cutiList));
             localStorage.setItem('portal_aduan_list', JSON.stringify(aduanList));
+        }
+
+        // LOGIKA PENGECEKAN JAM KERJA RESMI PUSKESMAS
+        function checkWorkHoursTime() {
+            const now = new Date();
+            const day = now.getDay(); // 0: Sun, 1: Mon, 2: Tue, 3: Wed, 4: Thu, 5: Fri, 6: Sat
+            const hh = String(now.getHours()).padStart(2, '0');
+            const mm = String(now.getMinutes()).padStart(2, '0');
+            const timeStr = `${hh}:${mm}`;
+
+            const absensiType = document.getElementById('absensiStatus')?.value || 'Hadir Masuk';
+            const badge = document.getElementById('timeCheckBadge');
+            const badgeText = document.getElementById('timeCheckBadgeText');
+            const suratBox = document.getElementById('suratKeteranganBox');
+
+            let isViolation = false;
+            let statusText = "Tepat Waktu";
+
+            if (absensiType === 'Hadir Masuk') {
+                // Maksimal 07.30
+                if (timeStr > "07:30") {
+                    isViolation = true;
+                    statusText = `Terlambat Masuk (Jam ${timeStr} WIB > 07:30 WIB)`;
+                } else {
+                    statusText = "Masuk Tepat Waktu (<= 07.30 WIB)";
+                }
+            } else if (absensiType === 'Hadir Pulang') {
+                // Cek jam pulang sesuai hari
+                let minPulang = "14:30"; // Senin-Kamis
+                let dayName = "Senin-Kamis";
+
+                if (day === 5) { minPulang = "11:30"; dayName = "Jum'at"; }
+                else if (day === 6) { minPulang = "13:00"; dayName = "Sabtu"; }
+
+                if (timeStr < minPulang) {
+                    isViolation = true;
+                    statusText = `Mendahului Jam Pulang (Jam ${timeStr} WIB < Min ${minPulang} WIB ${dayName})`;
+                } else {
+                    statusText = `Sesuai Jam Pulang (>= ${minPulang} WIB ${dayName})`;
+                }
+            }
+
+            currentWorkHourStatus = { isViolation, text: statusText };
+
+            if (isViolation) {
+                badge.className = "p-2.5 rounded-xl text-xs font-bold flex items-center gap-2 bg-rose-50 border border-rose-200 text-rose-800";
+                badgeText.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600"></i> ${statusText}`;
+                suratBox.classList.remove('hidden');
+                document.getElementById('absensiAlasanSurat').required = true;
+            } else {
+                badge.className = "p-2.5 rounded-xl text-xs font-bold flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-800";
+                badgeText.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> ${statusText}`;
+                suratBox.classList.add('hidden');
+                document.getElementById('absensiAlasanSurat').required = false;
+            }
         }
 
         // HAVERSINE FORMULA DISTANCE CALCULATOR
@@ -811,16 +899,16 @@
             if (distText) distText.innerText = `${currentDistanceMeters} m`;
 
             if (currentDistanceMeters <= MAX_ABSENSI_RADIUS_METERS) {
-                if (statusBox) statusBox.className = "p-3.5 mb-4 rounded-xl text-xs font-semibold space-y-1 bg-emerald-50 border border-emerald-200 text-emerald-800";
-                if (msgEl) msgEl.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Lokasi valid! Anda berada dalam radius absensi (${MAX_ABSENSI_RADIUS_METERS}m).`;
+                if (statusBox) statusBox.className = "p-3 mb-3 rounded-xl text-xs font-semibold space-y-1 bg-emerald-50 border border-emerald-200 text-emerald-800";
+                if (msgEl) msgEl.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Lokasi Valid (<= 10m dari Puskesmas).`;
                 if (btnSubmit) {
                     btnSubmit.disabled = false;
                     btnSubmit.className = "w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md cursor-pointer transition-all";
                     btnSubmit.innerText = "Kirim Presensi Sekarang";
                 }
             } else {
-                if (statusBox) statusBox.className = "p-3.5 mb-4 rounded-xl text-xs font-semibold space-y-1 bg-rose-50 border border-rose-200 text-rose-800";
-                if (msgEl) msgEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600 mr-1"></i> <strong>Anda diluar batas absensi</strong> (Jarak: ${currentDistanceMeters}m dari Puskesmas).`;
+                if (statusBox) statusBox.className = "p-3 mb-3 rounded-xl text-xs font-semibold space-y-1 bg-rose-50 border border-rose-200 text-rose-800";
+                if (msgEl) msgEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600 mr-1"></i> <strong>Anda diluar batas absensi</strong> (Jarak: ${currentDistanceMeters}m).`;
                 if (btnSubmit) {
                     btnSubmit.disabled = true;
                     btnSubmit.className = "w-full py-2.5 bg-slate-300 text-slate-500 font-semibold rounded-xl text-xs transition-all cursor-not-allowed";
@@ -878,6 +966,7 @@
             renderAduanList();
             renderKegiatanTable();
             checkGpsLocation();
+            checkWorkHoursTime();
             initCharts();
             switchTab('dashboard');
         }
@@ -895,12 +984,14 @@
             const activeNav = document.getElementById(`nav-${tabId}`);
             if (activeNav) activeNav.classList.add('sidebar-item-active');
 
-            if (tabId === 'kegiatan') {
+            if (tabId === 'absensi') {
+                checkWorkHoursTime();
+            } else if (tabId === 'kegiatan') {
                 setTimeout(() => { initLeafletMap(); }, 200);
             }
         }
 
-        // PEGAWAI TABLE & HAK AKSES
+        // PEGAWAI TABLE
         function renderPegawaiTable() {
             const tbody = document.getElementById('pegawaiTableBody');
             if (!tbody) return;
@@ -974,7 +1065,7 @@
             }
         }
 
-        // ABSENSI LOGIC
+        // ABSENSI SUBMISSION WITH SURAT KETERANGAN
         function submitAbsensi(e) {
             e.preventDefault();
             if (currentDistanceMeters > MAX_ABSENSI_RADIUS_METERS) {
@@ -983,38 +1074,55 @@
             }
 
             const status = document.getElementById('absensiStatus').value;
+            const alasanSurat = document.getElementById('absensiAlasanSurat')?.value.trim() || '';
+
+            if (currentWorkHourStatus.isViolation && !alasanSurat) {
+                alert('Wajib mengisi Surat Keterangan Alasan untuk keterlambatan / mendahului jam pulang!');
+                return;
+            }
+
             const newLog = {
-                waktu: new Date().toLocaleTimeString('id-ID'),
+                waktu: `${new Date().toLocaleTimeString('id-ID')} WIB`,
                 nama: currentUser.nama,
                 tipe: status,
-                jarak: `${currentDistanceMeters}m`,
-                status: "Valid (Radius <= 10m)"
+                statusJamKerja: currentWorkHourStatus.text,
+                isViolation: currentWorkHourStatus.isViolation,
+                alasanSurat: alasanSurat || '-',
+                jarak: `${currentDistanceMeters}m`
             };
 
             absensiLogs.unshift(newLog);
             saveToStorage();
             renderAbsensiLogs();
             document.getElementById('absensiKet').value = '';
+            if (document.getElementById('absensiAlasanSurat')) document.getElementById('absensiAlasanSurat').value = '';
             alert('Presensi Berhasil Dicatat!');
         }
 
         function renderAbsensiLogs() {
             const tbody = document.getElementById('absensiLogsBody');
             if (!tbody) return;
-            tbody.innerHTML = absensiLogs.slice(0, 10).map(l => `
+            tbody.innerHTML = absensiLogs.slice(0, 15).map(l => `
                 <tr class="hover:bg-slate-50">
-                    <td class="p-2.5 font-mono text-slate-500">${l.waktu}</td>
+                    <td class="p-2.5">
+                        <div class="font-mono text-slate-700 font-bold">${l.waktu}</div>
+                        <span class="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-[10px] font-semibold">${l.tipe}</span>
+                    </td>
                     <td class="p-2.5 font-bold text-slate-800">${l.nama}</td>
-                    <td class="p-2.5"><span class="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-[10px] font-semibold">${l.tipe}</span></td>
-                    <td class="p-2.5 font-mono text-slate-600">${l.jarak}</td>
-                    <td class="p-2.5 text-emerald-600 font-bold"><i class="fa-solid fa-circle-check"></i> ${l.status}</td>
+                    <td class="p-2.5">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${l.isViolation ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
+                            ${l.statusJamKerja}
+                        </span>
+                    </td>
+                    <td class="p-2.5 text-slate-600 font-medium">${l.alasanSurat}</td>
+                    <td class="p-2.5 font-mono text-slate-500">${l.jarak}</td>
                 </tr>
             `).join('');
         }
 
         function exportAbsensiCSV() {
-            let csv = "Waktu,Nama,Tipe,Jarak,Status\n";
-            absensiLogs.forEach(l => { csv += `"${l.waktu}","${l.nama}","${l.tipe}","${l.jarak}","${l.status}"\n`; });
+            let csv = "Waktu,Nama,Tipe,StatusJamKerja,SuratKeteranganAlasan,JarakGPS\n";
+            absensiLogs.forEach(l => { csv += `"${l.waktu}","${l.nama}","${l.tipe}","${l.statusJamKerja}","${l.alasanSurat}","${l.jarak}"\n`; });
             const blob = new Blob([csv], { type: 'text/csv' });
             const a = document.createElement('a');
             a.href = window.URL.createObjectURL(blob);
