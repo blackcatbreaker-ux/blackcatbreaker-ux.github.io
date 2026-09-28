@@ -295,19 +295,6 @@
                                     Kirim Presensi (Diluar Radius)
                                 </button>
                             </form>
-
-                            <!-- GPS Location Simulator -->
-                            <div class="mt-5 pt-4 border-t border-slate-200">
-                                <p class="text-[11px] font-bold text-slate-500 mb-2">Simulasi Lokasi GPS:</p>
-                                <div class="grid grid-cols-2 gap-2 text-xs">
-                                    <button onclick="setSimulatedLocation(5)" class="px-2.5 py-1.5 bg-teal-50 hover:bg-teal-100 text-teal-700 font-bold rounded-lg border border-teal-200">
-                                        <i class="fa-solid fa-location-dot"></i> Di Puskesmas (5m)
-                                    </button>
-                                    <button onclick="setSimulatedLocation(25)" class="px-2.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold rounded-lg border border-rose-200">
-                                        <i class="fa-solid fa-ban"></i> Di Luar (25m)
-                                    </button>
-                                </div>
-                            </div>
                         </div>
 
                         <div class="glass-card p-6 rounded-2xl border border-slate-200 md:col-span-2">
@@ -693,7 +680,7 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        const PUSKESMAS_COORDS = { lat: -7.8680, lng: 110.1510 };
+        const PUSKESMAS_COORDS = { lat: -7.8485695, lng: 110.2175086 };
         const MAX_ABSENSI_RADIUS_METERS = 10;
 
         const wilayahData = {
