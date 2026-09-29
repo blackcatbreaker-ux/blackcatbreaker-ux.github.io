@@ -1140,7 +1140,7 @@
         }
 
         function updateAbsensiGpsUI(distanceMeters) {
-            currentDistanceMeters = Math.round(distanceMeters * 10) / 10;
+            currentDistanceMeters = Math.round(distanceMeters * 50) / 50;
             const statusBox = document.getElementById('gpsStatusBox');
             const msgEl = document.getElementById('gpsNotifMessage');
             const distText = document.getElementById('currentDistanceText');
