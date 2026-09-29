@@ -223,7 +223,22 @@
                             </div>
                         </div>
                     </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200 lg:col-span-2">
+                            <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center justify-between">
+                                <span><i class="fa-solid fa-chart-line text-teal-600 mr-2"></i> Grafik Kehadiran Pegawai (Bulan Ini)</span>
+                                <span class="text-xs font-normal text-slate-400">Real-time Data</span>
+                            </h3>
+                            <div class="h-64"><canvas id="chartKehadiran"></canvas></div>
+                        </div>
 
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200">
+                            <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-chart-pie text-emerald-600"></i> Distribusi Jenis Cuti
+                            </h3>
+                            <div class="h-64 flex items-center justify-center"><canvas id="chartCuti"></canvas></div>
+                        </div>
+                    </div>
                     <!-- TABEL PERINGKAT KEDISIPLINAN PEGAWAI (10 TERAJIN & 10 KURANG RAJIN) -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- 10 Pegawai Terajin -->
@@ -269,22 +284,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <div class="glass-card p-6 rounded-2xl border border-slate-200 lg:col-span-2">
-                            <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center justify-between">
-                                <span><i class="fa-solid fa-chart-line text-teal-600 mr-2"></i> Grafik Kehadiran Pegawai (Bulan Ini)</span>
-                                <span class="text-xs font-normal text-slate-400">Real-time Data</span>
-                            </h3>
-                            <div class="h-64"><canvas id="chartKehadiran"></canvas></div>
-                        </div>
-
-                        <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                            <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
-                                <i class="fa-solid fa-chart-pie text-emerald-600"></i> Distribusi Jenis Cuti
-                            </h3>
-                            <div class="h-64 flex items-center justify-center"><canvas id="chartCuti"></canvas></div>
-                        </div>
-                    </div>
+                    
                 </section>
 
 
