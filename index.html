@@ -46,7 +46,7 @@
                     <i class="fa-solid fa-notes-medical"></i>
                 </div>
                 <h2 class="text-2xl font-extrabold text-slate-800">E-Portal Puskesmas</h2>
-                <p class="text-xs text-slate-500 mt-1 font-medium">UPT Puskesmas Sentolo II - Google Spreadsheet Integrated</p>
+                <p class="text-xs text-slate-500 mt-1 font-medium">UPT Puskesmas Sentolo II - Kulon Progo, DIY</p>
             </div>
 
             <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
@@ -90,7 +90,7 @@
                         </div>
                         <div class="truncate">
                             <h1 class="font-extrabold text-slate-800 text-sm leading-tight truncate">E-Portal Sentolo II</h1>
-                            <span class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase">Google Sheets DB</span>
+                            <span class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase">Kulon Progo, DIY</span>
                         </div>
                     </div>
                     <button onclick="toggleSidebar()" class="p-2 rounded-xl text-slate-400 hover:text-teal-600 hover:bg-teal-50 transition-all" title="Sembunyikan/Munculkan Sidebar">
@@ -168,7 +168,7 @@
                         <i class="fa-solid fa-bars"></i>
                     </button>
                     <div>
-                        <h2 id="pageTitle" class="text-xl font-bold text-slate-800">UPT PUSKESMAS SENTOLO II</h2>
+                        <h2 id="pageTitle" class="text-xl font-bold text-slate-800">Dashboard & Analisa</h2>
                         <p id="pageSubtitle" class="text-xs text-slate-500">Ringkasan statistik & indikator kinerja Puskesmas Hari Ini</p>
                     </div>
                 </div>
@@ -187,6 +187,7 @@
             </header>
 
             <div class="p-8 space-y-6 flex-1">
+
                 <!-- 1. TAB DASHBOARD -->
                 <section id="tab-dashboard" class="space-y-6">
                     <div class="space-y-3">
@@ -311,7 +312,7 @@
                     </div>
                 </section>
 
-                <!-- TAB ABSENSI -->
+                <!-- 2. TAB ABSENSI STAF -->
                 <section id="tab-absensi" class="space-y-6 hidden">
                     <div class="p-4 bg-gradient-to-r from-teal-500/10 to-emerald-500/10 border border-teal-200/80 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-700">
                         <div class="flex items-center gap-3">
@@ -398,7 +399,7 @@
                                 <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-list-check text-emerald-600 mr-2"></i> Log Presensi & Keterangan Waktu</h3>
 
                                 <div class="flex items-center gap-2 w-full sm:w-auto">
-                                    <select id="absensiFilterPegawai" onchange="renderAbsensiLogs()" class="hidden px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
+                                    <select id="absensiFilterPegawai" onchange="renderAbsensiLogs()" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
                                         <option value="ALL">-- Semua Pegawai --</option>
                                     </select>
                                     <button onclick="exportAbsensiCSV()" class="text-xs text-teal-600 hover:underline font-semibold whitespace-nowrap"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
@@ -425,7 +426,7 @@
                     </div>
                 </section>
 
-                <!-- TAB JADWAL -->
+                <!-- 3. TAB JADWAL PEGAWAI -->
                 <section id="tab-jadwal" class="space-y-6 hidden">
                     <div class="glass-card p-5 rounded-2xl border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
                         <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
@@ -455,7 +456,7 @@
                                 <option value="Staf">Staf / Administrasi</option>
                             </select>
 
-                            <button onclick="resetJadwalDefaultOrder()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1" title="Urutan Baku Database">
+                            <button onclick="resetJadwalDefaultOrder()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1">
                                 <i class="fa-solid fa-rotate-left text-teal-600"></i> Tampilan Baku
                             </button>
 
@@ -464,7 +465,7 @@
                             </button>
 
                             <button id="btnTambahJadwalModal" onclick="openJadwalModal()" class="hidden px-3.5 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition-all items-center gap-1.5">
-                                <i class="fa-solid fa-plus"></i> Tambah Shift
+                                <i class="fa-solid fa-plus"></i> Tambah Shift (Khusus Admin)
                             </button>
                         </div>
 
@@ -493,11 +494,11 @@
                     </div>
                 </section>
 
-                <!-- TAB KEGIATAN -->
+                <!-- 4. TAB LAPORAN KEGIATAN & MAPS -->
                 <section id="tab-kegiatan" class="space-y-6 hidden">
                     <div id="kegiatanRoleBanner" class="p-3 bg-teal-50 border border-teal-200 rounded-xl text-xs text-teal-800 flex items-center justify-between">
-                        <span id="kegiatanRoleBannerText" class="font-medium"><i class="fa-solid fa-shield-halved text-teal-600 mr-1.5"></i> Menampilkan Laporan Kegiatan</span>
-                        <span id="kegiatanRoleBadge" class="px-2 py-0.5 bg-teal-200 text-teal-900 rounded font-bold text-[10px] uppercase">Role: Staf</span>
+                        <span id="kegiatanRoleBannerText" class="font-medium"><i class="fa-solid fa-shield-halved text-teal-600 mr-1.5"></i> Menampilkan Laporan Kegiatan Puskesmas</span>
+                        <span id="kegiatanRoleBadge" class="px-2 py-0.5 bg-teal-200 text-teal-900 rounded font-bold text-[10px] uppercase">Akses Aktif</span>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -595,8 +596,8 @@
                                         <th class="p-3 border-b">Foto</th>
                                         <th class="p-3 border-b">Nama Kegiatan</th>
                                         <th class="p-3 border-b">Wilayah & Koordinat (Map)</th>
-                                        <th class="p-3 border-b">Tim Pelaksana (Maks 5)</th>
-                                        <th class="p-3 border-b text-center admin-only-col hidden">Aksi (Admin)</th>
+                                        <th class="p-3 border-b">Tim Pelaksana</th>
+                                        <th class="p-3 border-b text-center">Aksi (Edit / Revisi)</th>
                                     </tr>
                                 </thead>
                                 <tbody id="kegiatanTableBody" class="divide-y divide-slate-100"></tbody>
@@ -605,7 +606,7 @@
                     </div>
                 </section>
 
-                <!-- TAB PEGAWAI -->
+                <!-- 5. TAB PEGAWAI -->
                 <section id="tab-pegawai" class="space-y-6 hidden">
                     <div class="glass-card p-6 rounded-2xl border border-slate-200">
                         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
@@ -647,7 +648,7 @@
                     </div>
                 </section>
 
-                <!-- TAB CUTI -->
+                <!-- 6. TAB CUTI & PELIMPAHAN -->
                 <section id="tab-cuti" class="space-y-6 hidden">
                     <div class="glass-card p-5 rounded-2xl border border-slate-200">
                         <div class="flex items-center justify-between cursor-pointer" onclick="toggleKopEditor()">
@@ -738,7 +739,7 @@
                     </div>
                 </section>
 
-                <!-- TAB ADUAN -->
+                <!-- 7. TAB ADUAN -->
                 <section id="tab-aduan" class="space-y-6 hidden">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="glass-card p-6 rounded-2xl border border-slate-200">
@@ -774,338 +775,265 @@
                     </div>
                 </section>
 
-                <!-- TAB SHORTCUT LINKS -->
-                <section id="tab-links" class="space-y-6 hidden">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-                        <a href="http://157.15.82.16:8081/j-care/" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-id-card-clip"></i>
+                <!-- 8. TAB SHORTCUT APLIKASI (LENGKAP) -->
+                <section id="tab-links" class="space-y-8 hidden">
+                    
+                    <!-- KATEGORI A: UTAMA & REKAM MEDIS -->
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-star text-amber-500"></i> Portal Utama & Rekam Medis
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            <a href="http://157.15.82.16:8081/j-care/" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-xl font-bold mb-2"><i class="fa-solid fa-id-card-clip"></i></div>
+                                    <h4 class="font-bold text-slate-800 text-xs">SIMPUS PUSKESMAS</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Simpus Puskesmas Online.</p>
                                 </div>
-                                <h4 class="font-bold text-slate-800 text-sm">SIMPUS PUSKESMAS</h4>
-                                <p class="text-xs text-slate-500 mt-1">Simpus Puskesmas Online.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-emerald-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
+                                <span class="mt-3 text-[11px] font-semibold text-emerald-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
 
-                        <a href="https://sehatindonesiaku.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-syringe"></i>
+                            <a href="https://epuskesmas.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <div class="w-10 h-10 bg-teal-100 text-teal-700 rounded-xl flex items-center justify-center text-xl font-bold mb-2"><i class="fa-solid fa-laptop-medical"></i></div>
+                                    <h4 class="font-bold text-slate-800 text-xs">ePuskesmas Indonesia</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Sistem Rekam Medis Elektronik (RME).</p>
                                 </div>
-                                <h4 class="font-bold text-slate-800 text-sm">ASIK Kemenkes</h4>
-                                <p class="text-xs text-slate-500 mt-1">Aplikasi Sehat IndonesiaKu untuk Imunisasi & PTM.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
+                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
 
-                        <a href="https://linktr.ee/SKRINING_SendaKU" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-syringe"></i>
+                            <a href="https://pcarejkn.bpjs-kesehatan.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-xl font-bold mb-2"><i class="fa-solid fa-hospital-user"></i></div>
+                                    <h4 class="font-bold text-slate-800 text-xs">P-Care BPJS Kesehatan</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Klaim & Rujukan FKTP BPJS.</p>
                                 </div>
-                                <h4 class="font-bold text-slate-800 text-sm">SKRINING ILP</h4>
-                                <p class="text-xs text-slate-500 mt-1">Aplikasi Skrining ILP.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
+                                <span class="mt-3 text-[11px] font-semibold text-emerald-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
 
-                        <a href="https://linktr.ee/senda_ku" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-syringe"></i>
+                            <a href="https://sisrute.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <div class="w-10 h-10 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center text-xl font-bold mb-2"><i class="fa-solid fa-truck-medical"></i></div>
+                                    <h4 class="font-bold text-slate-800 text-xs">SISRUTE Kemenkes</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Sistem Informasi Rujukan Terintegrasi.</p>
                                 </div>
-                                <h4 class="font-bold text-slate-800 text-sm">Portal G.Drive Puskesmas</h4>
-                                <p class="text-xs text-slate-500 mt-1">Aplikasi G.Drive Puskesmas.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
-
-                        <a href="https://linktr.ee/ILP_Kunjungan_Rumah" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-syringe"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 text-sm">ILP Kunjungan Rumah</h4>
-                                <p class="text-xs text-slate-500 mt-1">Aplikasi ILP Kunjungan Rumah.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
-
-                        <a href="https://linktr.ee/Puskesmas_Sentolo_II" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-syringe"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 text-sm">Puskesmas Sentolo II</h4>
-                                <p class="text-xs text-slate-500 mt-1">Aplikasi Kritik Saran dan Media Sosial Puskesmas.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
-
-                        <a href="https://epuskesmas.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-teal-100 text-teal-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-laptop-medical"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 text-sm">ePuskesmas Indonesia</h4>
-                                <p class="text-xs text-slate-500 mt-1">Sistem Rekam Medis Elektronik (RME) Pelayanan Pasien.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-teal-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
-
-                        <a href="https://pcarejkn.bpjs-kesehatan.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-id-card-clip"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 text-sm">P-Care BPJS Kesehatan</h4>
-                                <p class="text-xs text-slate-500 mt-1">Entri Klaim & Rujukan Fasilitas Kesehatan Tingkat Pertama.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-emerald-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
-
-                        <a href="https://sisrute.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-truck-medical"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 text-sm">SISRUTE Kemenkes</h4>
-                                <p class="text-xs text-slate-500 mt-1">Sistem Informasi Rujukan Terintegrasi Antar Faskes.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-amber-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
-                        <!-- E-LING KU -->
-    <a href="https://dinkes.kulonprogokab.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-leaf"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">E-LING KU</h4>
-            <p class="text-xs text-slate-500 mt-1">Elektronik Lingkungan Kesehatan Kulon Progo.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-emerald-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- APLIKASI KOMDAT MICROSITE -->
-    <a href="https://komdat.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-blue-100 text-blue-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-chart-network"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">KOMDAT MICROSITE</h4>
-            <p class="text-xs text-slate-500 mt-1">Komunikasi Data Kesehatan Kemenkes RI.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-blue-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- APLIKASI SKDR -->
-    <a href="https://skdr.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-rose-100 text-rose-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">SKDR</h4>
-            <p class="text-xs text-slate-500 mt-1">Sistem Kewaspadaan Dini dan Respon.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-rose-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- APLIKASI STP -->
-    <a href="https://surveilans.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-notes-medical"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">STP</h4>
-            <p class="text-xs text-slate-500 mt-1">Surveilans Terpadu Puskesmas.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- e-PPGBM -->
-    <a href="https://sigizi.kemkes.go.id/e-ppgbm/" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-weight-scale"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">e-PPGBM</h4>
-            <p class="text-xs text-slate-500 mt-1">Pencatatan & Pelaporan Gizi Berbasis Masyarakat.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-amber-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- SIPTM -->
-    <a href="https://siptm.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-red-100 text-red-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-heart-pulse"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">SIPTM</h4>
-            <p class="text-xs text-slate-500 mt-1">Sistem Informasi Penyakit Tidak Menular.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-red-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- APLIKASI SITKO -->
-    <a href="https://sitb.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-cyan-100 text-cyan-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-lungs"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">SITKO / SITB</h4>
-            <p class="text-xs text-slate-500 mt-1">Sistem Informasi Tuberkulosis.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-cyan-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- WEBKESGA -->
-    <a href="https://kesga.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-pink-100 text-pink-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-people-roof"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">WEBKESGA</h4>
-            <p class="text-xs text-slate-500 mt-1">Sistem Informasi Kesehatan Keluarga.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-pink-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- SIHA -->
-    <a href="https://siha.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-purple-100 text-purple-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-ribbon"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">SIHA</h4>
-            <p class="text-xs text-slate-500 mt-1">Sistem Informasi HIV/AIDS & IMS.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-purple-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- ASPAK -->
-    <a href="https://aspak.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-teal-100 text-teal-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-hospital-user"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">ASPAK</h4>
-            <p class="text-xs text-slate-500 mt-1">Aplikasi Sarana, Prasarana & Alat Kesehatan.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-teal-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- SMILE -->
-    <a href="https://smile.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-sky-100 text-sky-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-syringe"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">SMILE</h4>
-            <p class="text-xs text-slate-500 mt-1">Sistem Imunisasi & Logistik Elektronik.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-sky-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- SIARVI -->
-    <a href="https://zoonosis.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-orange-100 text-orange-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-shield-cat"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">SIARVI</h4>
-            <p class="text-xs text-slate-500 mt-1">Sistem Informasi Rabies & Antrabes.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-orange-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- ESISMAL -->
-    <a href="https://sismal.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-lime-100 text-lime-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-mosquito"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">ESISMAL</h4>
-            <p class="text-xs text-slate-500 mt-1">Sistem Informasi Surveilans Malaria.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-lime-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- APLIKASI ISPA -->
-    <a href="#" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-blue-100 text-blue-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-head-side-cough"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">APLIKASI ISPA</h4>
-            <p class="text-xs text-slate-500 mt-1">Pelaporan Infeksi Saluran Pernapasan Akut.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-blue-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- GFORM KUSTA -->
-    <a href="#" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-violet-100 text-violet-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-file-pen"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">GFORM KUSTA</h4>
-            <p class="text-xs text-slate-500 mt-1">Formulir Pelaporan Surveilans Kusta.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-violet-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- GFORM FRAMBUSIA -->
-    <a href="#" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-fuchsia-100 text-fuchsia-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-file-lines"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">GFORM FRAMBUSIA</h4>
-            <p class="text-xs text-slate-500 mt-1">Formulir Pelaporan Eradikasi Frambusia.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-fuchsia-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- SIMOKU -->
-    <a href="https://kulonprogokab.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-emerald-100 text-emerald-800 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-laptop-code"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">SIMOKU</h4>
-            <p class="text-xs text-slate-500 mt-1">Sistem Otomatisasi Manajemen Kulon Progo.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-emerald-700 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- SELENA / E-MONEV OBAT -->
-    <a href="https://e-monevobat.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-pills"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">SELENA / E-MONEV OBAT</h4>
-            <p class="text-xs text-slate-500 mt-1">Monitoring & Evaluasi Logistik Obat.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-emerald-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
-
-    <!-- SIM ASET -->
-    <a href="#" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-        <div>
-            <div class="w-12 h-12 bg-slate-100 text-slate-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                <i class="fa-solid fa-boxes-packing"></i>
-            </div>
-            <h4 class="font-bold text-slate-800 text-sm">SIM ASET</h4>
-            <p class="text-xs text-slate-500 mt-1">Sistem Informasi Manajemen Aset.</p>
-        </div>
-        <span class="mt-4 text-xs font-semibold text-slate-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-    </a>
+                                <span class="mt-3 text-[11px] font-semibold text-amber-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+                        </div>
                     </div>
+
+                    <!-- KATEGORI B: SISTEM INFORMASI & APLIKASI KESEHATAN KEMENKES -->
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-notes-medical text-teal-600"></i> 1. Sistem Informasi & Aplikasi Kesehatan Kemenkes
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            <a href="https://skdr.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">APLIKASI SKDR</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Sistem Kewaspadaan Dini dan Respon.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+
+                            <a href="https://sigizi.kemkes.go.id/e-ppgbm/" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">e-PPGBM</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Pencatatan & Pelaporan Gizi Masyarakat.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+
+                            <a href="https://siptm.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">SIPTM Kemenkes</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Sistem Informasi Penyakit Tidak Menular.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+
+                            <a href="https://sitb.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">SITKO / SITB</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Sistem Informasi Tuberkulosis Indonesia.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+
+                            <a href="https://kesga.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">WEBKESGA</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Sistem Informasi Kesehatan Keluarga.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+
+                            <a href="https://siha.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">SIHA Kemenkes</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Sistem Informasi HIV/AIDS & IMS.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+
+                            <a href="https://aspak.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">ASPAK</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Aplikasi Sarana, Prasarana, & Alat Kesehatan.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+
+                            <a href="https://smile.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">SMILE Imunisasi</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Monitoring Imunisasi & Logistik Elektronik.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+
+                            <a href="https://sismal.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">ESISMAL Malaria</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Sistem Informasi Surveilans Malaria.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+
+                            <a href="https://e-monevobat.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">SELENA / E-MONEV OBAT</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Sistem Logistik Obat dan Alkes.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- KATEGORI C: KOMUNIKASI DATA, STP & PORTAL DAERAH -->
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-share-nodes text-indigo-600"></i> 2. Komunikasi Data, STP & Portal Daerah / Internal
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            <a href="https://komdat.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">KOMDAT MICROSITE</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Komunikasi Data Kemenkes RI.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-indigo-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+
+                            <a href="https://surveilans.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">APLIKASI STP</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Surveilans Terpadu Puskesmas.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-indigo-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+
+                            <a href="https://zoonosis.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">SIARVI (Rabies & Antrabes)</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Aplikasi Internal Zoonosis.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-indigo-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+
+                            <a href="https://simada.kulonprogokab.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">SIM ASET (SIMADA Kulon Progo)</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Manajemen Aset BPKAD Daerah.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-indigo-600 flex items-center gap-1">Buka Portal <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- KATEGORI D: PORTAL APLIKASI LOKAL KULON PROGO & SURVEILANS -->
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-map-location-dot text-emerald-600"></i> 3. Portal Aplikasi Lokal / Khusus Kulon Progo & Formulir Surveilans
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            <a href="https://dinkes.kulonprogokab.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">E-LING KU</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Elektronik Lingkungan Kulon Progo.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-emerald-600 flex items-center gap-1">Buka Dinkes <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+
+                            <a href="https://kulonprogokab.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">SIMOKU Kulon Progo</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Otomatisasi Sistem Pemkab Kulon Progo.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-emerald-600 flex items-center gap-1">Buka Pemkab <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+
+                            <a href="https://docs.google.com/forms" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">Form Surveilans ISPA</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Google Forms Subdin P2P Dinkes.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-emerald-600 flex items-center gap-1">Buka GForm <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+
+                            <a href="https://docs.google.com/forms" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-xs">GForm KUSTA & FRAMBUSIA</h4>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Pelaporan Digital P2P Kulon Progo.</p>
+                                </div>
+                                <span class="mt-3 text-[11px] font-semibold text-emerald-600 flex items-center gap-1">Buka GForm <i class="fa-solid fa-external-link text-[9px]"></i></span>
+                            </a>
+                        </div>
+                    </div>
+
                 </section>
+
             </div>
         </main>
+    </div>
+
+    <!-- MODAL EDIT LAPORAN KEGIATAN -->
+    <div id="editKegiatanModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-slate-100">
+            <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-file-pen text-teal-600"></i> Edit / Revisi Laporan Kegiatan
+            </h3>
+            <form onsubmit="saveKegiatanEdit(event)" class="space-y-3">
+                <input type="hidden" id="editKegId">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Kegiatan</label>
+                    <input type="text" id="editKegNama" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Kalurahan</label>
+                        <select id="editKegKalurahan" onchange="updateEditDusunOptions()" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white">
+                            <option value="Salamrejo">Salamrejo</option>
+                            <option value="Tuksono">Tuksono</option>
+                            <option value="Srikayangan">Srikayangan</option>
+                            <option value="Demangrejo">Demangrejo</option>
+                            <option value="Di Luar Wilayah">Di Luar Wilayah</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Dusun / Desa</label>
+                        <select id="editKegDusun" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white"></select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Kegiatan</label>
+                    <input type="date" id="editKegTanggal" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
+                </div>
+                <div class="flex items-center justify-end gap-2 pt-3">
+                    <button type="button" onclick="closeEditKegiatanModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- MODAL EDIT FLYER & TEKS BERJALAN -->
@@ -1122,7 +1050,6 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">URL Gambar Flyer / Banner Announcement</label>
                     <input type="url" id="editFlyerUrlInput" placeholder="https://..." class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-teal-500">
-                    <span class="text-[10px] text-slate-400 mt-1 block">Rekomendasi rasio gambar: 1200x250 piksel.</span>
                 </div>
                 <div class="flex items-center justify-end gap-2 pt-2">
                     <button type="button" onclick="closeAnnouncementModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs">Batal</button>
@@ -1145,19 +1072,15 @@
                     <input type="text" id="editNama" readonly class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-700">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Jabatan Official</label>
-                    <input type="text" id="editJabatan" readonly class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs text-slate-600">
-                </div>
-                <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Role / Hak Akses System</label>
                     <select id="editRole" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:ring-2 focus:ring-teal-500">
-                        <option value="Kepala Puskesmas">Kepala Puskesmas (Full Approval & Analisa)</option>
-                        <option value="Admin">Admin / Ka TU (Full System Control)</option>
-                        <option value="Dokter">Dokter (Portal Pegawai + Fitur Medis)</option>
-                        <option value="Perawat">Perawat (Portal Pegawai)</option>
-                        <option value="Bidan">Bidan (Portal Pegawai)</option>
-                        <option value="Apoteker">Apoteker (Portal Pegawai)</option>
-                        <option value="Staf">Staf Non-Medis / Administrasi</option>
+                        <option value="Kepala Puskesmas">Kepala Puskesmas</option>
+                        <option value="Admin">Admin / Ka TU</option>
+                        <option value="Dokter">Dokter</option>
+                        <option value="Perawat">Perawat</option>
+                        <option value="Bidan">Bidan</option>
+                        <option value="Apoteker">Apoteker</option>
+                        <option value="Staf">Staf Non-Medis</option>
                     </select>
                 </div>
                 <div>
@@ -1172,7 +1095,7 @@
         </div>
     </div>
 
-    <!-- MODAL TAMBAH JADWAL -->
+    <!-- MODAL TAMBAH JADWAL (KHUSUS ADMIN) -->
     <div id="jadwalModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="glass-card bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-100">
             <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
@@ -1215,12 +1138,12 @@
             <h3 class="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
                 <i class="fa-brands fa-google-drive text-teal-600 text-xl"></i> Integrasi Google Drive Spreadsheet
             </h3>
-            <p class="text-xs text-slate-500 mb-4">Masukkan Google Apps Script Web App URL untuk mengintegrasikan database <strong>DB_Portal_Puskesmas</strong> secara realtime.</p>
+            <p class="text-xs text-slate-500 mb-4">Masukkan Web App URL Apps Script untuk Google Spreadsheet <strong>DB_Portal_Puskesmas</strong>.</p>
 
             <form onsubmit="saveDriveConfig(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Google Web App Script URL</label>
-                    <input type="url" id="driveScriptUrl" placeholder="https://script.google.com/macros/s/.../exec" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-teal-500">
+                    <input type="url" id="driveScriptUrl" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-teal-500">
                 </div>
                 <div class="flex items-center justify-end gap-2 pt-2">
                     <button type="button" onclick="closeDriveConfigModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs">Tutup</button>
@@ -1344,7 +1267,6 @@
             localStorage.setItem('portal_flyer_url', flyerImageUrl);
         }
 
-        // INTEGRASI SPREADSHEET REALTIME (POST TO APPS SCRIPT)
         function sendToGoogleSheet(action, payload) {
             if (!driveScriptUrl || !driveScriptUrl.startsWith('http')) return;
             try {
@@ -1564,20 +1486,14 @@
             if (!tbody) return;
 
             const filterPeg = document.getElementById('absensiFilterPegawai')?.value || 'ALL';
-            const isAdmin = currentUser.role === 'Admin';
+            const isAdmin = currentUser.role === 'Admin' || currentUser.role === 'Kepala Puskesmas';
 
-            const filteredLogs = absensiLogs.filter(l => {
-                if (currentUser.role === 'Admin' || currentUser.role === 'Kepala Puskesmas') {
-                    return filterPeg === 'ALL' || l.nama === filterPeg;
-                } else {
-                    return l.nama === currentUser.nama;
-                }
-            });
+            const filteredLogs = absensiLogs.filter(l => filterPeg === 'ALL' || l.nama === filterPeg);
 
             if (filteredLogs.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="${isAdmin ? 7 : 6}" class="p-4 text-center text-slate-400 italic">Belum ada data presensi tersimpan.</td></tr>`;
             } else {
-                tbody.innerHTML = filteredLogs.slice(0, 20).map(l => `
+                tbody.innerHTML = filteredLogs.slice(0, 30).map(l => `
                     <tr class="hover:bg-slate-50">
                         <td class="p-2.5 font-mono text-slate-500">${l.waktu}</td>
                         <td class="p-2.5 font-bold text-slate-800">${l.nama}</td>
@@ -1592,6 +1508,10 @@
         }
 
         function deleteAbsensiLog(id) {
+            if (currentUser.role !== 'Admin' && currentUser.role !== 'Kepala Puskesmas') {
+                alert('Akses Ditolak! Hanya Admin/Pimpinan yang dapat menghapus data.');
+                return;
+            }
             if (confirm('Apakah Anda yakin ingin menghapus log presensi ini?')) {
                 absensiLogs = absensiLogs.filter(l => l.id !== id);
                 saveToStorage();
@@ -1721,29 +1641,28 @@
                 if (btnEditAnnouncement) btnEditAnnouncement.classList.add('hidden');
             }
 
-            const canEditJadwal = currentUser.role === 'Admin' || 
-                                 currentUser.role === 'Kepala Puskesmas' || 
-                                 currentUser.username.toLowerCase() === 'fathimatu';
+            const canManageJadwal = currentUser.role === 'Admin' || 
+                                   currentUser.role === 'Kepala Puskesmas' || 
+                                   currentUser.username.toLowerCase() === 'fathimatu';
 
             if (btnTambahJadwalModal) {
-                if (canEditJadwal) btnTambahJadwalModal.classList.remove('hidden');
+                if (canManageJadwal) btnTambahJadwalModal.classList.remove('hidden');
                 else btnTambahJadwalModal.classList.add('hidden');
             }
 
             if (currentUser.role === 'Admin' || currentUser.role === 'Kepala Puskesmas') {
                 if (adminNavGroup) adminNavGroup.classList.remove('hidden');
-                if (absensiFilterPegawai) {
-                    absensiFilterPegawai.classList.remove('hidden');
-                    absensiFilterPegawai.innerHTML = '<option value="ALL">-- Semua Pegawai --</option>' + 
-                        currentPegawaiList.map(p => `<option value="${p.nama}">${p.nama}</option>`).join('');
-                }
             } else {
                 if (adminNavGroup) adminNavGroup.classList.add('hidden');
-                if (absensiFilterPegawai) absensiFilterPegawai.classList.add('hidden');
+            }
+
+            if (absensiFilterPegawai) {
+                absensiFilterPegawai.innerHTML = '<option value="ALL">-- Semua Pegawai --</option>' + 
+                    currentPegawaiList.map(p => `<option value="${p.nama}">${p.nama}</option>`).join('');
             }
 
             document.querySelectorAll('.admin-only-col').forEach(el => {
-                if (currentUser.role === 'Admin') el.classList.remove('hidden');
+                if (currentUser.role === 'Admin' || currentUser.role === 'Kepala Puskesmas') el.classList.remove('hidden');
                 else el.classList.add('hidden');
             });
 
@@ -1790,7 +1709,6 @@
             if (tabId === 'dashboard') {
                 renderDashboardRealtimeStats();
             } else if (tabId === 'kegiatan') {
-                updateKegiatanRoleBanner();
                 setTimeout(() => { 
                     renderKegiatanTable();
                     initLeafletMap();
@@ -1950,14 +1868,13 @@
         }
 
         function openJadwalModal() {
+            if (currentUser.role !== 'Admin' && currentUser.role !== 'Kepala Puskesmas' && currentUser.username.toLowerCase() !== 'fathimatu') {
+                alert('Akses Ditolak! Anda tidak memiliki izin untuk mengentri atau mengubah jadwal pegawai.');
+                return;
+            }
             const selectPeg = document.getElementById('jadwalModalPegawai');
-            const activeFilterPeg = document.getElementById('filterJadwalPegawai').value;
-
             if (selectPeg) {
                 selectPeg.innerHTML = currentPegawaiList.map(p => `<option value="${p.nama}">${p.nama} (${p.jabatan})</option>`).join('');
-                if (activeFilterPeg !== 'ALL') {
-                    selectPeg.value = activeFilterPeg;
-                }
             }
             document.getElementById('jadwalModal').classList.remove('hidden');
         }
@@ -2089,7 +2006,6 @@
             if (!p) return;
             document.getElementById('editPegawaiId').value = p.id;
             document.getElementById('editNama').value = p.nama;
-            document.getElementById('editJabatan').value = p.jabatan;
             document.getElementById('editRole').value = p.role;
             document.getElementById('editPassword').value = p.pass;
             document.getElementById('editPegawaiModal').classList.remove('hidden');
@@ -2115,6 +2031,14 @@
         function updateDusunOptions() {
             const kal = document.getElementById('kegKalurahan').value;
             const dusunSelect = document.getElementById('kegDusun');
+            if (!dusunSelect) return;
+            const list = wilayahData[kal] || [kal];
+            dusunSelect.innerHTML = list.map(d => `<option value="${d}">${d}</option>`).join('');
+        }
+
+        function updateEditDusunOptions() {
+            const kal = document.getElementById('editKegKalurahan').value;
+            const dusunSelect = document.getElementById('editKegDusun');
             if (!dusunSelect) return;
             const list = wilayahData[kal] || [kal];
             dusunSelect.innerHTML = list.map(d => `<option value="${d}">${d}</option>`).join('');
@@ -2201,50 +2125,22 @@
             initLeafletMap();
             updateSebaranChart();
             renderDashboardRealtimeStats();
-            alert(`Laporan Kegiatan Berhasil Disimpan pada koordinat: ${selectedCoords.lat.toFixed(5)}, ${selectedCoords.lng.toFixed(5)}!`);
-        }
-
-        function getFilteredKegiatanList() {
-            if (!currentUser) return [];
-            if (currentUser.role === 'Admin' || currentUser.role === 'Kepala Puskesmas') {
-                return kegiatanList;
-            } else {
-                return kegiatanList.filter(k => k.pelaksana.includes(currentUser.nama));
-            }
-        }
-
-        function updateKegiatanRoleBanner() {
-            const bannerText = document.getElementById('kegiatanRoleBannerText');
-            const badge = document.getElementById('kegiatanRoleBadge');
-            if (!bannerText || !badge) return;
-
-            if (currentUser.role === 'Admin' || currentUser.role === 'Kepala Puskesmas') {
-                bannerText.innerHTML = `<i class="fa-solid fa-users text-teal-600 mr-1.5"></i> <strong>Mode Akses Pimpinan/Admin:</strong> Menampilkan seluruh laporan kegiatan dari <strong>semua pegawai Puskesmas</strong>.`;
-                badge.innerText = `Role: ${currentUser.role}`;
-                badge.className = "px-2 py-0.5 bg-purple-100 text-purple-800 rounded font-bold text-[10px] uppercase";
-            } else {
-                bannerText.innerHTML = `<i class="fa-solid fa-user-check text-emerald-600 mr-1.5"></i> <strong>Mode Akses Staf:</strong> Menampilkan laporan kegiatan khusus atas nama <strong>${currentUser.nama}</strong>.`;
-                badge.innerText = `Role: ${currentUser.role}`;
-                badge.className = "px-2 py-0.5 bg-teal-100 text-teal-800 rounded font-bold text-[10px] uppercase";
-            }
+            alert(`Laporan Kegiatan Berhasil Disimpan ke Database!`);
         }
 
         function renderKegiatanTable() {
             const tbody = document.getElementById('kegiatanTableBody');
             if (!tbody) return;
             const search = (document.getElementById('searchKegiatan')?.value || '').toLowerCase();
-            const isAdmin = currentUser.role === 'Admin';
 
-            const scopedList = getFilteredKegiatanList();
-
-            const filtered = scopedList.filter(k =>
+            const filtered = kegiatanList.filter(k =>
                 k.nama.toLowerCase().includes(search) ||
                 k.kalurahan.toLowerCase().includes(search) ||
                 k.dusun.toLowerCase().includes(search)
             );
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${isAdmin ? 6 : 5}" class="p-4 text-center text-slate-400 italic">Belum ada laporan kegiatan untuk akses akun Anda.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400 italic">Belum ada laporan kegiatan tersimpan.</td></tr>`;
             } else {
                 tbody.innerHTML = filtered.map(k => `
                     <tr class="hover:bg-slate-50">
@@ -2253,30 +2149,55 @@
                         <td class="p-3 font-bold text-slate-800">${k.nama}</td>
                         <td class="p-3 text-slate-600">
                             <span class="font-semibold text-teal-700">${k.dusun}</span>, Kal. ${k.kalurahan}<br>
-                            <span class="font-mono text-[10px] text-slate-400">📍 ${k.lat.toFixed(5)}, ${k.lng.toFixed(5)}</span>
+                            <span class="font-mono text-[10px] text-slate-400">📍 ${k.lat ? k.lat.toFixed(5) : '-'}, ${k.lng ? k.lng.toFixed(5) : '-'}</span>
                         </td>
                         <td class="p-3">
                             <div class="flex flex-wrap gap-1">
-                                ${k.pelaksana.map(p => `<span class="px-2 py-0.5 ${p === currentUser.nama ? 'bg-teal-600 text-white font-bold' : 'bg-slate-100 text-slate-700'} rounded text-[10px]">${p}</span>`).join('')}
+                                ${k.pelaksana.map(p => `<span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded text-[10px]">${p}</span>`).join('')}
                             </div>
                         </td>
-                        ${isAdmin ? `<td class="p-3 text-center"><button onclick="deleteKegiatanItem(${k.id})" class="p-1 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded" title="Hapus Laporan"><i class="fa-solid fa-trash-can text-xs"></i></button></td>` : ''}
+                        <td class="p-3 text-center">
+                            <button onclick="openEditKegiatanModal(${k.id})" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-xs font-semibold border border-amber-200">
+                                <i class="fa-solid fa-pen-to-square mr-1"></i> Edit
+                            </button>
+                        </td>
                     </tr>
                 `).join('');
             }
-
-            const statKeg = document.getElementById('statKegiatanCount');
-            if (statKeg) statKeg.innerText = scopedList.length;
         }
 
-        function deleteKegiatanItem(id) {
-            if (confirm('Apakah Anda yakin ingin menghapus laporan kegiatan ini?')) {
-                kegiatanList = kegiatanList.filter(k => k.id !== id);
+        function openEditKegiatanModal(id) {
+            const k = kegiatanList.find(x => x.id === id);
+            if (!k) return;
+            document.getElementById('editKegId').value = k.id;
+            document.getElementById('editKegNama').value = k.nama;
+            document.getElementById('editKegKalurahan').value = k.kalurahan;
+            updateEditDusunOptions();
+            document.getElementById('editKegDusun').value = k.dusun;
+            document.getElementById('editKegTanggal').value = k.tanggal;
+            document.getElementById('editKegiatanModal').classList.remove('hidden');
+        }
+
+        function closeEditKegiatanModal() {
+            document.getElementById('editKegiatanModal').classList.add('hidden');
+        }
+
+        function saveKegiatanEdit(e) {
+            e.preventDefault();
+            const id = parseInt(document.getElementById('editKegId').value);
+            const k = kegiatanList.find(x => x.id === id);
+            if (k) {
+                k.nama = document.getElementById('editKegNama').value;
+                k.kalurahan = document.getElementById('editKegKalurahan').value;
+                k.dusun = document.getElementById('editKegDusun').value;
+                k.tanggal = document.getElementById('editKegTanggal').value;
                 saveToStorage();
+                sendToGoogleSheet('UPDATE_KEGIATAN', k);
                 renderKegiatanTable();
                 initLeafletMap();
                 updateSebaranChart();
-                renderDashboardRealtimeStats();
+                closeEditKegiatanModal();
+                alert('Revisi Laporan Kegiatan Berhasil Disimpan!');
             }
         }
 
@@ -2296,12 +2217,9 @@
 
                 mapInstance.on('click', function(e) {
                     selectedCoords = { lat: e.latlng.lat, lng: e.latlng.lng };
-                    
                     document.getElementById('selectedCoordsText').innerText = `${selectedCoords.lat.toFixed(5)}, ${selectedCoords.lng.toFixed(5)}`;
 
-                    if (pickedLocationMarker) {
-                        mapInstance.removeLayer(pickedLocationMarker);
-                    }
+                    if (pickedLocationMarker) mapInstance.removeLayer(pickedLocationMarker);
 
                     const redIcon = L.icon({
                         iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
@@ -2320,30 +2238,27 @@
             mapMarkers.forEach(m => mapInstance.removeLayer(m));
             mapMarkers = [];
 
-            const scopedList = getFilteredKegiatanList();
-
-            scopedList.forEach(k => {
-                const marker = L.marker([k.lat, k.lng]).addTo(mapInstance);
-                marker.bindPopup(`
-                    <div class="text-xs p-1">
-                        <img src="${k.foto}" class="w-full h-20 object-cover rounded mb-2">
-                        <strong class="text-teal-700">${k.nama}</strong><br>
-                        <span>📍 ${k.dusun}, Kal. ${k.kalurahan}</span><br>
-                        <span class="text-slate-500 font-mono">Co: ${k.lat.toFixed(4)}, ${k.lng.toFixed(4)}</span><br>
-                        <span class="text-slate-500">🗓 ${k.tanggal}</span><br>
-                        <div class="mt-1 text-[10px] text-slate-600"><strong>Tim:</strong> ${k.pelaksana.join(', ')}</div>
-                    </div>
-                `);
-                mapMarkers.push(marker);
+            kegiatanList.forEach(k => {
+                if (k.lat && k.lng) {
+                    const marker = L.marker([k.lat, k.lng]).addTo(mapInstance);
+                    marker.bindPopup(`
+                        <div class="text-xs p-1">
+                            <img src="${k.foto}" class="w-full h-20 object-cover rounded mb-2">
+                            <strong class="text-teal-700">${k.nama}</strong><br>
+                            <span>📍 ${k.dusun}, Kal. ${k.kalurahan}</span><br>
+                            <span class="text-slate-500">🗓 ${k.tanggal}</span><br>
+                            <div class="mt-1 text-[10px] text-slate-600"><strong>Tim:</strong> ${k.pelaksana.join(', ')}</div>
+                        </div>
+                    `);
+                    mapMarkers.push(marker);
+                }
             });
         }
 
         function updateSebaranChart() {
             const counts = {};
             Object.keys(wilayahData).forEach(k => counts[k] = 0);
-
-            const scopedList = getFilteredKegiatanList();
-            scopedList.forEach(k => { if (counts[k.kalurahan] !== undefined) counts[k.kalurahan]++; });
+            kegiatanList.forEach(k => { if (counts[k.kalurahan] !== undefined) counts[k.kalurahan]++; });
 
             if (chartSebaranInstance) {
                 chartSebaranInstance.data.datasets[0].data = Object.values(counts);
@@ -2404,7 +2319,7 @@
         function renderCutiTable() {
             const tbody = document.getElementById('cutiTableBody');
             if (!tbody) return;
-            const isAdmin = currentUser.role === 'Admin';
+            const isAdmin = currentUser.role === 'Admin' || currentUser.role === 'Kepala Puskesmas';
 
             if (cutiList.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="${isAdmin ? 7 : 6}" class="p-4 text-center text-slate-400 italic">Belum ada permohonan cuti tersimpan.</td></tr>`;
@@ -2444,6 +2359,10 @@
         }
 
         function deleteCutiItem(id) {
+            if (currentUser.role !== 'Admin' && currentUser.role !== 'Kepala Puskesmas') {
+                alert('Akses Ditolak!');
+                return;
+            }
             if (confirm('Apakah Anda yakin ingin menghapus data pengajuan cuti ini?')) {
                 cutiList = cutiList.filter(c => c.id !== id);
                 saveToStorage();
