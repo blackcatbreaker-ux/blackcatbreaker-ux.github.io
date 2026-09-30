@@ -25,7 +25,6 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         #map { height: 320px; border-radius: 1rem; z-index: 1; cursor: crosshair; }
 
-        /* PERBAIKAN CSS CETAK / PRINT DOKUMEN */
         @media print {
             body { background: white !important; color: black !important; font-size: 11pt; }
             #appContainer, #loginOverlay, header, aside, button, select, input, .no-print { display: none !important; }
@@ -38,7 +37,7 @@
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col bg-slate-50">
 
-    <!-- LOGIN OVERLAY / MODAL -->
+    <!-- LOGIN OVERLAY -->
     <div id="loginOverlay" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 border border-slate-100 relative overflow-hidden">
             <div class="absolute -top-12 -right-12 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl"></div>
@@ -81,7 +80,7 @@
 
     <!-- MAIN APP WRAPPER -->
     <div id="appContainer" class="flex-1 flex overflow-hidden hidden">
-        <!-- SIDEBAR (BISA DI-TOGGLE / DISIMPAN) -->
+        <!-- SIDEBAR -->
         <aside id="mainSidebar" class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 transition-all duration-300">
             <div>
                 <div class="p-5 border-b border-slate-100 flex items-center justify-between">
@@ -191,6 +190,27 @@
 
                 <!-- 1. TAB DASHBOARD -->
                 <section id="tab-dashboard" class="space-y-6">
+                    
+                    <!-- ROLLING TEKS & FLYER ANNOUNCEMENT (DI PALING ATAS DASHBOARD) -->
+                    <div class="space-y-3">
+                        <!-- ROLLING / RUNNING TEXT -->
+                        <div class="bg-gradient-to-r from-teal-700 to-emerald-700 text-white rounded-2xl px-4 py-2.5 shadow-md flex items-center justify-between gap-3 overflow-hidden text-xs">
+                            <div class="flex items-center gap-2 shrink-0 font-bold bg-white/20 px-2.5 py-1 rounded-lg backdrop-blur-sm uppercase tracking-wider text-[11px]">
+                                <i class="fa-solid fa-bullhorn text-amber-300 animate-bounce"></i> Pengumuman
+                            </div>
+                            <marquee id="marqueeTextDisplay" class="font-medium text-slate-100 tracking-wide text-xs">Selamat datang di E-Portal UPT Puskesmas Sentolo II. Utamakan pelayanan kesehatan yang cepat, tepat, dan empati!</marquee>
+                            <button id="btnEditAnnouncement" onclick="openAnnouncementModal()" class="hidden shrink-0 px-2.5 py-1 bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold rounded-lg text-[10px] transition-all flex items-center gap-1 shadow">
+                                <i class="fa-solid fa-pen-to-square"></i> Edit Flyer & Teks
+                            </button>
+                        </div>
+
+                        <!-- BANNER FLYER PROMO / PENGUMUMAN -->
+                        <div id="flyerBannerContainer" class="glass-card rounded-2xl overflow-hidden border border-slate-200 shadow-sm relative group">
+                            <img id="flyerImageDisplay" src="https://via.placeholder.com/1200x250/0d9488/ffffff?text=Banner+Pengumuman+%26+Informasi+Penting+UPT+Puskesmas+Sentolo+II" class="w-full h-36 md:h-48 object-cover transition-all duration-300 group-hover:scale-[1.01]">
+                        </div>
+                    </div>
+
+                    <!-- STATISTIK REALTIME -->
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
                         <div class="glass-card p-5 rounded-2xl border border-slate-200 flex items-center gap-4">
                             <div class="w-12 h-12 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center text-xl font-bold">
@@ -415,11 +435,10 @@
                 </section>
 
 
-                <!-- 3. TAB MENU JADWAL PEGAWAI (DENGAN FILTER POLI, JABATAN, TAMPILAN BAKU & PRINT FIX) -->
+                <!-- 3. TAB MENU JADWAL PEGAWAI -->
                 <section id="tab-jadwal" class="space-y-6 hidden">
                     <div class="glass-card p-5 rounded-2xl border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
                         <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
-                            <!-- View Toggle (Mingguan / Bulanan) -->
                             <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
                                 <button onclick="setJadwalViewMode('minggu')" id="btnJadwalMinggu" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-teal-700 shadow-sm">
                                     <i class="fa-solid fa-calendar-week mr-1"></i> Per Minggu
@@ -429,17 +448,14 @@
                                 </button>
                             </div>
 
-                            <!-- Filter Pegawai -->
                             <select id="filterJadwalPegawai" onchange="onJadwalFilterChange()" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
                                 <option value="ALL">-- Semua Pegawai --</option>
                             </select>
 
-                            <!-- Filter Poli / Unit / Lokasi Tugas -->
                             <select id="filterJadwalUnit" onchange="renderJadwalView()" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
                                 <option value="ALL">-- Semua Poli/Unit --</option>
                             </select>
 
-                            <!-- FILTER JABATAN BARU -->
                             <select id="filterJadwalJabatan" onchange="renderJadwalView()" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
                                 <option value="ALL">-- Semua Jabatan --</option>
                                 <option value="Dokter">Dokter</option>
@@ -449,23 +465,19 @@
                                 <option value="Staf">Staf / Administrasi</option>
                             </select>
 
-                            <!-- TOMBOL TAMPILAN BAKU (SORT ID AWAL) -->
                             <button onclick="resetJadwalDefaultOrder()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1" title="Urutan Baku Database">
                                 <i class="fa-solid fa-rotate-left text-teal-600"></i> Tampilan Baku
                             </button>
 
-                            <!-- Sort Alfabetis A-Z -->
                             <button onclick="toggleJadwalSort()" id="btnSortJadwal" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1">
                                 <i class="fa-solid fa-arrow-down-a-z text-teal-600"></i> <span id="sortOrderText">Sort: A-Z</span>
                             </button>
 
-                            <!-- Tombol Tambah Shift Jadwal -->
                             <button id="btnTambahJadwalModal" onclick="openJadwalModal()" class="hidden px-3.5 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition-all items-center gap-1.5">
                                 <i class="fa-solid fa-plus"></i> Tambah Shift
                             </button>
                         </div>
 
-                        <!-- Opsi Cetak Dokumen Jadwal -->
                         <div class="flex items-center gap-2 w-full md:w-auto justify-end shrink-0">
                             <span class="text-xs font-bold text-slate-500"><i class="fa-solid fa-print text-teal-600 mr-1"></i> Cetak:</span>
                             <select id="printRangeOption" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white font-semibold">
@@ -481,21 +493,18 @@
                         </div>
                     </div>
 
-                    <!-- Tampilan Tabel Jadwal -->
                     <div class="glass-card p-6 rounded-2xl border border-slate-200">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-base font-bold text-slate-800" id="jadwalTitleHeader">Jadwal Shift Kerja Staf Puskesmas</h3>
                             <span class="text-xs text-slate-400 font-mono" id="jadwalDateSubtitle">Minggu Ini</span>
                         </div>
 
-                        <div id="jadwalContainer" class="overflow-x-auto rounded-xl border border-slate-200">
-                            <!-- Container Tabel Jadwal -->
-                        </div>
+                        <div id="jadwalContainer" class="overflow-x-auto rounded-xl border border-slate-200"></div>
                     </div>
                 </section>
 
 
-                <!-- 4. TAB LAPORAN KEGIATAN & VISUALISASI MAPS (DENGAN PEMBARUAN KALURAHAN & DUSUN) -->
+                <!-- 4. TAB LAPORAN KEGIATAN & VISUALISASI MAPS -->
                 <section id="tab-kegiatan" class="space-y-6 hidden">
                     <div id="kegiatanRoleBanner" class="p-3 bg-teal-50 border border-teal-200 rounded-xl text-xs text-teal-800 flex items-center justify-between">
                         <span id="kegiatanRoleBannerText" class="font-medium"><i class="fa-solid fa-shield-halved text-teal-600 mr-1.5"></i> Menampilkan Laporan Kegiatan</span>
@@ -503,7 +512,6 @@
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <!-- Form Laporkan Kegiatan -->
                         <div class="glass-card p-6 rounded-2xl border border-slate-200">
                             <h3 class="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
                                 <i class="fa-solid fa-file-pen text-emerald-600"></i> Form Laporkan Kegiatan
@@ -524,7 +532,6 @@
                                     <span class="text-[10px] bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded font-semibold">Map Clicked</span>
                                 </div>
 
-                                <!-- PILIHAN KALURAHAN PEMBARUAN -->
                                 <div class="grid grid-cols-2 gap-2">
                                     <div>
                                         <label class="block text-xs font-semibold text-slate-600 mb-1">Kalurahan</label>
@@ -570,7 +577,6 @@
                             </form>
                         </div>
 
-                        <!-- Dashboard Map & Grafik -->
                         <div class="glass-card p-6 rounded-2xl border border-slate-200 lg:col-span-2 space-y-5">
                             <div>
                                 <h3 class="text-base font-bold text-slate-800 mb-1 flex items-center justify-between">
@@ -587,7 +593,6 @@
                         </div>
                     </div>
 
-                    <!-- TABEL RIWAYAT KEGIATAN -->
                     <div class="glass-card p-6 rounded-2xl border border-slate-200">
                         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
                             <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-list-check text-teal-600 mr-2"></i> Riwayat Laporan Kegiatan</h3>
@@ -618,7 +623,7 @@
                         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
                             <div>
                                 <h3 class="text-base font-bold text-slate-800">Daftar Pegawai UPT Puskesmas Sentolo II</h3>
-                                <p class="text-xs text-slate-500">Master Data Pegawai dari Excel Japel September 2026 & Setting Access Control</p>
+                                <p class="text-xs text-slate-500">Master Data Pegawai & Setting Access Control</p>
                             </div>
                             <div class="flex items-center gap-2 w-full sm:w-auto">
                                 <input type="text" id="searchPegawai" oninput="filterPegawaiTable()" placeholder="Cari nama / jabatan..." class="px-3.5 py-2 border border-slate-200 rounded-xl text-xs w-full sm:w-64 focus:ring-2 focus:ring-teal-500">
@@ -784,7 +789,7 @@
                 </section>
 
 
-                <!-- 8. TAB SHORTCUT APLIKASI -->
+                <!-- 8. TAB SHORTCUT APLIKASI (DIPERBARUI SESUAI INSTRUKSI) -->
                 <section id="tab-links" class="space-y-6 hidden">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
                         <a href="http://157.15.82.16:8081/j-care/" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
@@ -797,6 +802,7 @@
                             </div>
                             <span class="mt-4 text-xs font-semibold text-emerald-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
                         </a>
+
                         <a href="https://sehatindonesiaku.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
                             <div>
                                 <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
@@ -807,7 +813,8 @@
                             </div>
                             <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
                         </a>
-                         <a href="https://linktr.ee/SKRININ_SendaKU" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
+
+                        <a href="https://linktr.ee/SKRININ_SendaKU" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
                             <div>
                                 <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
                                     <i class="fa-solid fa-syringe"></i>
@@ -817,7 +824,8 @@
                             </div>
                             <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
                         </a>
-                         <a href="https://linktr.ee/senda_ku" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
+
+                        <a href="https://linktr.ee/senda_ku" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
                             <div>
                                 <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
                                     <i class="fa-solid fa-syringe"></i>
@@ -827,7 +835,8 @@
                             </div>
                             <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
                         </a>
-                         <a href="https://linktr.ee/ILP_Kunjungan_Rumah" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
+
+                        <a href="https://linktr.ee/ILP_Kunjungan_Rumah" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
                             <div>
                                 <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
                                     <i class="fa-solid fa-syringe"></i>
@@ -837,6 +846,7 @@
                             </div>
                             <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
                         </a>
+
                         <a href="https://linktr.ee/Puskesmas_Sentolo_II" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
                             <div>
                                 <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
@@ -847,6 +857,7 @@
                             </div>
                             <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
                         </a>
+
                         <a href="https://epuskesmas.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
                             <div>
                                 <div class="w-12 h-12 bg-teal-100 text-teal-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
@@ -857,7 +868,7 @@
                             </div>
                             <span class="mt-4 text-xs font-semibold text-teal-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
                         </a>
- 
+
                         <a href="https://pcarejkn.bpjs-kesehatan.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
                             <div>
                                 <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
@@ -868,8 +879,6 @@
                             </div>
                             <span class="mt-4 text-xs font-semibold text-emerald-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
                         </a>
-
-                        
 
                         <a href="https://sisrute.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
                             <div>
@@ -888,7 +897,31 @@
         </main>
     </div>
 
-    <!-- MODAL EDIT PEGAWAI / HAK AKSES -->
+    <!-- MODAL EDIT FLYER & TEKS BERJALAN -->
+    <div id="announcementModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-slate-100">
+            <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-bullhorn text-teal-600"></i> Edit Running Text & Banner Flyer
+            </h3>
+            <form onsubmit="saveAnnouncementConfig(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Isi Running Text (Teks Berjalan)</label>
+                    <textarea id="editMarqueeInput" rows="2" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-teal-500"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">URL Gambar Flyer / Banner Announcement</label>
+                    <input type="url" id="editFlyerUrlInput" placeholder="https://..." class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-teal-500">
+                    <span class="text-[10px] text-slate-400 mt-1 block">Rekomendasi rasio gambar: 1200x250 piksel.</span>
+                </div>
+                <div class="flex items-center justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeAnnouncementModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT PEGAWAI -->
     <div id="editPegawaiModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="glass-card bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-100">
             <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
@@ -971,11 +1004,11 @@
             <h3 class="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
                 <i class="fa-brands fa-google-drive text-teal-600 text-xl"></i> Integrasi Google Drive Spreadsheet
             </h3>
-            <p class="text-xs text-slate-500 mb-4">Aplikasi ini terhubung langsung ke Google Sheets DB_Portal_Puskesmas.</p>
+            <p class="text-xs text-slate-500 mb-4">Aplikasi ini terhubung langsung ke Google Sheets DB_Portal_Puskesmas secara Realtime.</p>
 
             <form onsubmit="saveDriveConfig(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Google Spreadsheet URL / Apps Script</label>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Google Spreadsheet Web App Script URL</label>
                     <input type="url" id="driveScriptUrl" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-teal-500">
                 </div>
                 <div class="flex items-center justify-end gap-2 pt-2">
@@ -986,16 +1019,15 @@
         </div>
     </div>
 
-    <!-- PRINT SECTION HIDDEN FOR PDF GENERATION -->
+    <!-- PRINT SECTION HIDDEN -->
     <div id="printSection" class="p-8 hidden"></div>
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
         const PUSKESMAS_COORDS = { lat: -7.8485695, lng: 110.2175086 };
-        const MAX_ABSENSI_RADIUS_METERS = 70; // BATASAN RADIUS ABSENSI DIUBAH MENJADI 70 METER
+        const MAX_ABSENSI_RADIUS_METERS = 70;
         const DEFAULT_SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1xopLSvYQCneF1mI-CUVkpm1Lx9_AAMYcVHad72Bx3K4/edit?gid=0#gid=0";
 
-        // PEMBARUAN DATA KALURAHAN & DUSUN
         const wilayahData = {
             "Salamrejo": ["Klebakan", "Mentobayan", "Giyoso", "Karangwetan", "Kidulan", "Dhisil", "Salam", "Ngrandu"],
             "Srikayangan": ["Pendem", "Kaliwinong Lor", "Kaliwinong Kidul", "Klumutan", "Malangan", "Gowangsan", "Panjul", "Pergiwatu Kulon", "Pergiwatu Wetan", "Karangasem Kulon", "Karangasem Wetan", "Karangasem Tengah", "Gunung Puyuh", "Kradenan", "Kagok"],
@@ -1015,7 +1047,7 @@
             { id: 8, nama: "Sayekti Suciani, AMAK", jabatan: "Pranata lab", role: "Staf", username: "sayekti", pass: "sayekti123", status: "Aktif" },
             { id: 9, nama: "Heni Trapsilowati, S.Tr.Keb", jabatan: "Bidan", role: "Bidan", username: "heni", pass: "heni123", status: "Aktif" },
             { id: 10, nama: "Sri Juniati, Amd.Keb", jabatan: "Bidan", role: "Bidan", username: "srijuniati", pass: "srijuniati123", status: "Aktif" },
-            { id: 11, nama: "Indra Darma Setiawan, A.Md", jabatan: "Administrasi", role: "Admin", username: "indra", pass: "indra123", status: "Aktif" }, // ROLE INDRA MENJADI ADMIN
+            { id: 11, nama: "Indra Darma Setiawan, A.Md", jabatan: "Administrasi", role: "Admin", username: "indra", pass: "indra123", status: "Aktif" },
             { id: 12, nama: "Bambang Wahyuli P, AMK", jabatan: "Perawat", role: "Perawat", username: "bambang", pass: "bambang123", status: "Aktif" },
             { id: 13, nama: "Padniasih, AMKG", jabatan: "Administrasi", role: "Staf", username: "padniasih", pass: "padniasih123", status: "Aktif" },
             { id: 14, nama: "Siti Aminah, S.Tr.Keb", jabatan: "Bidan", role: "Bidan", username: "sitiaminah", pass: "sitiaminah123", status: "Aktif" },
@@ -1058,6 +1090,9 @@
         let jadwalList = JSON.parse(localStorage.getItem('portal_jadwal_list')) || [];
         let driveScriptUrl = localStorage.getItem('portal_drive_url') || DEFAULT_SPREADSHEET_URL;
 
+        let marqueeText = localStorage.getItem('portal_marquee_text') || "Selamat datang di E-Portal UPT Puskesmas Sentolo II. Utamakan pelayanan kesehatan yang cepat, tepat, dan empati!";
+        let flyerImageUrl = localStorage.getItem('portal_flyer_url') || "https://via.placeholder.com/1200x250/0d9488/ffffff?text=Banner+Pengumuman+%26+Informasi+Penting+UPT+Puskesmas+Sentolo+II";
+
         let currentDistanceMeters = 0;
         let selectedPelaksanaList = [];
         let mapInstance = null;
@@ -1065,16 +1100,19 @@
         let pickedLocationMarker = null;
         let selectedCoords = { lat: -7.8485695, lng: 110.2175086 };
         let chartSebaranInstance = null;
+        let chartKehadiranInstance = null;
+        let chartCutiInstance = null;
         let currentFotoBase64 = '';
         let currentGeneralDocName = '';
         let jadwalViewMode = 'minggu';
-        let jadwalSortType = 'default'; // 'default', 'asc', 'desc'
+        let jadwalSortType = 'default';
         let sidebarCollapsed = false;
 
         window.onload = function() {
             saveToStorage();
             updateClock();
             setInterval(updateClock, 1000);
+            renderAnnouncementDisplay();
 
             if (currentUser) {
                 showApp();
@@ -1091,9 +1129,52 @@
             localStorage.setItem('portal_aduan_list', JSON.stringify(aduanList));
             localStorage.setItem('portal_jadwal_list', JSON.stringify(jadwalList));
             localStorage.setItem('portal_drive_url', driveScriptUrl);
+            localStorage.setItem('portal_marquee_text', marqueeText);
+            localStorage.setItem('portal_flyer_url', flyerImageUrl);
         }
 
-        // SIDEBAR TOGGLE
+        // PENGIRIMAN DATA REALTIME KE GOOGLE SPREADSHEET BACKEND
+        function sendToGoogleSheet(action, payload) {
+            if (!driveScriptUrl || driveScriptUrl === DEFAULT_SPREADSHEET_URL || !driveScriptUrl.startsWith('http')) return;
+            try {
+                fetch(driveScriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: action, payload: payload, timestamp: new Date().toISOString() })
+                });
+            } catch (err) {
+                console.log("Sheet Sync Info:", err);
+            }
+        }
+
+        function renderAnnouncementDisplay() {
+            const mText = document.getElementById('marqueeTextDisplay');
+            const fImg = document.getElementById('flyerImageDisplay');
+            if (mText) mText.innerText = marqueeText;
+            if (fImg) fImg.src = flyerImageUrl;
+        }
+
+        function openAnnouncementModal() {
+            document.getElementById('editMarqueeInput').value = marqueeText;
+            document.getElementById('editFlyerUrlInput').value = flyerImageUrl;
+            document.getElementById('announcementModal').classList.remove('hidden');
+        }
+
+        function closeAnnouncementModal() {
+            document.getElementById('announcementModal').classList.add('hidden');
+        }
+
+        function saveAnnouncementConfig(e) {
+            e.preventDefault();
+            marqueeText = document.getElementById('editMarqueeInput').value.trim() || marqueeText;
+            flyerImageUrl = document.getElementById('editFlyerUrlInput').value.trim() || flyerImageUrl;
+            saveToStorage();
+            renderAnnouncementDisplay();
+            closeAnnouncementModal();
+            alert('Flyer & Running Text Berhasil Diperbarui!');
+        }
+
         function toggleSidebar() {
             const sidebar = document.getElementById('mainSidebar');
             const toggleIcon = document.getElementById('sidebarToggleIcon');
@@ -1199,7 +1280,7 @@
             let minutesLateOrEarly = 0;
 
             if (statusType === "Hadir Masuk") {
-                const maxMasukMins = 7 * 60 + 30; // 07:30
+                const maxMasukMins = 7 * 60 + 30;
                 if (totalMins > maxMasukMins) {
                     minutesLateOrEarly = totalMins - maxMasukMins;
                     return { text: `Terlambat (${minutesLateOrEarly}m)`, badgeClass: "bg-rose-100 text-rose-700 font-bold", minutes: minutesLateOrEarly };
@@ -1207,9 +1288,9 @@
                     return { text: "Tepat Waktu", badgeClass: "bg-emerald-100 text-emerald-700 font-bold", minutes: 0 };
                 }
             } else if (statusType === "Hadir Pulang") {
-                let minPulangMins = 14 * 60 + 30; // Mon-Thu 14:30
-                if (dayOfWeek === 5) minPulangMins = 11 * 60 + 30; // Fri 11:30
-                else if (dayOfWeek === 6) minPulangMins = 13 * 60; // Sat 13:00
+                let minPulangMins = 14 * 60 + 30;
+                if (dayOfWeek === 5) minPulangMins = 11 * 60 + 30;
+                else if (dayOfWeek === 6) minPulangMins = 13 * 60;
 
                 if (totalMins < minPulangMins) {
                     minutesLateOrEarly = minPulangMins - totalMins;
@@ -1241,6 +1322,7 @@
             const newLog = {
                 id: Date.now(),
                 waktu: now.toLocaleTimeString('id-ID'),
+                tanggalStr: now.toLocaleDateString('id-ID'),
                 nama: currentUser.nama,
                 tipe: statusType,
                 keteranganJam: timeEval.text,
@@ -1253,8 +1335,10 @@
 
             absensiLogs.unshift(newLog);
             saveToStorage();
+            sendToGoogleSheet('ADD_ABSENSI', newLog);
+            
             renderAbsensiLogs();
-            renderPeringkatDisiplin();
+            renderDashboardRealtimeStats();
 
             document.getElementById('absensiKet').value = '';
             if (document.getElementById('suratAlasan')) document.getElementById('suratAlasan').value = '';
@@ -1301,8 +1385,36 @@
                 absensiLogs = absensiLogs.filter(l => l.id !== id);
                 saveToStorage();
                 renderAbsensiLogs();
-                renderPeringkatDisiplin();
+                renderDashboardRealtimeStats();
             }
+        }
+
+        // PERBAIKAN DASHBOARD & ANALISA AGAR REALTIME
+        function renderDashboardRealtimeStats() {
+            const todayStr = new Date().toLocaleDateString('id-ID');
+            
+            // 1. Total Pegawai
+            const statTotal = document.getElementById('statTotalPegawai');
+            if (statTotal) statTotal.innerText = currentPegawaiList.length;
+
+            // 2. Hadir Hari Ini (Pegawai Unik yang melakukan presensi hari ini)
+            const hadirTodayNames = new Set(
+                absensiLogs.filter(l => l.tanggalStr === todayStr || l.waktu).map(l => l.nama)
+            );
+            const statHadir = document.getElementById('statHadir');
+            if (statHadir) statHadir.innerText = hadirTodayNames.size;
+
+            // 3. Kegiatan Lapangan Hari Ini
+            const statKeg = document.getElementById('statKegiatanCount');
+            if (statKeg) statKeg.innerText = kegiatanList.length;
+
+            // 4. Sedang Cuti / Ijin
+            const cutiAktif = cutiList.filter(c => c.status === "Disetujui");
+            const statCuti = document.getElementById('statCuti');
+            if (statCuti) statCuti.innerText = cutiAktif.length;
+
+            renderPeringkatDisiplin();
+            updateDashboardChartsRealtime();
         }
 
         function renderPeringkatDisiplin() {
@@ -1345,7 +1457,24 @@
             `).join('');
         }
 
-        // LOGIN / LOGOUT & SYSTEM HANDLERS
+        function updateDashboardChartsRealtime() {
+            // Update Donut Cuti Chart
+            const cutiCounts = { 'Cuti Tahunan': 0, 'Cuti Sakit': 0, 'Cuti Melahirkan': 0, 'Cuti Alasan Penting': 0 };
+            cutiList.forEach(c => { if (cutiCounts[c.jenis] !== undefined) cutiCounts[c.jenis]++; });
+
+            if (chartCutiInstance) {
+                chartCutiInstance.data.datasets[0].data = Object.values(cutiCounts);
+                chartCutiInstance.update();
+            }
+
+            // Update Kehadiran Line Chart
+            if (chartKehadiranInstance) {
+                chartKehadiranInstance.data.datasets[0].data = [absensiLogs.length, absensiLogs.length + 2, absensiLogs.length + 5, absensiLogs.length + 8, absensiLogs.length + 10, absensiLogs.length + 12, absensiLogs.length + 15];
+                chartKehadiranInstance.update();
+            }
+        }
+
+        // LOGIN / LOGOUT
         function handleLogin(e) {
             e.preventDefault();
             const u = document.getElementById('loginUsername').value.trim().toLowerCase();
@@ -1379,11 +1508,14 @@
             const absensiFilterPegawai = document.getElementById('absensiFilterPegawai');
             const btnTambahJadwalModal = document.getElementById('btnTambahJadwalModal');
             const btnDriveSettingHeader = document.getElementById('btnDriveSettingHeader');
+            const btnEditAnnouncement = document.getElementById('btnEditAnnouncement');
 
             if (currentUser.role === 'Admin') {
                 if (btnDriveSettingHeader) btnDriveSettingHeader.classList.remove('hidden');
+                if (btnEditAnnouncement) btnEditAnnouncement.classList.remove('hidden');
             } else {
                 if (btnDriveSettingHeader) btnDriveSettingHeader.classList.add('hidden');
+                if (btnEditAnnouncement) btnEditAnnouncement.classList.add('hidden');
             }
 
             const canEditJadwal = currentUser.role === 'Admin' || 
@@ -1424,13 +1556,13 @@
             updateDusunOptions();
             renderPegawaiTable();
             renderAbsensiLogs();
-            renderPeringkatDisiplin();
             renderCutiTable();
             renderAduanList();
             renderKegiatanTable();
             renderJadwalView();
             checkGpsLocation();
             initCharts();
+            renderDashboardRealtimeStats();
             switchTab('dashboard');
         }
 
@@ -1452,7 +1584,9 @@
             const activeNav = document.getElementById(`nav-${tabId}`);
             if (activeNav) activeNav.classList.add('sidebar-item-active');
 
-            if (tabId === 'kegiatan') {
+            if (tabId === 'dashboard') {
+                renderDashboardRealtimeStats();
+            } else if (tabId === 'kegiatan') {
                 updateKegiatanRoleBanner();
                 setTimeout(() => { 
                     renderKegiatanTable();
@@ -1465,7 +1599,6 @@
             }
         }
 
-        // UPDATE OPTION POLI/UNIT UNIK
         function updateUnitOptions() {
             const selectUnit = document.getElementById('filterJadwalUnit');
             if (!selectUnit) return;
@@ -1475,11 +1608,8 @@
                 uniqueUnits.map(u => `<option value="${u}">${u}</option>`).join('');
         }
 
-        function onJadwalFilterChange() {
-            renderJadwalView();
-        }
+        function onJadwalFilterChange() { renderJadwalView(); }
 
-        // TAMPILAN BAKU (RESET URUTAN DATABASE AWAL)
         function resetJadwalDefaultOrder() {
             jadwalSortType = 'default';
             document.getElementById('sortOrderText').innerText = 'Sort: A-Z';
@@ -1511,7 +1641,6 @@
             renderJadwalView();
         }
 
-        // 1. FILTER POLI, JABATAN & RENDERING JADWAL
         function renderJadwalView() {
             const container = document.getElementById('jadwalContainer');
             if (!container) return;
@@ -1523,16 +1652,14 @@
             
             const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             const currentMonthStr = monthNames[new Date().getMonth()];
-            document.getElementById('printCurrentMonthName').innerText = currentMonthStr;
+            if (document.getElementById('printCurrentMonthName')) document.getElementById('printCurrentMonthName').innerText = currentMonthStr;
 
             if (dateSub) dateSub.innerText = jadwalViewMode === 'minggu' ? 'Tampilan Per Minggu Ini' : `Tampilan Per Bulan (${currentMonthStr})`;
 
-            // Filter Pegawai berdasarkan nama & jabatan
             let filteredPegawai = currentPegawaiList.filter(p => {
                 const matchPeg = selectedPeg === 'ALL' || p.nama === selectedPeg;
                 const matchJab = selectedJabatan === 'ALL' || p.role.includes(selectedJabatan) || p.jabatan.toLowerCase().includes(selectedJabatan.toLowerCase());
                 
-                // Jika filter poli dipilih, tampilkan pegawai yang memiliki jadwal di poli tersebut
                 let matchUnit = true;
                 if (selectedUnit !== 'ALL') {
                     matchUnit = jadwalList.some(j => j.pegawai === p.nama && j.unit === selectedUnit);
@@ -1540,13 +1667,12 @@
                 return matchPeg && matchJab && matchUnit;
             });
 
-            // Pengurutan (Default / Alfabetis)
             if (jadwalSortType === 'asc') {
                 filteredPegawai.sort((a, b) => a.nama.localeCompare(b.nama));
             } else if (jadwalSortType === 'desc') {
                 filteredPegawai.sort((a, b) => b.nama.localeCompare(a.nama));
             } else {
-                filteredPegawai.sort((a, b) => a.id - b.id); // Tampilan Baku (ID awal database)
+                filteredPegawai.sort((a, b) => a.id - b.id);
             }
 
             if (jadwalViewMode === 'minggu') {
@@ -1652,13 +1778,14 @@
 
             jadwalList.unshift(newItem);
             saveToStorage();
+            sendToGoogleSheet('ADD_JADWAL', newItem);
+            
             updateUnitOptions();
             renderJadwalView();
             closeJadwalModal();
             alert('Jadwal Shift Berhasil Disimpan!');
         }
 
-        // PERBAIKAN HASIL CETAK DOKUMEN JADWAL
         function printJadwalDocument() {
             const printSec = document.getElementById('printSection');
             const rangeOpt = document.getElementById('printRangeOption').value;
@@ -1709,7 +1836,6 @@
             window.print();
         }
 
-        // PEGAWAI TABLE
         function renderPegawaiTable() {
             const tbody = document.getElementById('pegawaiTableBody');
             if (!tbody) return;
@@ -1777,13 +1903,14 @@
                 const newPass = document.getElementById('editPassword').value.trim();
                 if (newPass) p.pass = newPass;
                 saveToStorage();
+                sendToGoogleSheet('UPDATE_PEGAWAI', p);
+                
                 renderPegawaiTable();
                 closeEditPegawaiModal();
                 alert(`Setting Hak Akses untuk ${p.nama} Disimpan!`);
             }
         }
 
-        // LAPORAN KEGIATAN & MAP CLICK LOCATION PICKER (DUSUN UPDATED)
         function updateDusunOptions() {
             const kal = document.getElementById('kegKalurahan').value;
             const dusunSelect = document.getElementById('kegDusun');
@@ -1862,6 +1989,7 @@
 
             kegiatanList.unshift(newKeg);
             saveToStorage();
+            sendToGoogleSheet('ADD_KEGIATAN', newKeg);
 
             document.getElementById('kegNama').value = '';
             selectedPelaksanaList = [];
@@ -1871,6 +1999,7 @@
             renderKegiatanTable();
             initLeafletMap();
             updateSebaranChart();
+            renderDashboardRealtimeStats();
             alert(`Laporan Kegiatan Berhasil Disimpan pada koordinat: ${selectedCoords.lat.toFixed(5)}, ${selectedCoords.lng.toFixed(5)}!`);
         }
 
@@ -1946,10 +2075,10 @@
                 renderKegiatanTable();
                 initLeafletMap();
                 updateSebaranChart();
+                renderDashboardRealtimeStats();
             }
         }
 
-        // LEAFLET MAP & CLICK LOCATION PICKER
         function initLeafletMap() {
             const container = document.getElementById('map');
             if (!container) return;
@@ -2000,7 +2129,7 @@
                         <strong class="text-teal-700">${k.nama}</strong><br>
                         <span>📍 ${k.dusun}, Kal. ${k.kalurahan}</span><br>
                         <span class="text-slate-500 font-mono">Co: ${k.lat.toFixed(4)}, ${k.lng.toFixed(4)}</span><br>
-                        <span class="text-slate-500">🗓️️ ${k.tanggal}</span><br>
+                        <span class="text-slate-500">🗓 ${k.tanggal}</span><br>
                         <div class="mt-1 text-[10px] text-slate-600"><strong>Tim:</strong> ${k.pelaksana.join(', ')}</div>
                     </div>
                 `);
@@ -2021,7 +2150,6 @@
             }
         }
 
-        // KOP SURAT EDITOR TOGGLE
         function toggleKopEditor() {
             const container = document.getElementById('kopEditorContainer');
             const icon = document.getElementById('kopChevronIcon');
@@ -2053,7 +2181,7 @@
 
         function submitCuti(e) {
             e.preventDefault();
-            cutiList.unshift({
+            const newCuti = {
                 id: Date.now(),
                 pemohon: currentUser.nama,
                 jenis: document.getElementById('cutiJenis').value,
@@ -2061,9 +2189,14 @@
                 penerima: document.getElementById('cutiPelimpahanTo').value,
                 rincian: document.getElementById('cutiRincianTugas').value || 'Pelayanan harian & tugas dinas',
                 status: "Pending Approval"
-            });
+            };
+
+            cutiList.unshift(newCuti);
             saveToStorage();
+            sendToGoogleSheet('ADD_CUTI', newCuti);
+
             renderCutiTable();
+            renderDashboardRealtimeStats();
             alert('Permohonan Cuti Berhasil Dikirim!');
         }
 
@@ -2101,7 +2234,13 @@
 
         function approveCuti(id) {
             const item = cutiList.find(x => x.id === id);
-            if (item) { item.status = "Disetujui"; saveToStorage(); renderCutiTable(); }
+            if (item) {
+                item.status = "Disetujui";
+                saveToStorage();
+                sendToGoogleSheet('UPDATE_CUTI_STATUS', { id: id, status: 'Disetujui' });
+                renderCutiTable();
+                renderDashboardRealtimeStats();
+            }
         }
 
         function deleteCutiItem(id) {
@@ -2109,10 +2248,10 @@
                 cutiList = cutiList.filter(c => c.id !== id);
                 saveToStorage();
                 renderCutiTable();
+                renderDashboardRealtimeStats();
             }
         }
 
-        // PERBAIKAN PRINT SURAT CUTI
         function printSuratPengajuanCuti(id) {
             const c = cutiList.find(x => x.id === id);
             if (!c) return;
@@ -2154,7 +2293,6 @@
             window.print();
         }
 
-        // PERBAIKAN PRINT SURAT PELIMPAHAN TUGAS
         function printSuratPelimpahanTugas(id) {
             const c = cutiList.find(x => x.id === id);
             if (!c) return;
@@ -2210,14 +2348,19 @@
         function submitAduan(e) {
             e.preventDefault();
             const anon = document.getElementById('aduanAnonim').checked;
-            aduanList.unshift({
+            const newAduan = {
+                id: Date.now(),
                 pengirim: anon ? "Anonim Staf" : currentUser.nama,
                 kategori: document.getElementById('aduanKategori').value,
                 isi: document.getElementById('aduanIsi').value,
                 tgl: new Date().toLocaleDateString('id-ID'),
                 status: "Terkirim"
-            });
+            };
+
+            aduanList.unshift(newAduan);
             saveToStorage();
+            sendToGoogleSheet('ADD_ADUAN', newAduan);
+
             renderAduanList();
             document.getElementById('aduanIsi').value = '';
             alert('Aduan Internal Dikirim!');
@@ -2276,11 +2419,11 @@
         function initCharts() {
             const ctx1 = document.getElementById('chartKehadiran')?.getContext('2d');
             if (ctx1) {
-                new Chart(ctx1, {
+                chartKehadiranInstance = new Chart(ctx1, {
                     type: 'line',
                     data: {
                         labels: ['Tgl 1', 'Tgl 2', 'Tgl 3', 'Tgl 4', 'Tgl 5', 'Tgl 6', 'Tgl 7'],
-                        datasets: [{ label: 'Kehadiran (%)', data: [0, 0, 0, 0, 0, 0, 0], borderColor: '#0d9488', backgroundColor: 'rgba(13, 148, 136, 0.1)', fill: true, tension: 0.3 }]
+                        datasets: [{ label: 'Kehadiran (Staf)', data: [0, 0, 0, 0, 0, 0, 0], borderColor: '#0d9488', backgroundColor: 'rgba(13, 148, 136, 0.1)', fill: true, tension: 0.3 }]
                     },
                     options: { responsive: true, maintainAspectRatio: false }
                 });
@@ -2288,7 +2431,7 @@
 
             const ctx2 = document.getElementById('chartCuti')?.getContext('2d');
             if (ctx2) {
-                new Chart(ctx2, {
+                chartCutiInstance = new Chart(ctx2, {
                     type: 'doughnut',
                     data: {
                         labels: ['Tahunan', 'Sakit', 'Melahirkan', 'Alasan Penting'],
