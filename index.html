@@ -696,7 +696,7 @@
         const PUSKESMAS_COORDS = { lat: -7.8485695, lng: 110.2175086 };
         const MAX_ABSENSI_RADIUS_METERS = 70;
         
-        // DEFAULT SPREADSHEET URL AKTIF:
+        // MASUKKAN URL WEB APP SCRIPT HASIL DEPLOY DI SINI:
         const DEFAULT_SPREADSHEET_URL = "https://script.google.com/macros/s/AKfycbyRRfl4NJFi0z_bfrJ7kajd6R4gphcRr9MSE7uQeNt9zK9UTV-BxsJQUMbWN5ZRC-4ptw/exec";
 
         const wilayahData = {
@@ -745,7 +745,7 @@
 
         // INTEGRASI API GOOGLE SPREADSHEET
         async function syncDataFromSpreadsheet() {
-            if (!driveScriptUrl) return;
+            if (!driveScriptUrl || driveScriptUrl.includes('YOUR_SCRIPT_ID_HERE')) return;
 
             const spinIcon = document.getElementById('syncSpinIcon');
             const syncText = document.getElementById('dbSyncText');
@@ -776,7 +776,7 @@
         }
 
         function sendToGoogleSheet(action, payload) {
-            if (!driveScriptUrl) return;
+            if (!driveScriptUrl || driveScriptUrl.includes('YOUR_SCRIPT_ID_HERE')) return;
             try {
                 fetch(driveScriptUrl, {
                     method: 'POST',
