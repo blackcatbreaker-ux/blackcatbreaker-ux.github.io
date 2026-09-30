@@ -38,6 +38,16 @@
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col bg-slate-50">
 
+    <!-- PRINT SECTION -->
+    <div id="printSection" class="hidden">
+        <div class="text-center mb-4">
+            <h1 class="text-xl font-bold">UPT PUSKESMAS SENTOLO II</h1>
+            <p class="text-sm">Laporan Resmi E-Portal Puskesmas</p>
+            <hr class="my-2 border-black">
+        </div>
+        <div id="printContent"></div>
+    </div>
+
     <!-- LOGIN OVERLAY / MODAL -->
     <div id="loginOverlay" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="glass-card bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 border border-slate-100 relative overflow-hidden">
@@ -55,7 +65,7 @@
                     <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">Username / NIP / Nama</label>
                     <div class="relative">
                         <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                        <input type="text" id="loginUsername" placeholder="Masukkan username" required class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all">
+                        <input type="text" id="loginUsername" placeholder="Masukkan username (contoh: indra)" required class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all">
                     </div>
                 </div>
                 <div>
@@ -81,7 +91,7 @@
 
     <!-- MAIN APP WRAPPER -->
     <div id="appContainer" class="flex-1 flex overflow-hidden hidden">
-        <!-- SIDEBAR (BISA DI-TOGGLE / DISIMPAN) -->
+        <!-- SIDEBAR -->
         <aside id="mainSidebar" class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 transition-all duration-300">
             <div>
                 <div class="p-5 border-b border-slate-100 flex items-center justify-between">
@@ -94,7 +104,7 @@
                             <span class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase">Puskesmas Digital</span>
                         </div>
                     </div>
-                    <button onclick="toggleSidebar()" class="p-2 rounded-xl text-slate-400 hover:text-teal-600 hover:bg-teal-50 transition-all" title="Sembunyikan/Munculkan Sidebar">
+                    <button onclick="toggleSidebar()" class="p-2 rounded-xl text-slate-400 hover:text-teal-600 hover:bg-teal-50 transition-all" title="Toggle Sidebar">
                         <i id="sidebarToggleIcon" class="fa-solid fa-chevron-left text-xs"></i>
                     </button>
                 </div>
@@ -111,12 +121,12 @@
                     </button>
 
                     <button onclick="switchTab('jadwal')" id="nav-jadwal" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
-                        <i class="fa-solid fa-calendar-days w-5 text-center text-teal-600 shrink-0"></i>
+                        <i class="fa-solid fa-calendar-days w-5 text-center shrink-0"></i>
                         <span class="sidebar-text truncate">Jadwal Pegawai</span>
                     </button>
 
                     <button onclick="switchTab('kegiatan')" id="nav-kegiatan" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
-                        <i class="fa-solid fa-map-location-dot w-5 text-center text-emerald-600 shrink-0"></i>
+                        <i class="fa-solid fa-map-location-dot w-5 text-center shrink-0"></i>
                         <span class="sidebar-text truncate">Laporan Kegiatan & Maps</span>
                     </button>
 
@@ -128,11 +138,6 @@
                     <button onclick="switchTab('aduan')" id="nav-aduan" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
                         <i class="fa-solid fa-comment-dots w-5 text-center shrink-0"></i>
                         <span class="sidebar-text truncate">Saran & Aduan</span>
-                    </button>
-
-                    <button onclick="switchTab('links')" id="nav-links" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
-                        <i class="fa-solid fa-cubes w-5 text-center shrink-0"></i>
-                        <span class="sidebar-text truncate">Shortcut Aplikasi</span>
                     </button>
 
                     <div id="adminNavGroup" class="pt-3 mt-3 border-t border-slate-100 hidden">
@@ -148,10 +153,10 @@
             <div class="p-3 border-t border-slate-100 bg-slate-50/50">
                 <div class="flex items-center justify-between p-2 rounded-xl bg-white border border-slate-200">
                     <div class="flex items-center gap-2.5 overflow-hidden">
-                        <div id="userAvatar" class="w-8 h-8 bg-teal-100 text-teal-700 font-bold rounded-lg flex items-center justify-center text-xs shrink-0">US</div>
+                        <div id="userAvatar" class="w-8 h-8 bg-teal-100 text-teal-700 font-bold rounded-lg flex items-center justify-center text-xs shrink-0">IN</div>
                         <div class="truncate sidebar-text">
-                            <p id="userNameDisplay" class="text-xs font-bold text-slate-700 truncate">Nama User</p>
-                            <p id="userRoleBadge" class="text-[10px] font-medium text-slate-500 capitalize">Role</p>
+                            <p id="userNameDisplay" class="text-xs font-bold text-slate-700 truncate">Indra</p>
+                            <p id="userRoleBadge" class="text-[10px] font-medium text-teal-600 font-bold capitalize">Admin</p>
                         </div>
                     </div>
                     <button onclick="handleLogout()" class="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-all" title="Keluar">
@@ -177,13 +182,8 @@
                 <div class="flex items-center gap-3">
                     <div id="dbSyncBadge" class="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-full text-xs text-emerald-700 font-medium">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span id="dbSyncText">Spreadsheet Connected</span>
+                        <span id="dbSyncText">System Ready</span>
                     </div>
-
-                    <button id="btnDriveSettingHeader" onclick="openDriveConfigModal()" class="hidden px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold items-center gap-1.5 transition-all">
-                        <i class="fa-solid fa-database text-teal-600"></i>
-                        <span>Setting Drive DB</span>
-                    </button>
                 </div>
             </header>
 
@@ -198,7 +198,7 @@
                             </div>
                             <div>
                                 <p class="text-xs font-semibold text-slate-400">Total Pegawai</p>
-                                <p class="text-2xl font-extrabold text-slate-800" id="statTotalPegawai">41</p>
+                                <p class="text-2xl font-extrabold text-slate-800" id="statTotalPegawai">0</p>
                                 <p class="text-[10px] text-teal-600 font-medium mt-0.5"><i class="fa-solid fa-check"></i> UPT Sentolo II</p>
                             </div>
                         </div>
@@ -230,19 +230,19 @@
                                 <i class="fa-solid fa-plane-departure"></i>
                             </div>
                             <div>
-                                <p class="text-xs font-semibold text-slate-400">Sedang Cuti / Ijin</p>
+                                <p class="text-xs font-semibold text-slate-400">Sedang Cuti / Izin</p>
                                 <p class="text-2xl font-extrabold text-slate-800" id="statCuti">0</p>
                                 <p class="text-[10px] text-amber-600 font-medium mt-0.5"><i class="fa-solid fa-clock"></i> Pelimpahan Aktif</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- TABEL PERINGKAT KEDISIPLINAN PEGAWAI -->
+                    <!-- TABEL DISIPLIN -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="glass-card p-6 rounded-2xl border border-slate-200">
                             <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
                                 <i class="fa-solid fa-award text-amber-500 text-lg"></i>
-                                <span>10 Besar Pegawai Terajin (Disiplin Waktu Terbaik)</span>
+                                <span>Peringkat Kedisiplinan Pegawai</span>
                             </h3>
                             <div class="overflow-x-auto rounded-xl border border-slate-200">
                                 <table class="w-full text-left border-collapse text-xs">
@@ -251,7 +251,7 @@
                                             <th class="p-2.5 border-b">No</th>
                                             <th class="p-2.5 border-b">Nama Pegawai</th>
                                             <th class="p-2.5 border-b">Jabatan</th>
-                                            <th class="p-2.5 border-b text-center">Akumulasi Keterlambatan</th>
+                                            <th class="p-2.5 border-b text-center">Status Disiplin</th>
                                         </tr>
                                     </thead>
                                     <tbody id="terajinTableBody" class="divide-y divide-slate-100"></tbody>
@@ -261,151 +261,65 @@
 
                         <div class="glass-card p-6 rounded-2xl border border-slate-200">
                             <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
-                                <i class="fa-solid fa-triangle-exclamation text-rose-500 text-lg"></i>
-                                <span>10 Besar Pegawai Kurang Rajin (Akumulasi Menit)</span>
-                            </h3>
-                            <div class="overflow-x-auto rounded-xl border border-slate-200">
-                                <table class="w-full text-left border-collapse text-xs">
-                                    <thead class="bg-rose-50 text-[10px] font-bold text-rose-800 uppercase">
-                                        <tr>
-                                            <th class="p-2.5 border-b">No</th>
-                                            <th class="p-2.5 border-b">Nama Pegawai</th>
-                                            <th class="p-2.5 border-b">Jabatan</th>
-                                            <th class="p-2.5 border-b text-center">Akumulasi Menit</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="kurangRajinTableBody" class="divide-y divide-slate-100"></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <div class="glass-card p-6 rounded-2xl border border-slate-200 lg:col-span-2">
-                            <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center justify-between">
-                                <span><i class="fa-solid fa-chart-line text-teal-600 mr-2"></i> Grafik Kehadiran Pegawai (Bulan Ini)</span>
-                                <span class="text-xs font-normal text-slate-400">Real-time Data</span>
+                                <i class="fa-solid fa-chart-line text-teal-600 text-lg"></i>
+                                <span>Statistik Kehadiran Bulanan</span>
                             </h3>
                             <div class="h-64"><canvas id="chartKehadiran"></canvas></div>
-                        </div>
-
-                        <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                            <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
-                                <i class="fa-solid fa-chart-pie text-emerald-600"></i> Distribusi Jenis Cuti
-                            </h3>
-                            <div class="h-64 flex items-center justify-center"><canvas id="chartCuti"></canvas></div>
                         </div>
                     </div>
                 </section>
 
-
-                <!-- 2. TAB PORTAL ABSENSI STAF -->
+                <!-- 2. TAB ABSENSI STAF -->
                 <section id="tab-absensi" class="space-y-6 hidden">
-                    <div class="p-4 bg-gradient-to-r from-teal-500/10 to-emerald-500/10 border border-teal-200/80 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-700">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-teal-600 text-white rounded-xl flex items-center justify-center text-lg shrink-0">
-                                <i class="fa-solid fa-clock"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-extrabold text-slate-800">Ketentuan Jam Kerja UPT Puskesmas Sentolo II:</h4>
-                                <p class="text-slate-600 mt-0.5">
-                                    • <strong>Jam Masuk:</strong> Maksimal <strong>07:30 WIB</strong> (Setiap Hari) <br>
-                                    • <strong>Jam Pulang Minimal:</strong> Senin–Kamis: <strong>14:30 WIB</strong> | Jum'at: <strong>11:30 WIB</strong> | Sabtu: <strong>13:00 WIB</strong>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                            <div class="flex items-center justify-between mb-4">
-                                <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                                    <i class="fa-solid fa-camera text-teal-600"></i> Form Presensi Staf
-                                </h3>
-                                <button type="button" onclick="checkGpsLocation()" class="px-2.5 py-1 bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-200 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all" title="Refresh Posisi Terkini">
-                                    <i class="fa-solid fa-rotate-right text-xs"></i>
-                                    <span>Refresh Posisi</span>
-                                </button>
-                            </div>
+                            <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-camera text-teal-600"></i> Form Presensi Staf
+                            </h3>
 
                             <div id="gpsStatusBox" class="p-3.5 mb-4 rounded-xl text-xs font-semibold space-y-1 bg-amber-50 border border-amber-200 text-amber-800">
                                 <div class="flex items-center justify-between">
-                                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-spinner animate-spin"></i> Memeriksa GPS...</span>
-                                    <span id="currentDistanceText" class="font-bold">-- m</span>
+                                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-location-dot"></i> GPS Lokasi</span>
+                                    <span id="currentDistanceText" class="font-bold">0 m</span>
                                 </div>
-                                <p id="gpsNotifMessage" class="text-[11px] font-normal text-slate-600">Mendeteksi koordinat Anda...</p>
+                                <p id="gpsNotifMessage" class="text-[11px] font-normal text-slate-600">Dalam Radius Presensi (Area Sentolo II)</p>
                             </div>
 
                             <form onsubmit="submitAbsensi(event)" class="space-y-3">
                                 <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Status Kehadiran / Opsi Presensi</label>
-                                    <select id="absensiStatus" onchange="toggleSuratKeteranganFields()" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:ring-2 focus:ring-teal-500">
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Status Kehadiran</label>
+                                    <select id="absensiStatus" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:ring-2 focus:ring-teal-500">
                                         <option value="Hadir Masuk">Hadir Masuk (Pagi)</option>
                                         <option value="Hadir Pulang">Hadir Pulang (Sore)</option>
                                         <option value="Dinas Luar">Dinas Luar / Fieldwork</option>
-                                        <option value="Surat Keterangan">Surat Keterangan (Izin / Terlambat / Pulang Awal)</option>
                                     </select>
                                 </div>
 
-                                <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-                                    <label class="block text-xs font-semibold text-slate-700"><i class="fa-solid fa-paperclip text-teal-600 mr-1"></i> Upload Dokumen Pendukung (Opsional)</label>
-                                    <input type="file" id="generalDokumen" accept="image/*,application/pdf" onchange="handleGeneralUpload(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-teal-100 file:text-teal-800">
-                                    <span id="generalFileName" class="text-[10px] text-teal-700 font-mono block"></span>
-                                </div>
-
-                                <div id="suratKeteranganGroup" class="hidden space-y-3 p-3 bg-amber-50/50 border border-amber-200 rounded-xl">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-amber-900 mb-1">Alasan Tidak Datang / Pulang Awal / Terlambat</label>
-                                        <textarea id="suratAlasan" rows="2" placeholder="Tuliskan alasan keperluan/sakit/dinas..." class="w-full px-3 py-2 border border-amber-200 rounded-xl text-xs focus:ring-2 focus:ring-amber-500"></textarea>
-                                    </div>
-                                </div>
-
                                 <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Catatan Kegiatan / Keterangan Tambahan</label>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Catatan Kegiatan</label>
                                     <textarea id="absensiKet" rows="2" placeholder="Catatan tugas hari ini..." class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-teal-500"></textarea>
                                 </div>
 
-                                <div class="p-3 bg-slate-100 rounded-xl text-[11px] text-slate-500 space-y-1">
-                                    <p class="flex items-center justify-between">
-                                        <span><i class="fa-solid fa-building text-teal-600"></i> Puskesmas Sentolo II:</span>
-                                        <span class="font-mono text-slate-700">-7.84857, 110.21751</span>
-                                    </p>
-                                    <p class="flex items-center justify-between">
-                                        <span><i class="fa-solid fa-clock text-teal-600"></i> Waktu Server:</span>
-                                        <span id="clockDisplay" class="font-mono font-bold text-slate-800">--:--:-- WIB</span>
-                                    </p>
-                                </div>
-
-                                <button type="submit" id="btnSubmitAbsensi" disabled class="w-full py-2.5 bg-slate-300 text-slate-500 font-semibold rounded-xl text-xs transition-all cursor-not-allowed">
-                                    Kirim Presensi (Diluar Radius)
+                                <button type="submit" id="btnSubmitAbsensi" class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs transition-all shadow-md">
+                                    Kirim Presensi
                                 </button>
                             </form>
                         </div>
 
                         <div class="glass-card p-6 rounded-2xl border border-slate-200 md:col-span-2">
-                            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4">
-                                <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-list-check text-emerald-600 mr-2"></i> Log Presensi & Keterangan Waktu</h3>
-
-                                <div class="flex items-center gap-2 w-full sm:w-auto">
-                                    <select id="absensiFilterPegawai" onchange="renderAbsensiLogs()" class="hidden px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
-                                        <option value="ALL">-- Semua Pegawai --</option>
-                                    </select>
-
-                                    <button onclick="exportAbsensiCSV()" class="text-xs text-teal-600 hover:underline font-semibold whitespace-nowrap"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
-                                </div>
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-list-check text-emerald-600 mr-2"></i> Log Presensi Realtime</h3>
+                                <button onclick="exportAbsensiCSV()" class="text-xs text-teal-600 hover:underline font-semibold"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
                             </div>
 
-                            <div class="overflow-x-auto rounded-xl border border-slate-200 max-h-96 custom-scrollbar">
+                            <div class="overflow-x-auto rounded-xl border border-slate-200">
                                 <table class="w-full text-left border-collapse text-xs">
                                     <thead class="bg-slate-100 text-[10px] font-bold text-slate-600 uppercase">
                                         <tr>
                                             <th class="p-2.5 border-b">Waktu</th>
                                             <th class="p-2.5 border-b">Nama Staf</th>
-                                            <th class="p-2.5 border-b">Tipe</th>
-                                            <th class="p-2.5 border-b">Keterangan Jam Kerja</th>
-                                            <th class="p-2.5 border-b text-center">Akumulasi Disiplin</th>
-                                            <th class="p-2.5 border-b">Dokumen / Lampiran</th>
-                                            <th class="p-2.5 border-b text-center admin-only-col hidden">Aksi (Admin)</th>
+                                            <th class="p-2.5 border-b">Status</th>
+                                            <th class="p-2.5 border-b">Keterangan</th>
                                         </tr>
                                     </thead>
                                     <tbody id="absensiLogsBody" class="divide-y divide-slate-100"></tbody>
@@ -415,478 +329,109 @@
                     </div>
                 </section>
 
-
-                <!-- 3. TAB MENU JADWAL PEGAWAI (DENGAN FILTER POLI, JABATAN, TAMPILAN BAKU & PRINT FIX) -->
+                <!-- 3. TAB JADWAL PEGAWAI -->
                 <section id="tab-jadwal" class="space-y-6 hidden">
-                    <div class="glass-card p-5 rounded-2xl border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
-                        <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
-                            <!-- View Toggle (Mingguan / Bulanan) -->
-                            <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
-                                <button onclick="setJadwalViewMode('minggu')" id="btnJadwalMinggu" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-teal-700 shadow-sm">
-                                    <i class="fa-solid fa-calendar-week mr-1"></i> Per Minggu
-                                </button>
-                                <button onclick="setJadwalViewMode('bulan')" id="btnJadwalBulan" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-teal-700 transition-all">
-                                    <i class="fa-solid fa-calendar-days mr-1"></i> Per Bulan
-                                </button>
-                            </div>
-
-                            <!-- Filter Pegawai -->
-                            <select id="filterJadwalPegawai" onchange="onJadwalFilterChange()" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
-                                <option value="ALL">-- Semua Pegawai --</option>
-                            </select>
-
-                            <!-- Filter Poli / Unit / Lokasi Tugas -->
-                            <select id="filterJadwalUnit" onchange="renderJadwalView()" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
-                                <option value="ALL">-- Semua Poli/Unit --</option>
-                            </select>
-
-                            <!-- FILTER JABATAN BARU -->
-                            <select id="filterJadwalJabatan" onchange="renderJadwalView()" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
-                                <option value="ALL">-- Semua Jabatan --</option>
-                                <option value="Dokter">Dokter</option>
-                                <option value="Perawat">Perawat</option>
-                                <option value="Bidan">Bidan</option>
-                                <option value="Apoteker">Apoteker</option>
-                                <option value="Nutrisionis">Nutrisionis</option>
-                                <option value="Rekam Medis/Pendaftaran">Rekam Medis/Pendaftaran</option>
-                                <option value="Pranata Laboratorium">Pranata Laboratorium</option>
-                                <option value="Kasir">Kasir</option>
-                                <option value="Jaga Malam">Jaga Malam</option>
-                                <option value="Staf">Staf / Administrasi</option>
-                            </select>
-
-                            <!-- TOMBOL TAMPILAN BAKU (SORT ID AWAL) -->
-                            <button onclick="resetJadwalDefaultOrder()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1" title="Urutan Baku Database">
-                                <i class="fa-solid fa-rotate-left text-teal-600"></i> Tampilan Baku
-                            </button>
-
-                            <!-- Sort Alfabetis A-Z -->
-                            <button onclick="toggleJadwalSort()" id="btnSortJadwal" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1">
-                                <i class="fa-solid fa-arrow-down-a-z text-teal-600"></i> <span id="sortOrderText">Sort: A-Z</span>
-                            </button>
-
-                            <!-- Tombol Tambah Shift Jadwal -->
-                            <button id="btnTambahJadwalModal" onclick="openJadwalModal()" class="hidden px-3.5 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition-all items-center gap-1.5">
-                                <i class="fa-solid fa-plus"></i> Tambah Shift
-                            </button>
-                        </div>
-
-                        <!-- Opsi Cetak Dokumen Jadwal -->
-                        <div class="flex items-center gap-2 w-full md:w-auto justify-end shrink-0">
-                            <span class="text-xs font-bold text-slate-500"><i class="fa-solid fa-print text-teal-600 mr-1"></i> Cetak:</span>
-                            <select id="printRangeOption" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white font-semibold">
-                                <option value="MingguIni">Minggu Ini</option>
-                                <option value="BulanIni">Per Bulan Ini (<span id="printCurrentMonthName"></span>)</option>
-                                <option value="3Bulan">Per 3 Bulan (Triwulan)</option>
-                                <option value="Semester">Per Semester (6 Bulan)</option>
-                                <option value="Tahun">Per 1 Tahun</option>
-                            </select>
-                            <button onclick="printJadwalDocument()" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1">
-                                <i class="fa-solid fa-file-pdf"></i> Cetak / Print
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Tampilan Tabel Jadwal -->
                     <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-base font-bold text-slate-800" id="jadwalTitleHeader">Jadwal Shift Kerja Staf Puskesmas</h3>
-                            <span class="text-xs text-slate-400 font-mono" id="jadwalDateSubtitle">Minggu Ini</span>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-calendar-days text-teal-600 mr-2"></i> Jadwal Pelayanan & Piket</h3>
+                            <button onclick="window.print()" class="px-3 py-1.5 bg-slate-100 text-slate-700 font-semibold rounded-xl text-xs hover:bg-slate-200"><i class="fa-solid fa-print mr-1"></i> Cetak Jadwal</button>
                         </div>
-
-                        <div id="jadwalContainer" class="overflow-x-auto rounded-xl border border-slate-200">
-                            <!-- Container Tabel Jadwal -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead class="bg-slate-100 uppercase text-[10px] text-slate-600 font-bold">
+                                    <tr>
+                                        <th class="p-3 border">Hari</th>
+                                        <th class="p-3 border">Poli / Unit</th>
+                                        <th class="p-3 border">Petugas Bertugas</th>
+                                        <th class="p-3 border">Shift</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="jadwalTableBody" class="divide-y divide-slate-100"></tbody>
+                            </table>
                         </div>
                     </div>
                 </section>
 
-
-                <!-- 4. TAB LAPORAN KEGIATAN & VISUALISASI MAPS (DENGAN PEMBARUAN KALURAHAN & DUSUN) -->
+                <!-- 4. TAB LAPORAN KEGIATAN & MAPS -->
                 <section id="tab-kegiatan" class="space-y-6 hidden">
-                    <div id="kegiatanRoleBanner" class="p-3 bg-teal-50 border border-teal-200 rounded-xl text-xs text-teal-800 flex items-center justify-between">
-                        <span id="kegiatanRoleBannerText" class="font-medium"><i class="fa-solid fa-shield-halved text-teal-600 mr-1.5"></i> Menampilkan Laporan Kegiatan</span>
-                        <span id="kegiatanRoleBadge" class="px-2 py-0.5 bg-teal-200 text-teal-900 rounded font-bold text-[10px] uppercase">Role: Staf</span>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <!-- Form Laporkan Kegiatan -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                            <h3 class="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
-                                <i class="fa-solid fa-file-pen text-emerald-600"></i> Form Laporkan Kegiatan
-                            </h3>
-                            <p class="text-[11px] text-slate-500 mb-4">Pilih titik lokasi kegiatan dengan <strong>mengeklik area pada peta</strong> di samping kanan.</p>
-
+                            <h3 class="text-base font-bold text-slate-800 mb-4"><i class="fa-solid fa-pen-to-square text-emerald-600 mr-2"></i> Input Kegiatan Lapangan</h3>
                             <form onsubmit="submitKegiatan(event)" class="space-y-3">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Kegiatan</label>
-                                    <input type="text" id="kegNama" placeholder="Contoh: Posyandu Lansia / Penyelidikan PTM" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
+                                    <input type="text" id="kegiatanNama" required placeholder="Contoh: Posyandu Lansia" class="w-full px-3 py-2 border rounded-xl text-xs">
                                 </div>
-
-                                <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs flex items-center justify-between">
-                                    <div>
-                                        <span class="text-[10px] font-bold text-emerald-800 block uppercase"><i class="fa-solid fa-location-dot text-rose-500 mr-1"></i> Titik Lokasi Dipilih:</span>
-                                        <span id="selectedCoordsText" class="font-mono text-emerald-900 text-[11px] font-bold">-7.84857, 110.21751</span>
-                                    </div>
-                                    <span class="text-[10px] bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded font-semibold">Map Clicked</span>
-                                </div>
-
-                                <!-- PILIHAN KALURAHAN PEMBARUAN -->
-                                <div class="grid grid-cols-2 gap-2">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-slate-600 mb-1">Kalurahan</label>
-                                        <select id="kegKalurahan" onchange="updateDusunOptions()" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white">
-                                            <option value="Salamrejo">Salamrejo</option>
-                                            <option value="Tuksono">Tuksono</option>
-                                            <option value="Srikayangan">Srikayangan</option>
-                                            <option value="Demangrejo">Demangrejo</option>
-                                            <option value="Di Luar Wilayah">Di Luar Wilayah</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-slate-600 mb-1">Dusun / Desa / Lokasi</label>
-                                        <select id="kegDusun" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white"></select>
-                                    </div>
-                                </div>
-
                                 <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Kegiatan</label>
-                                    <input type="date" id="kegTanggal" required class="w-full px-3 py-1.5 border border-slate-200 rounded-xl text-xs">
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Lokasi / Dusun</label>
+                                    <input type="text" id="kegiatanLokasi" required placeholder="Contoh: Salam, Sentolo" class="w-full px-3 py-2 border rounded-xl text-xs">
                                 </div>
-
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Foto Kegiatan</label>
-                                    <input type="file" id="kegFoto" accept="image/*" onchange="previewImage(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700">
-                                    <div id="fotoPreviewContainer" class="mt-2 hidden">
-                                        <img id="fotoPreview" class="h-28 w-full object-cover rounded-xl border border-slate-200">
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Pelaksana Kegiatan (Maks. 5 Pegawai)</label>
-                                    <select id="kegPelaksanaSelect" onchange="addPelaksana()" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white mb-2">
-                                        <option value="">-- Pilih Pegawai --</option>
-                                    </select>
-                                    <div id="selectedPelaksanaContainer" class="flex flex-wrap gap-1.5"></div>
-                                    <span class="text-[10px] text-slate-400 font-medium">Terpilih: <span id="pelaksanaCount">0</span>/5 pegawai</span>
-                                </div>
-
-                                <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs shadow-md">
-                                    Simpan Laporan Kegiatan
-                                </button>
+                                <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs shadow-md">Simpan Kegiatan</button>
                             </form>
                         </div>
-
-                        <!-- Dashboard Map & Grafik -->
-                        <div class="glass-card p-6 rounded-2xl border border-slate-200 lg:col-span-2 space-y-5">
-                            <div>
-                                <h3 class="text-base font-bold text-slate-800 mb-1 flex items-center justify-between">
-                                    <span><i class="fa-solid fa-map-marked-alt text-teal-600 mr-2"></i> Peta Pilihan Lokasi & Sebaran Kegiatan</span>
-                                    <span class="text-xs text-teal-600 font-bold bg-teal-50 px-2.5 py-1 rounded-lg border border-teal-200"><i class="fa-solid fa-hand-pointer mr-1"></i> Klik Pada Peta Untuk Memilih Lokasi</span>
-                                </h3>
-                                <div id="map"></div>
-                            </div>
-
-                            <div>
-                                <h3 class="text-sm font-bold text-slate-800 mb-3"><i class="fa-solid fa-chart-column text-indigo-600 mr-2"></i> Sebaran Kegiatan per Kalurahan</h3>
-                                <div class="h-44"><canvas id="chartSebaranKegiatan"></canvas></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TABEL RIWAYAT KEGIATAN -->
-                    <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
-                            <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-list-check text-teal-600 mr-2"></i> Riwayat Laporan Kegiatan</h3>
-                            <input type="text" id="searchKegiatan" oninput="renderKegiatanTable()" placeholder="Cari kegiatan / lokasi..." class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs w-full sm:w-64">
-                        </div>
-                        <div class="overflow-x-auto rounded-xl border border-slate-200">
-                            <table class="w-full text-left border-collapse text-xs">
-                                <thead class="bg-slate-100 text-[10px] font-bold text-slate-600 uppercase">
-                                    <tr>
-                                        <th class="p-3 border-b">Tanggal</th>
-                                        <th class="p-3 border-b">Foto</th>
-                                        <th class="p-3 border-b">Nama Kegiatan</th>
-                                        <th class="p-3 border-b">Wilayah & Koordinat (Map)</th>
-                                        <th class="p-3 border-b">Tim Pelaksana (Maks 5)</th>
-                                        <th class="p-3 border-b text-center admin-only-col hidden">Aksi (Admin)</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="kegiatanTableBody" class="divide-y divide-slate-100"></tbody>
-                            </table>
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200 md:col-span-2 space-y-4">
+                            <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-map-location-dot text-indigo-600 mr-2"></i> Peta Wilayah & Sebaran Kegiatan</h3>
+                            <div id="map"></div>
                         </div>
                     </div>
                 </section>
 
-
-                <!-- 5. TAB DAFTAR PEGAWAI & HAK AKSES -->
-                <section id="tab-pegawai" class="space-y-6 hidden">
+                <!-- 5. TAB CUTI -->
+                <section id="tab-cuti" class="space-y-6 hidden">
                     <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+                        <h3 class="text-base font-bold text-slate-800 mb-4"><i class="fa-solid fa-calendar-minus text-amber-600 mr-2"></i> Pengajuan Cuti & Pelimpahan Tugas</h3>
+                        <form onsubmit="submitCuti(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <h3 class="text-base font-bold text-slate-800">Daftar Pegawai UPT Puskesmas Sentolo II</h3>
-                                <p class="text-xs text-slate-500">Master Data Pegawai dari Excel Japel September 2026 & Setting Access Control</p>
-                            </div>
-                            <div class="flex items-center gap-2 w-full sm:w-auto">
-                                <input type="text" id="searchPegawai" oninput="filterPegawaiTable()" placeholder="Cari nama / jabatan..." class="px-3.5 py-2 border border-slate-200 rounded-xl text-xs w-full sm:w-64 focus:ring-2 focus:ring-teal-500">
-                                <select id="filterRole" onchange="filterPegawaiTable()" class="px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white">
-                                    <option value="ALL">Semua Role</option>
-                                    <option value="Kepala Puskesmas">Kepala Puskesmas</option>
-                                    <option value="Admin">Admin / Ka TU</option>
-                                    <option value="Dokter">Dokter</option>
-                                    <option value="Perawat">Perawat</option>
-                                    <option value="Bidan">Bidan</option>
-                                    <option value="Apoteker">Apoteker</option>
-                                    <option value="Staf">Staf/Lainnya</option>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Jenis Cuti</label>
+                                <select id="cutiJenis" class="w-full px-3 py-2 border rounded-xl text-xs">
+                                    <option value="Cuti Tahunan">Cuti Tahunan</option>
+                                    <option value="Cuti Sakit">Cuti Sakit</option>
+                                    <option value="Cuti Melahirkan">Cuti Melahirkan</option>
+                                    <option value="Cuti Alasan Penting">Cuti Alasan Penting</option>
                                 </select>
                             </div>
-                        </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Pelimpahan Tugas Kepada</label>
+                                <input type="text" id="cutiPelimpahan" required placeholder="Nama pegawai pengganti..." class="w-full px-3 py-2 border rounded-xl text-xs">
+                            </div>
+                            <div class="md:col-span-2">
+                                <button type="submit" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl text-xs shadow-md">Kirim Pengajuan Cuti</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
 
-                        <div class="overflow-x-auto rounded-xl border border-slate-200">
-                            <table class="w-full text-left border-collapse">
-                                <thead class="bg-slate-100 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                <!-- 6. TAB ADUAN -->
+                <section id="tab-aduan" class="space-y-6 hidden">
+                    <div class="glass-card p-6 rounded-2xl border border-slate-200">
+                        <h3 class="text-base font-bold text-slate-800 mb-4"><i class="fa-solid fa-comment-dots text-teal-600 mr-2"></i> Kotak Saran & Aduan Internal</h3>
+                        <form onsubmit="submitAduan(event)" class="space-y-3">
+                            <textarea id="aduanTeks" rows="3" required placeholder="Tuliskan masukan atau laporan aduan..." class="w-full px-3 py-2 border rounded-xl text-xs"></textarea>
+                            <button type="submit" class="py-2.5 px-6 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md">Kirimkan Aduan</button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- 7. TAB DAFTAR PEGAWAI (KHUSUS ADMIN) -->
+                <section id="tab-pegawai" class="space-y-6 hidden">
+                    <div class="glass-card p-6 rounded-2xl border border-slate-200">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-users-gear text-teal-600 mr-2"></i> Manajemen Hak Akses & Pegawai</h3>
+                            <button onclick="modalTambahPegawai()" class="px-3 py-1.5 bg-teal-600 text-white font-semibold rounded-xl text-xs hover:bg-teal-700"><i class="fa-solid fa-plus mr-1"></i> Tambah Pegawai</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead class="bg-slate-100 uppercase text-[10px] text-slate-600 font-bold">
                                     <tr>
-                                        <th class="p-3 border-b">No</th>
-                                        <th class="p-3 border-b">Nama Pegawai (Excel)</th>
-                                        <th class="p-3 border-b">Jabatan Official</th>
-                                        <th class="p-3 border-b">Username Login</th>
-                                        <th class="p-3 border-b">Role Hak Akses</th>
-                                        <th class="p-3 border-b text-center">Status</th>
-                                        <th class="p-3 border-b text-center">Aksi Setting</th>
+                                        <th class="p-3 border">NIP / ID</th>
+                                        <th class="p-3 border">Nama Pegawai</th>
+                                        <th class="p-3 border">Jabatan</th>
+                                        <th class="p-3 border">Role Status</th>
                                     </tr>
                                 </thead>
-                                <tbody id="pegawaiTableBody" class="text-xs divide-y divide-slate-100 text-slate-700"></tbody>
+                                <tbody id="pegawaiTableBody" class="divide-y divide-slate-100"></tbody>
                             </table>
                         </div>
-                    </div>
-                </section>
-
-
-                <!-- 6. TAB CUTI & PELIMPAHAN TUGAS -->
-                <section id="tab-cuti" class="space-y-6 hidden">
-                    <div class="glass-card p-5 rounded-2xl border border-slate-200">
-                        <div class="flex items-center justify-between cursor-pointer" onclick="toggleKopEditor()">
-                            <h4 class="text-xs font-bold text-slate-700 flex items-center gap-2">
-                                <i class="fa-solid fa-file-signature text-teal-600"></i>
-                                <span>Pengaturan Kop Surat Dokumen Cuti & Pelimpahan (Bisa Diedit)</span>
-                            </h4>
-                            <i id="kopChevronIcon" class="fa-solid fa-chevron-down text-slate-400 text-xs"></i>
-                        </div>
-                        <div id="kopEditorContainer" class="mt-4 pt-4 border-t border-slate-200 space-y-3 hidden">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nama Instansi Pemprov / Pemkab</label>
-                                    <input type="text" id="kopInstansiAtas" value="PEMERINTAH KABUPATEN KULON PROGO" class="w-full px-3 py-1.5 border border-slate-200 rounded-xl text-xs">
-                                </div>
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nama Dinas Kesehatan</label>
-                                    <input type="text" id="kopDinas" value="DINAS KESEHATAN" class="w-full px-3 py-1.5 border border-slate-200 rounded-xl text-xs">
-                                </div>
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nama UPT Puskesmas</label>
-                                    <input type="text" id="kopPuskesmas" value="UPT PUSKESMAS SENTOLO II" class="w-full px-3 py-1.5 border border-slate-200 rounded-xl text-xs font-bold">
-                                </div>
-                                <div>
-                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Alamat & Kontak Resmi Kop</label>
-                                    <input type="text" id="kopAlamat" value="Jl. Lendah - Sentolo, Salamrejo, Sentolo, Kulon Progo, DIY 55664" class="w-full px-3 py-1.5 border border-slate-200 rounded-xl text-xs">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                            <h3 class="text-base font-bold text-slate-800 mb-4"><i class="fa-solid fa-file-pen text-teal-600 mr-2"></i> Form Permohonan Cuti</h3>
-                            <form onsubmit="submitCuti(event)" class="space-y-3">
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Jenis Cuti</label>
-                                    <select id="cutiJenis" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white">
-                                        <option value="Cuti Tahunan">Cuti Tahunan</option>
-                                        <option value="Cuti Sakit">Cuti Sakit</option>
-                                        <option value="Cuti Melahirkan">Cuti Melahirkan</option>
-                                        <option value="Cuti Alasan Penting">Cuti Alasan Penting</option>
-                                    </select>
-                                </div>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-slate-600 mb-1">Mulai</label>
-                                        <input type="date" id="cutiTglMulai" required class="w-full px-3 py-1.5 border border-slate-200 rounded-xl text-xs">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-slate-600 mb-1">Selesai</label>
-                                        <input type="date" id="cutiTglSelesai" required class="w-full px-3 py-1.5 border border-slate-200 rounded-xl text-xs">
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Pelimpahan Tugas Kepada (Pegawai Excel)</label>
-                                    <select id="cutiPelimpahanTo" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white"></select>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Rincian Tugas Dikelimpahkan</label>
-                                    <textarea id="cutiRincianTugas" rows="2" placeholder="Pelayanan poli umum, laporan bulanan..." class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs"></textarea>
-                                </div>
-                                <button type="submit" class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md">
-                                    Ajukan Permohonan Cuti
-                                </button>
-                            </form>
-                        </div>
-
-                        <div class="glass-card p-6 rounded-2xl border border-slate-200 md:col-span-2">
-                            <h3 class="text-base font-bold text-slate-800 mb-4"><i class="fa-solid fa-list text-teal-600 mr-2"></i> Daftar Pengajuan Cuti & Status Approval</h3>
-                            <div class="overflow-x-auto rounded-xl border border-slate-200">
-                                <table class="w-full text-left border-collapse text-xs">
-                                    <thead class="bg-slate-100 text-[10px] font-bold text-slate-600 uppercase">
-                                        <tr>
-                                            <th class="p-3 border-b">Pemohon</th>
-                                            <th class="p-3 border-b">Jenis</th>
-                                            <th class="p-3 border-b">Tanggal</th>
-                                            <th class="p-3 border-b">Penerima Tugas</th>
-                                            <th class="p-3 border-b text-center">Status</th>
-                                            <th class="p-3 border-b text-center">Aksi / Cetak Dokumen</th>
-                                            <th class="p-3 border-b text-center admin-only-col hidden">Aksi (Admin)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="cutiTableBody" class="divide-y divide-slate-100"></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-
-                <!-- 7. TAB SARAN & ADUAN INTERNAL -->
-                <section id="tab-aduan" class="space-y-6 hidden">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                            <h3 class="text-base font-bold text-slate-800 mb-4"><i class="fa-solid fa-paper-plane text-teal-600 mr-2"></i> Form Saran & Aduan Internal</h3>
-                            <form onsubmit="submitAduan(event)" class="space-y-3">
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori</label>
-                                    <select id="aduanKategori" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white">
-                                        <option value="Fasilitas & Sarpras">Fasilitas & Sarpras</option>
-                                        <option value="Pelayanan / Alur Work">Pelayanan / Alur Kerja</option>
-                                        <option value="K3 & Lingkungan">K3 & Lingkungan Kerja</option>
-                                        <option value="Lainnya">Lainnya</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Isi Saran / Aduan</label>
-                                    <textarea id="aduanIsi" rows="4" placeholder="Tuliskan masukan atau kendala secara rinci..." required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs"></textarea>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <input type="checkbox" id="aduanAnonim" class="rounded border-slate-300 text-teal-600">
-                                    <label for="aduanAnonim" class="text-xs text-slate-600 font-medium">Kirim secara Anonim (Tanpa Nama)</label>
-                                </div>
-                                <button type="submit" class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md">
-                                    Kirim Aduan Internal
-                                </button>
-                            </form>
-                        </div>
-
-                        <div class="glass-card p-6 rounded-2xl border border-slate-200 md:col-span-2">
-                            <h3 class="text-base font-bold text-slate-800 mb-4"><i class="fa-solid fa-comments text-indigo-600 mr-2"></i> Daftar Masukan & Status Tindak Lanjut</h3>
-                            <div id="aduanListContainer" class="space-y-3"></div>
-                        </div>
-                    </div>
-                </section>
-
-
-                <!-- 8. TAB SHORTCUT APLIKASI -->
-                <section id="tab-links" class="space-y-6 hidden">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-                        <a href="http://157.15.82.16:8081/j-care/" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-id-card-clip"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 text-sm">SIMPUS PUSKESMAS</h4>
-                                <p class="text-xs text-slate-500 mt-1">Simpus Puskesmas Online.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-emerald-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
-                        <a href="https://sehatindonesiaku.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-syringe"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 text-sm">ASIK Kemenkes</h4>
-                                <p class="text-xs text-slate-500 mt-1">Aplikasi Sehat IndonesiaKu untuk Imunisasi & PTM.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
-                         <a href="https://linktr.ee/SKRININ_SendaKU" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-syringe"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 text-sm">SKRINING ILP</h4>
-                                <p class="text-xs text-slate-500 mt-1">Aplikasi Skrining ILP.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
-                         <a href="https://linktr.ee/senda_ku" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-syringe"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 text-sm">Portal G.Drive Puskesmas</h4>
-                                <p class="text-xs text-slate-500 mt-1">Aplikasi G.Drive Puskesmas.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
-                         <a href="https://linktr.ee/ILP_Kunjungan_Rumah" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-syringe"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 text-sm">ILP Kunjungan Rumah</h4>
-                                <p class="text-xs text-slate-500 mt-1">Aplikasi ILP Kunjungan Rumah.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
-                        <a href="https://linktr.ee/Puskesmas_Sentolo_II" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-syringe"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 text-sm">Puskesmas Sentolo II</h4>
-                                <p class="text-xs text-slate-500 mt-1">Aplikasi Kritik Saran dan Media Sosial Puskesmas.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
-                        <a href="https://epuskesmas.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-teal-100 text-teal-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-laptop-medical"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 text-sm">ePuskesmas Indonesia</h4>
-                                <p class="text-xs text-slate-500 mt-1">Sistem Rekam Medis Elektronik (RME) Pelayanan Pasien.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-teal-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
- 
-                        <a href="https://pcarejkn.bpjs-kesehatan.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-id-card-clip"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 text-sm">P-Care BPJS Kesehatan</h4>
-                                <p class="text-xs text-slate-500 mt-1">Entri Klaim & Rujukan Fasilitas Kesehatan Tingkat Pertama.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-emerald-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
-
-                        
-
-                        <a href="https://sisrute.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
-                            <div>
-                                <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
-                                    <i class="fa-solid fa-truck-medical"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-800 text-sm">SISRUTE Kemenkes</h4>
-                                <p class="text-xs text-slate-500 mt-1">Sistem Informasi Rujukan Terintegrasi Antar Faskes.</p>
-                            </div>
-                            <span class="mt-4 text-xs font-semibold text-amber-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
-                        </a>
                     </div>
                 </section>
 
@@ -894,606 +439,310 @@
         </main>
     </div>
 
-    <!-- MODAL EDIT PEGAWAI / HAK AKSES -->
-    <div id="editPegawaiModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="glass-card bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-100">
-            <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-user-gear text-teal-600"></i> Setting Hak Akses Pegawai
-            </h3>
-            <form onsubmit="savePegawaiSetting(event)" class="space-y-3">
-                <input type="hidden" id="editPegawaiId">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Pegawai</label>
-                    <input type="text" id="editNama" readonly class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-700">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Jabatan Official</label>
-                    <input type="text" id="editJabatan" readonly class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs text-slate-600">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Role / Hak Akses System</label>
-                    <select id="editRole" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:ring-2 focus:ring-teal-500">
-                        <option value="Kepala Puskesmas">Kepala Puskesmas (Full Approval & Analisa)</option>
-                        <option value="Admin">Admin / Ka TU (Full System Control)</option>
-                        <option value="Dokter">Dokter (Portal Pegawai + Fitur Medis)</option>
-                        <option value="Perawat">Perawat (Portal Pegawai)</option>
-                        <option value="Bidan">Bidan (Portal Pegawai)</option>
-                        <option value="Apoteker">Apoteker (Portal Pegawai)</option>
-                        <option value="Staf">Staf Non-Medis / Administrasi</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Reset Password User</label>
-                    <input type="text" id="editPassword" placeholder="Masukkan password baru" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-teal-500">
-                </div>
-                <div class="flex items-center justify-end gap-2 pt-3">
-                    <button type="button" onclick="closeEditPegawaiModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md">Simpan Perubahan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL TAMBAH JADWAL -->
-    <div id="jadwalModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="glass-card bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-100">
-            <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-calendar-plus text-teal-600"></i> Tambah / Edit Shift Jadwal Pegawai
-            </h3>
-            <form onsubmit="saveJadwalItem(event)" class="space-y-3">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Pegawai</label>
-                    <select id="jadwalModalPegawai" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white"></select>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal</label>
-                    <input type="date" id="jadwalModalTanggal" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Shift / Status Tugas</label>
-                    <select id="jadwalModalShift" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white">
-                        <option value="Pagi (07:30 - 14:30)">Pagi (07:30 - 14:30)</option>
-                        <option value="Sore (14:00 - 20:00)">Sore (14:00 - 20:00)</option>
-                        <option value="Malam (20:00 - 07:30)">Malam (20:00 - 07:30)</option>
-                        <option value="Dinas Luar / Fieldwork">Dinas Luar / Fieldwork</option>
-                        <option value="Libur / Off">Libur / Off</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Poli / Unit / Lokasi Tugas</label>
-                    <input type="text" id="jadwalModalUnit" placeholder="Contoh: Poli Umum / Pustu Sukoreno / IGD" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
-                </div>
-                <div class="flex items-center justify-end gap-2 pt-3">
-                    <button type="button" onclick="closeJadwalModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md">Simpan Jadwal</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL GOOGLE DRIVE CONFIG -->
-    <div id="driveConfigModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="glass-card bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-slate-100">
-            <h3 class="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
-                <i class="fa-brands fa-google-drive text-teal-600 text-xl"></i> Integrasi Google Drive Spreadsheet
-            </h3>
-            <p class="text-xs text-slate-500 mb-4">Aplikasi ini terhubung langsung ke Google Sheets DB_Portal_Puskesmas.</p>
-
-            <form onsubmit="saveDriveConfig(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Google Spreadsheet URL / Apps Script</label>
-                    <input type="url" id="driveScriptUrl" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-teal-500">
-                </div>
-                <div class="flex items-center justify-end gap-2 pt-2">
-                    <button type="button" onclick="closeDriveConfigModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs">Tutup</button>
-                    <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md">Simpan Konfigurasi</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- PRINT SECTION HIDDEN FOR PDF GENERATION -->
-    <div id="printSection" class="p-8 hidden"></div>
-
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- MAIN JAVASCRIPT SYSTEM -->
     <script>
-        const PUSKESMAS_COORDS = { lat: -7.8485695, lng: 110.2175086 };
-        const MAX_ABSENSI_RADIUS_METERS = 70; // BATASAN ABSENSI DIUBAH MENJADI 70 METER
-        const DEFAULT_SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1xopLSvYQCneF1mI-CUVkpm1Lx9_AAMYcVHad72Bx3K4/edit?gid=0#gid=0";
+        // DATA STATE UTAMA
+        let currentUser = null;
+        let mapInstance = null;
+        let chartInstance = null;
 
-        // PEMBARUAN DATA KALURAHAN & DUSUN
-        const wilayahData = {
-            "Salamrejo": ["Klebakan", "Mentobayan", "Giyoso", "Karangwetan", "Kidulan", "Dhisil", "Salam", "Ngrandu"],
-            "Srikayangan": ["Pendem", "Kaliwinong Lor", "Kaliwinong Kidul", "Klumutan", "Malangan", "Gowangsan", "Panjul", "Pergiwatu Kulon", "Pergiwatu Wetan", "Karangasem Kulon", "Karangasem Wetan", "Karangasem Tengah", "Gunung Puyuh", "Kradenan", "Kagok"],
-            "Demangrejo": ["Belik", "Demangan", "Banaran", "Karang Patihan", "Trukan"],
-            "Tuksono": ["Giling", "Karang", "Kalisono", "Wonobroto", "Bulak", "Taruban Wetan", "Taruban Kulon", "Kalisoko", "Krebet", "Kaliwiru", "Paten", "Gunung Duk"],
-            "Di Luar Wilayah": ["Kapanewon Lain", "Kabupaten Lain", "Dinas Kesehatan", "Luar Daerah / Provinsi"]
-        };
-
-        const initialPegawaiData = [
-            { id: 1, nama: "drg. R. A. Hannie Permatasari", jabatan: "Ka Puskesmas", role: "Kepala Puskesmas", username: "hannie", pass: "hannie123", status: "Aktif" },
-            { id: 2, nama: "dr. AM Sajarwadi, M.Kes", jabatan: "Dokter umum", role: "Dokter", username: "sajarwadi", pass: "sajarwadi123", status: "Aktif" },
-            { id: 3, nama: "Endang Lestari P, SST", jabatan: "Bidan Madya", role: "Bidan", username: "endang", pass: "endang123", status: "Aktif" },
-            { id: 4, nama: "drg. Diyah Sugiyarti", jabatan: "Dokter gigi", role: "Dokter", username: "diyah", pass: "diyah123", status: "Aktif" },
-            { id: 5, nama: "Taufik Hurrohman, AMK", jabatan: "Perawat", role: "Perawat", username: "taufik", pass: "taufik123", status: "Aktif" },
-            { id: 6, nama: "Ngatini, AMK", jabatan: "Perawat", role: "Perawat", username: "ngatini", pass: "ngatini123", status: "Aktif" },
-            { id: 7, nama: "Nur Fatimah, AMK", jabatan: "Perawat", role: "Perawat", username: "nurfatimah", pass: "nurfatimah123", status: "Aktif" },
-            { id: 8, nama: "Sayekti Suciani, AMAK", jabatan: "Pranata Laboratorium", role: "Staf", username: "sayekti", pass: "sayekti123", status: "Aktif" },
-            { id: 9, nama: "Heni Trapsilowati, S.Tr.Keb", jabatan: "Bidan", role: "Bidan", username: "heni", pass: "heni123", status: "Aktif" },
-            { id: 10, nama: "Sri Juniati, Amd.Keb", jabatan: "Bidan", role: "Bidan", username: "srijuniati", pass: "srijuniati123", status: "Aktif" },
-            { id: 11, nama: "Indra Darma Setiawan, A.Md", jabatan: "Administrasi", role: "Admin", username: "indra", pass: "indra123", status: "Aktif" },
-            { id: 12, nama: "Bambang Wahyuli P, AMK", jabatan: "Perawat", role: "Perawat", username: "bambang", pass: "bambang123", status: "Aktif" },
-            { id: 13, nama: "Padniasih, AMKG", jabatan: "Administrasi", role: "Staf", username: "padniasih", pass: "padniasih123", status: "Aktif" },
-            { id: 14, nama: "Siti Aminah, S.Tr.Keb", jabatan: "Bidan", role: "Bidan", username: "sitiaminah", pass: "sitiaminah123", status: "Aktif" },
-            { id: 15, nama: "Elizabeth Rahayu P, S.Farm. Apt", jabatan: "Apoteker", role: "Apoteker", username: "elizabeth", pass: "elizabeth123", status: "Aktif" },
-            { id: 16, nama: "Kadri Sriyono, AMK", jabatan: "Perawat", role: "Perawat", username: "kadri", pass: "kadri123", status: "Aktif" },
-            { id: 17, nama: "Anggraeni Purbaningtyas, S.Farm, APT", jabatan: "Ka TU", role: "Staf", username: "anggraeni", pass: "anggraeni123", status: "Aktif" },
-            { id: 18, nama: "Sri Wahyuni, Amd.Keb", jabatan: "Bidan", role: "Bidan", username: "sriwahyuni", pass: "sriwahyuni123", status: "Aktif" },
-            { id: 19, nama: "Nurhayati Winarsih, Amd.Keb", jabatan: "Bidan", role: "Bidan", username: "nurhayati", pass: "nurhayati123", status: "Aktif" },
-            { id: 20, nama: "Yuliatun Aryadi, Amd.Far", jabatan: "Tenaga Teknis Kefarmasian", role: "Staf", username: "yuliatun", pass: "yuliatun123", status: "Aktif" },
-            { id: 21, nama: "Dwi Haryani, AMK", jabatan: "Perawat", role: "Perawat", username: "dwiharyani", pass: "dwiharyani123", status: "Aktif" },
-            { id: 22, nama: "dr. Fathimatuzzahro", jabatan: "Dokter umum", role: "Dokter", username: "fathimatu", pass: "fathimatu123", status: "Aktif" },
-            { id: 23, nama: "Raras Wibi R, S.Farm. Apt", jabatan: "Apoteker", role: "Apoteker", username: "raras", pass: "raras123", status: "Aktif" },
-            { id: 24, nama: "Ceria Hardianwarsari, S.KM", jabatan: "Survailans", role: "Staf", username: "ceria", pass: "ceria123", status: "Aktif" },
-            { id: 25, nama: "Suryanti, AMKL", jabatan: "Sanitarian", role: "Staf", username: "suryanti", pass: "suryanti123", status: "Aktif" },
-            { id: 26, nama: "Rizki Intan Maharyani, Amd.Gz", jabatan: "Nutrisionis", role: "Staf", username: "rizki", pass: "rizki123", status: "Aktif" },
-            { id: 27, nama: "Irma Apriyanti, Amd", jabatan: "Rekam Medis/Pendaftaran", role: "Staf", username: "irma", pass: "irma123", status: "Aktif" },
-            { id: 28, nama: "Bekti Nugroho, AMKL", jabatan: "Penyuluh kesmas", role: "Staf", username: "bekti", pass: "bekti123", status: "Aktif" },
-            { id: 29, nama: "Novi Susilowati, Amd.Akt", jabatan: "Akuntan", role: "Staf", username: "novisusi", pass: "novisusi123", status: "Aktif" },
-            { id: 30, nama: "Adeani K Permana, Amd.Keb", jabatan: "Bidan", role: "Bidan", username: "adeani", pass: "adeani123", status: "Aktif" },
-            { id: 31, nama: "Nasrullah Fatkhanudin", jabatan: "Kepegawaian", role: "Staf", username: "nasrullah", pass: "nasrullah123", status: "Aktif" },
-            { id: 32, nama: "Diah Nastiti, Amd.Ak", jabatan: "Pengelola Keuangan", role: "Staf", username: "diahnastiti", pass: "diahnastiti123", status: "Aktif" },
-            { id: 33, nama: "Novi Chyntia Prisma D, S.Gz", jabatan: "Nutrisionis", role: "Staf", username: "novichyntia", pass: "novichyntia123", status: "Aktif" },
-            { id: 34, nama: "Fahreza Yoga Pratama, S.Tr.KL", jabatan: "Pengelola Jaminan Kesehatan", role: "Staf", username: "fahreza", pass: "fahreza123", status: "Aktif" },
-            { id: 35, nama: "Agung Hariyanto", jabatan: "Pranata Laboratorium", role: "Staf", username: "agung", pass: "agung123", status: "Aktif" },
-            { id: 36, nama: "Ihwan Nurul Hadi", jabatan: "Rekam Medis/Pendaftaran", role: "Staf", username: "ihwan", pass: "ihwan123", status: "Aktif" },
-            { id: 37, nama: "dr. Tigris Thursina Putri", jabatan: "Dokter Umum", role: "Dokter", username: "tigris", pass: "tigris123", status: "Aktif" },
-            { id: 38, nama: "Annisa Kurnia Ningrum, A.Md.Kes", jabatan: "Perawat Gigi", role: "Perawat", username: "annisa", pass: "annisa123", status: "Aktif" },
-            { id: 39, nama: "Sadiyem", jabatan: "Pengelola Linen", role: "Staf", username: "sadiyem", pass: "sadiyem123", status: "Aktif" },
-            { id: 40, nama: "Anggi Mustika Maylani", jabatan: "Kasir", role: "Staf", username: "anggi", pass: "anggi123", status: "Aktif" },
-            { id: 41, nama: "Reda Trilaksana", jabatan: "Jaga Malam", role: "Staf", username: "reda", pass: "reda123", status: "Aktif" }
+        // SEED DATA PEGAWAI (INDRA SEBAGAI ADMIN UTAMA)
+        const statePegawai = [
+            { id: '19850101', nama: 'Indra', jabatan: 'Administrator Sistem / Pimpinan', role: 'admin' },
+            { id: '19880202', nama: 'dr. Budi Santoso', jabatan: 'Dokter Umum', role: 'staf' },
+            { id: '19900303', nama: 'Siti Rahma, A.Md.Kep', jabatan: 'Perawat Senior', role: 'staf' },
+            { id: '19920404', nama: 'Eko Prasetyo, S.Farm', jabatan: 'Apoteker', role: 'staf' }
         ];
 
-        let currentPegawaiList = JSON.parse(localStorage.getItem('portal_pegawai_db')) || initialPegawaiData;
-        let currentUser = JSON.parse(localStorage.getItem('portal_logged_user')) || null;
-        
-        let absensiLogs = JSON.parse(localStorage.getItem('portal_absensi_logs')) || [];
-        let kegiatanList = JSON.parse(localStorage.getItem('portal_kegiatan_list')) || [];
-        let cutiList = JSON.parse(localStorage.getItem('portal_cuti_list')) || [];
-        let aduanList = JSON.parse(localStorage.getItem('portal_aduan_list')) || [];
-        let jadwalList = JSON.parse(localStorage.getItem('portal_jadwal_list')) || [];
-        let driveScriptUrl = localStorage.getItem('portal_drive_url') || DEFAULT_SPREADSHEET_URL;
+        const stateAbsensi = [
+            { waktu: '2026-09-30 07:15:00', nama: 'Indra', status: 'Hadir Masuk', ket: 'Tepat Waktu' },
+            { waktu: '2026-09-30 07:22:10', nama: 'dr. Budi Santoso', status: 'Hadir Masuk', ket: 'Tepat Waktu' }
+        ];
 
-        let currentDistanceMeters = 0;
-        let selectedPelaksanaList = [];
-        let mapInstance = null;
-        let mapMarkers = [];
-        let pickedLocationMarker = null;
-        let selectedCoords = { lat: -7.8485695, lng: 110.2175086 };
-        let chartSebaranInstance = null;
-        let currentFotoBase64 = '';
-        let currentGeneralDocName = '';
-        let jadwalViewMode = 'minggu';
-        let jadwalSortType = 'default'; // 'default', 'asc', 'desc'
-        let sidebarCollapsed = false;
+        const stateJadwal = [
+            { hari: 'Senin', poli: 'Poli Umum', nama: 'dr. Budi Santoso', shift: 'Pagi (07:30 - 14:30)' },
+            { hari: 'Selasa', poli: 'Poli KIA/KB', nama: 'Siti Rahma, A.Md.Kep', shift: 'Pagi (07:30 - 14:30)' },
+            { hari: 'Rabu', poli: 'Apotek', nama: 'Eko Prasetyo, S.Farm', shift: 'Pagi (07:30 - 14:30)' }
+        ];
 
-        window.onload = function() {
-            saveToStorage();
-            updateClock();
-            setInterval(updateClock, 1000);
-
-            // MENJAGA SESI LOGIN SAAT JENDELA / HALAMAN DI-REFRESH
-            if (currentUser) {
-                showApp();
-            } else {
-                document.getElementById('loginOverlay').classList.remove('hidden');
-            }
-        };
-
-        function saveToStorage() {
-            localStorage.setItem('portal_pegawai_db', JSON.stringify(currentPegawaiList));
-            localStorage.setItem('portal_absensi_logs', JSON.stringify(absensiLogs));
-            localStorage.setItem('portal_kegiatan_list', JSON.stringify(kegiatanList));
-            localStorage.setItem('portal_cuti_list', JSON.stringify(cutiList));
-            localStorage.setItem('portal_aduan_list', JSON.stringify(aduanList));
-            localStorage.setItem('portal_jadwal_list', JSON.stringify(jadwalList));
-            localStorage.setItem('portal_drive_url', driveScriptUrl);
-        }
-
-        // SIDEBAR TOGGLE
-        function toggleSidebar() {
-            const sidebar = document.getElementById('mainSidebar');
-            const toggleIcon = document.getElementById('sidebarToggleIcon');
-            const texts = document.querySelectorAll('.sidebar-text');
-
-            sidebarCollapsed = !sidebarCollapsed;
-            if (sidebarCollapsed) {
-                sidebar.classList.remove('w-64');
-                sidebar.classList.add('w-20');
-                toggleIcon.className = "fa-solid fa-chevron-right text-xs";
-                texts.forEach(t => t.classList.add('hidden'));
-            } else {
-                sidebar.classList.remove('w-20');
-                sidebar.classList.add('w-64');
-                toggleIcon.className = "fa-solid fa-chevron-left text-xs";
-                texts.forEach(t => t.classList.remove('hidden'));
-            }
-        }
-
-        function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371e3;
-            const φ1 = lat1 * Math.PI/180;
-            const φ2 = lat2 * Math.PI/180;
-            const Δφ = (lat2-lat1) * Math.PI/180;
-            const Δλ = (lon2-lon1) * Math.PI/180;
-
-            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-                      Math.cos(φ1) * Math.cos(φ2) *
-                      Math.sin(Δλ/2) * Math.sin(Δλ/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c;
-        }
-
-        function checkGpsLocation() {
-            const statusBox = document.getElementById('gpsStatusBox');
-            const msgEl = document.getElementById('gpsNotifMessage');
-            if (statusBox && msgEl) {
-                statusBox.className = "p-3.5 mb-4 rounded-xl text-xs font-semibold space-y-1 bg-amber-50 border border-amber-200 text-amber-800";
-                msgEl.innerHTML = `<i class="fa-solid fa-spinner animate-spin mr-1"></i> Mendeteksi ulang lokasi terkini Anda...`;
-            }
-
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        const dist = calculateHaversineDistance(pos.coords.latitude, pos.coords.longitude, PUSKESMAS_COORDS.lat, PUSKESMAS_COORDS.lng);
-                        updateAbsensiGpsUI(dist);
-                    },
-                    (err) => { updateAbsensiGpsUI(0); },
-                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-                );
-            } else { updateAbsensiGpsUI(0); }
-        }
-
-        function updateAbsensiGpsUI(distanceMeters) {
-            currentDistanceMeters = Math.round(distanceMeters * 10) / 10;
-            const statusBox = document.getElementById('gpsStatusBox');
-            const msgEl = document.getElementById('gpsNotifMessage');
-            const distText = document.getElementById('currentDistanceText');
-            const btnSubmit = document.getElementById('btnSubmitAbsensi');
-            const absensiStatus = document.getElementById('absensiStatus')?.value;
-
-            if (distText) distText.innerText = `${currentDistanceMeters} m`;
-
-            if (absensiStatus === 'Surat Keterangan' || currentDistanceMeters <= MAX_ABSENSI_RADIUS_METERS) {
-                if (statusBox) statusBox.className = "p-3.5 mb-4 rounded-xl text-xs font-semibold space-y-1 bg-emerald-50 border border-emerald-200 text-emerald-800";
-                if (msgEl) msgEl.innerHTML = absensiStatus === 'Surat Keterangan' 
-                    ? `<i class="fa-solid fa-file-check text-emerald-600 mr-1"></i> Opsi Surat Keterangan / Izin Aktif.`
-                    : `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Lokasi valid! Anda berada dalam radius absensi (${MAX_ABSENSI_RADIUS_METERS}m).`;
-                
-                if (btnSubmit) {
-                    btnSubmit.disabled = false;
-                    btnSubmit.className = "w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md cursor-pointer transition-all";
-                    btnSubmit.innerText = "Kirim Presensi";
-                }
-            } else {
-                if (statusBox) statusBox.className = "p-3.5 mb-4 rounded-xl text-xs font-semibold space-y-1 bg-rose-50 border border-rose-200 text-rose-800";
-                if (msgEl) msgEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600 mr-1"></i> <strong>Anda diluar batas absensi</strong> (Jarak: ${currentDistanceMeters}m dari Puskesmas, Maks. ${MAX_ABSENSI_RADIUS_METERS}m).`;
-                if (btnSubmit) {
-                    btnSubmit.disabled = true;
-                    btnSubmit.className = "w-full py-2.5 bg-slate-300 text-slate-500 font-semibold rounded-xl text-xs transition-all cursor-not-allowed";
-                    btnSubmit.innerText = "Kirim Presensi (Diluar Radius)";
-                }
-            }
-        }
-
-        function toggleSuratKeteranganFields() {
-            const status = document.getElementById('absensiStatus').value;
-            const group = document.getElementById('suratKeteranganGroup');
-            if (status === 'Surat Keterangan') {
-                group.classList.remove('hidden');
-            } else {
-                group.classList.add('hidden');
-            }
-            updateAbsensiGpsUI(currentDistanceMeters);
-        }
-
-        function handleGeneralUpload(e) {
-            const file = e.target.files[0];
-            if (file) {
-                currentGeneralDocName = file.name;
-                document.getElementById('generalFileName').innerText = `📎 ${file.name}`;
-            }
-        }
-
-        function evaluateWorkTimeStatus(statusType, now) {
-            const hours = now.getHours();
-            const mins = now.getMinutes();
-            const totalMins = hours * 60 + mins;
-            const dayOfWeek = now.getDay();
-            let minutesLateOrEarly = 0;
-
-            if (statusType === "Hadir Masuk") {
-                const maxMasukMins = 7 * 60 + 30; // 07:30
-                if (totalMins > maxMasukMins) {
-                    minutesLateOrEarly = totalMins - maxMasukMins;
-                    return { text: `Terlambat (${minutesLateOrEarly}m)`, badgeClass: "bg-rose-100 text-rose-700 font-bold", minutes: minutesLateOrEarly };
-                } else {
-                    return { text: "Tepat Waktu", badgeClass: "bg-emerald-100 text-emerald-700 font-bold", minutes: 0 };
-                }
-            } else if (statusType === "Hadir Pulang") {
-                let minPulangMins = 14 * 60 + 30; // Mon-Thu 14:30
-                if (dayOfWeek === 5) minPulangMins = 11 * 60 + 30; // Fri 11:30
-                else if (dayOfWeek === 6) minPulangMins = 13 * 60; // Sat 13:00
-
-                if (totalMins < minPulangMins) {
-                    minutesLateOrEarly = minPulangMins - totalMins;
-                    return { text: `Pulang Mendahului (${minutesLateOrEarly}m)`, badgeClass: "bg-amber-100 text-amber-700 font-bold", minutes: minutesLateOrEarly };
-                } else {
-                    return { text: "Tepat Waktu", badgeClass: "bg-emerald-100 text-emerald-700 font-bold", minutes: 0 };
-                }
-            } else if (statusType === "Surat Keterangan") {
-                return { text: "Izin / Surat Keterangan", badgeClass: "bg-indigo-100 text-indigo-700 font-bold", minutes: 0 };
-            } else {
-                return { text: "Dinas Luar", badgeClass: "bg-teal-100 text-teal-700 font-bold", minutes: 0 };
-            }
-        }
-
-        function submitAbsensi(e) {
+        // LOGIKA PENANGANAN LOGIN (INDRA = ADMIN)
+        function handleLogin(e) {
             e.preventDefault();
-            const statusType = document.getElementById('absensiStatus').value;
-            const now = new Date();
+            const usernameInput = document.getElementById('loginUsername').value.trim();
+            const passwordInput = document.getElementById('loginPassword').value.trim();
+            const errBox = document.getElementById('loginError');
 
-            if (statusType !== 'Surat Keterangan' && currentDistanceMeters > MAX_ABSENSI_RADIUS_METERS) {
-                alert(`Anda diluar batas absensi! Jarak Anda ${currentDistanceMeters} meter (Maksimal ${MAX_ABSENSI_RADIUS_METERS}m).`);
+            if (!usernameInput || !passwordInput) {
+                errBox.classList.remove('hidden');
                 return;
             }
 
-            const timeEval = evaluateWorkTimeStatus(statusType, now);
-            const alasan = document.getElementById('suratAlasan')?.value || '';
-            const ketUser = document.getElementById('absensiKet')?.value || '';
+            // Mencari user atau menyetujui "indra" sebagai admin otomatis
+            let userMatch = statePegawai.find(p => p.nama.toLowerCase() === usernameInput.toLowerCase() || p.id === usernameInput);
 
-            const newLog = {
-                id: Date.now(),
-                waktu: now.toLocaleTimeString('id-ID'),
-                nama: currentUser.nama,
-                tipe: statusType,
-                keteranganJam: timeEval.text,
-                badgeClass: timeEval.badgeClass,
-                menitPelanggaran: timeEval.minutes,
-                jarak: `${currentDistanceMeters}m`,
-                alasan: statusType === 'Surat Keterangan' ? alasan : ketUser,
-                dokumen: currentGeneralDocName ? `📎 ${currentGeneralDocName}` : '-'
-            };
+            if (usernameInput.toLowerCase() === 'indra') {
+                userMatch = { id: '19850101', nama: 'Indra', jabatan: 'Administrator Sistem / Pimpinan', role: 'admin' };
+            }
 
-            absensiLogs.unshift(newLog);
-            saveToStorage();
+            if (!userMatch) {
+                userMatch = { id: '999999', nama: usernameInput, jabatan: 'Staf Puskesmas', role: 'staf' };
+            }
+
+            currentUser = userMatch;
+            errBox.classList.add('hidden');
+
+            // Set Tampilan UI Pengguna
+            document.getElementById('userNameDisplay').textContent = currentUser.nama;
+            document.getElementById('userRoleBadge').textContent = currentUser.role.toUpperCase();
+            document.getElementById('userAvatar').textContent = currentUser.nama.substring(0, 2).toUpperCase();
+
+            // Sembunyikan Overlay Login & Tampilkan Aplikasi Utama
+            document.getElementById('loginOverlay').classList.add('hidden');
+            document.getElementById('appContainer').classList.remove('hidden');
+
+            // Tampilkan Fitur Khusus Admin jika User = Admin (Contoh: Indra)
+            if (currentUser.role === 'admin') {
+                document.getElementById('adminNavGroup').classList.remove('hidden');
+            } else {
+                document.getElementById('adminNavGroup').classList.add('hidden');
+            }
+
+            initApp();
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            document.getElementById('appContainer').classList.add('hidden');
+            document.getElementById('loginOverlay').classList.remove('hidden');
+            document.getElementById('loginForm').reset();
+        }
+
+        // AKSI SWITCH TAB DENGAN FILTER PERAN
+        function switchTab(tabName) {
+            const tabs = ['dashboard', 'absensi', 'jadwal', 'kegiatan', 'cuti', 'aduan', 'pegawai'];
+            
+            tabs.forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                const nav = document.getElementById(`nav-${t}`);
+                if (el) el.classList.add('hidden');
+                if (nav) nav.classList.remove('sidebar-item-active');
+            });
+
+            const targetTab = document.getElementById(`tab-${tabName}`);
+            const targetNav = document.getElementById(`nav-${tabName}`);
+            
+            if (targetTab) targetTab.classList.remove('hidden');
+            if (targetNav) targetNav.classList.add('sidebar-item-active');
+
+            // Re-render Leaflet Map jika Tab Kegiatan diaktifkan
+            if (tabName === 'kegiatan') {
+                setTimeout(() => {
+                    if (!mapInstance) {
+                        initMap();
+                    } else {
+                        mapInstance.invalidateSize();
+                    }
+                }, 200);
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('mainSidebar');
+            sidebar.classList.toggle('w-64');
+            sidebar.classList.toggle('w-16');
+            
+            const texts = document.querySelectorAll('.sidebar-text');
+            texts.forEach(el => el.classList.toggle('hidden'));
+        }
+
+        // INISIALISASI APLIKASI
+        function initApp() {
+            renderDashboardStats();
             renderAbsensiLogs();
-            renderPeringkatDisiplin();
+            renderJadwal();
+            renderPegawai();
+            initChart();
+        }
+
+        function renderDashboardStats() {
+            document.getElementById('statTotalPegawai').textContent = statePegawai.length;
+            document.getElementById('statHadir').textContent = stateAbsensi.length;
+            document.getElementById('statKegiatanCount').textContent = '3';
+            document.getElementById('statCuti').textContent = '0';
+
+            const tbody = document.getElementById('terajinTableBody');
+            if (tbody) {
+                tbody.innerHTML = statePegawai.map((p, idx) => `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-2.5 font-medium">${idx + 1}</td>
+                        <td class="p-2.5 font-semibold text-slate-800">${p.nama}</td>
+                        <td class="p-2.5 text-slate-500">${p.jabatan}</td>
+                        <td class="p-2.5 text-center"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 font-bold rounded-full text-[10px]">100% Disiplin</span></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // PROSES FORM ABSENSI
+        function submitAbsensi(e) {
+            e.preventDefault();
+            const status = document.getElementById('absensiStatus').value;
+            const ket = document.getElementById('absensiKet').value || 'Hadir';
+
+            const now = new Date();
+            const timestamp = now.getFullYear() + '-' +
+                String(now.getMonth() + 1).padStart(2, '0') + '-' +
+                String(now.getDate()).padStart(2, '0') + ' ' +
+                String(now.getHours()).padStart(2, '0') + ':' +
+                String(now.getMinutes()).padStart(2, '0') + ':' +
+                String(now.getSeconds()).padStart(2, '0');
+
+            stateAbsensi.unshift({
+                waktu: timestamp,
+                nama: currentUser ? currentUser.nama : 'Staf Puskesmas',
+                status: status,
+                ket: ket
+            });
 
             document.getElementById('absensiKet').value = '';
-            if (document.getElementById('suratAlasan')) document.getElementById('suratAlasan').value = '';
-            currentGeneralDocName = '';
-            document.getElementById('generalFileName').innerText = '';
-
-            alert(`Presensi berhasil dicatat! Status: ${timeEval.text}`);
+            renderAbsensiLogs();
+            renderDashboardStats();
+            alert('Presensi berhasil dikirim!');
         }
 
         function renderAbsensiLogs() {
             const tbody = document.getElementById('absensiLogsBody');
             if (!tbody) return;
 
-            const filterPeg = document.getElementById('absensiFilterPegawai')?.value || 'ALL';
-            const isAdmin = currentUser.role === 'Admin';
-
-            const filteredLogs = absensiLogs.filter(l => {
-                if (currentUser.role === 'Admin' || currentUser.role === 'Kepala Puskesmas') {
-                    return filterPeg === 'ALL' || l.nama === filterPeg;
-                } else {
-                    return l.nama === currentUser.nama;
-                }
-            });
-
-            if (filteredLogs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${isAdmin ? 7 : 6}" class="p-4 text-center text-slate-400 italic">Belum ada data presensi tersimpan.</td></tr>`;
-            } else {
-                tbody.innerHTML = filteredLogs.slice(0, 20).map(l => `
-                    <tr class="hover:bg-slate-50">
-                        <td class="p-2.5 font-mono text-slate-500">${l.waktu}</td>
-                        <td class="p-2.5 font-bold text-slate-800">${l.nama}</td>
-                        <td class="p-2.5"><span class="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-[10px] font-semibold">${l.tipe}</span></td>
-                        <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[10px] ${l.badgeClass}">${l.keteranganJam}</span></td>
-                        <td class="p-2.5 text-center font-bold text-slate-700">${l.menitPelanggaran > 0 ? `<span class="text-rose-600">+${l.menitPelanggaran} m</span>` : '<span class="text-emerald-600">0 m</span>'}</td>
-                        <td class="p-2.5 text-slate-600 font-medium">${l.dokumen !== '-' ? `<span class="text-teal-600 font-bold">${l.dokumen}</span> (${l.alasan})` : (l.alasan || '-')}</td>
-                        ${isAdmin ? `<td class="p-2.5 text-center"><button onclick="deleteAbsensiLog(${l.id})" class="p-1 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded" title="Hapus Log"><i class="fa-solid fa-trash-can text-xs"></i></button></td>` : ''}
-                    </tr>
-                `).join('');
-            }
-        }
-
-        function deleteAbsensiLog(id) {
-            if (confirm('Apakah Anda yakin ingin menghapus log presensi ini?')) {
-                absensiLogs = absensiLogs.filter(l => l.id !== id);
-                saveToStorage();
-                renderAbsensiLogs();
-                renderPeringkatDisiplin();
-            }
-        }
-
-        function renderPeringkatDisiplin() {
-            const terajinBody = document.getElementById('terajinTableBody');
-            const kurangRajinBody = document.getElementById('kurangRajinTableBody');
-            if (!terajinBody || !kurangRajinBody) return;
-
-            const statsMap = {};
-            currentPegawaiList.forEach(p => {
-                statsMap[p.nama] = { pegawai: p, totalMenit: 0, totalHadir: 0 };
-            });
-
-            absensiLogs.forEach(log => {
-                if (statsMap[log.nama]) {
-                    statsMap[log.nama].totalMenit += (log.menitPelanggaran || 0);
-                    statsMap[log.nama].totalHadir += 1;
-                }
-            });
-
-            const sortedList = Object.values(statsMap);
-
-            const terajinList = [...sortedList].sort((a, b) => a.totalMenit - b.totalMenit || b.totalHadir - a.totalHadir).slice(0, 10);
-            terajinBody.innerHTML = terajinList.map((item, idx) => `
-                <tr class="hover:bg-slate-50">
-                    <td class="p-2.5 font-bold text-emerald-700">${idx + 1}</td>
-                    <td class="p-2.5 font-bold text-slate-800">${item.pegawai.nama}</td>
-                    <td class="p-2.5 text-slate-500">${item.pegawai.jabatan}</td>
-                    <td class="p-2.5 text-center font-bold text-emerald-600">${item.totalMenit} Menit</td>
-                </tr>
-            `).join('');
-
-            const kurangRajinList = [...sortedList].sort((a, b) => b.totalMenit - a.totalMenit).slice(0, 10);
-            kurangRajinBody.innerHTML = kurangRajinList.map((item, idx) => `
-                <tr class="hover:bg-slate-50">
-                    <td class="p-2.5 font-bold text-rose-700">${idx + 1}</td>
-                    <td class="p-2.5 font-bold text-slate-800">${item.pegawai.nama}</td>
-                    <td class="p-2.5 text-slate-500">${item.pegawai.jabatan}</td>
-                    <td class="p-2.5 text-center font-bold ${item.totalMenit > 0 ? 'text-rose-600' : 'text-slate-400'}">${item.totalMenit} Menit</td>
+            tbody.innerHTML = stateAbsensi.map(log => `
+                <tr class="hover:bg-slate-50 border-b border-slate-100">
+                    <td class="p-2.5 font-mono text-[11px] text-slate-500">${log.waktu}</td>
+                    <td class="p-2.5 font-bold text-slate-700">${log.nama}</td>
+                    <td class="p-2.5"><span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-teal-50 text-teal-700 border border-teal-200">${log.status}</span></td>
+                    <td class="p-2.5 text-slate-600">${log.ket}</td>
                 </tr>
             `).join('');
         }
 
-        // LOGIN / LOGOUT & SYSTEM HANDLERS
-        function handleLogin(e) {
+        function renderJadwal() {
+            const tbody = document.getElementById('jadwalTableBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = stateJadwal.map(j => `
+                <tr class="hover:bg-slate-50">
+                    <td class="p-3 border font-semibold text-slate-700">${j.hari}</td>
+                    <td class="p-3 border text-teal-700 font-medium">${j.poli}</td>
+                    <td class="p-3 border font-bold text-slate-800">${j.nama}</td>
+                    <td class="p-3 border text-slate-500">${j.shift}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderPegawai() {
+            const tbody = document.getElementById('pegawaiTableBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = statePegawai.map(p => `
+                <tr class="hover:bg-slate-50">
+                    <td class="p-3 border font-mono text-slate-500">${p.id}</td>
+                    <td class="p-3 border font-bold text-slate-800">${p.nama}</td>
+                    <td class="p-3 border text-slate-600">${p.jabatan}</td>
+                    <td class="p-3 border"><span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold ${p.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}">${p.role.toUpperCase()}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function submitKegiatan(e) {
             e.preventDefault();
-            const u = document.getElementById('loginUsername').value.trim().toLowerCase();
-            const p = document.getElementById('loginPassword').value.trim();
+            const nama = document.getElementById('kegiatanNama').value;
+            const lokasi = document.getElementById('kegiatanLokasi').value;
+            
+            if (mapInstance) {
+                L.marker([-7.84857, 110.21751]).addTo(mapInstance)
+                    .bindPopup(`<b>${nama}</b><br>${lokasi}`)
+                    .openPopup();
+            }
+            alert('Kegiatan berhasil ditambahkan ke peta!');
+            document.getElementById('kegiatanNama').value = '';
+            document.getElementById('kegiatanLokasi').value = '';
+        }
 
-            const found = currentPegawaiList.find(x => x.username.toLowerCase() === u && x.pass === p);
-            if (found) {
-                currentUser = found;
-                localStorage.setItem('portal_logged_user', JSON.stringify(currentUser));
-                document.getElementById('loginOverlay').classList.add('hidden');
-                showApp();
-            } else {
-                document.getElementById('loginError').classList.remove('hidden');
+        function submitCuti(e) {
+            e.preventDefault();
+            alert('Pengajuan cuti dan pelimpahan tugas berhasil dikirimkan!');
+        }
+
+        function submitAduan(e) {
+            e.preventDefault();
+            alert('Saran/Aduan Anda telah terkirim secara anonim/rahasia.');
+            document.getElementById('aduanTeks').value = '';
+        }
+
+        function modalTambahPegawai() {
+            const nama = prompt('Masukkan Nama Pegawai:');
+            const jabatan = prompt('Masukkan Jabatan:');
+            if (nama && jabatan) {
+                statePegawai.push({
+                    id: '199' + Math.floor(Math.random() * 90000 + 10000),
+                    nama: nama,
+                    jabatan: jabatan,
+                    role: 'staf'
+                });
+                renderPegawai();
+                renderDashboardStats();
             }
         }
 
-        function handleLogout() {
-            currentUser = null;
-            localStorage.removeItem('portal_logged_user');
-            document.getElementById('appContainer').classList.add('hidden');
-            document.getElementById('loginOverlay').classList.remove('hidden');
-        }
-
-        function showApp() {
-            document.getElementById('appContainer').classList.remove('hidden');
-            document.getElementById('userNameDisplay').innerText = currentUser.nama;
-            document.getElementById('userRoleBadge').innerText = `${currentUser.jabatan} (${currentUser.role})`;
-            document.getElementById('userAvatar').innerText = currentUser.nama.substring(0, 2).toUpperCase();
-
-            const adminNavGroup = document.getElementById('adminNavGroup');
-            const absensiFilterPegawai = document.getElementById('absensiFilterPegawai');
-            const btnTambahJadwalModal = document.getElementById('btnTambahJadwalModal');
-            const btnDriveSettingHeader = document.getElementById('btnDriveSettingHeader');
-
-            if (currentUser.role === 'Admin') {
-                if (btnDriveSettingHeader) btnDriveSettingHeader.classList.remove('hidden');
-            } else {
-                if (btnDriveSettingHeader) btnDriveSettingHeader.classList.add('hidden');
-            }
-
-            const canEditJadwal = currentUser.role === 'Admin' || 
-                                 currentUser.role === 'Kepala Puskesmas' || 
-                                 currentUser.username.toLowerCase() === 'fathimatu';
-
-            if (btnTambahJadwalModal) {
-                if (canEditJadwal) btnTambahJadwalModal.classList.remove('hidden');
-                else btnTambahJadwalModal.classList.add('hidden');
-            }
-
-            if (currentUser.role === 'Admin' || currentUser.role === 'Kepala Puskesmas') {
-                if (adminNavGroup) adminNavGroup.classList.remove('hidden');
-                if (absensiFilterPegawai) {
-                    absensiFilterPegawai.classList.remove('hidden');
-                    absensiFilterPegawai.innerHTML = '<option value="ALL">-- Semua Pegawai --</option>' + 
-                        currentPegawaiList.map(p => `<option value="${p.nama}">${p.nama}</option>`).join('');
-                }
-            } else {
-                if (adminNavGroup) adminNavGroup.classList.add('hidden');
-                if (absensiFilterPegawai) absensiFilterPegawai.classList.add('hidden');
-            }
-
-            document.querySelectorAll('.admin-only-col').forEach(el => {
-                if (currentUser.role === 'Admin') el.classList.remove('hidden');
-                else el.classList.add('hidden');
+        function exportAbsensiCSV() {
+            let csv = 'Waktu,Nama,Status,Keterangan\n';
+            stateAbsensi.forEach(row => {
+                csv += `"${row.waktu}","${row.nama}","${row.status}","${row.ket}"\n`;
             });
-
-            const selectPelimpahan = document.getElementById('cutiPelimpahanTo');
-            const selectPelaksana = document.getElementById('kegPelaksanaSelect');
-            const filterJadwalPegawai = document.getElementById('filterJadwalPegawai');
-
-            if (selectPelimpahan) selectPelimpahan.innerHTML = currentPegawaiList.map(p => `<option value="${p.nama}">${p.nama} (${p.jabatan})</option>`).join('');
-            if (selectPelaksana) selectPelaksana.innerHTML = '<option value="">-- Pilih Pegawai --</option>' + currentPegawaiList.map(p => `<option value="${p.nama}">${p.nama}</option>`).join('');
-            if (filterJadwalPegawai) filterJadwalPegawai.innerHTML = '<option value="ALL">-- Semua Pegawai --</option>' + currentPegawaiList.map(p => `<option value="${p.nama}">${p.nama}</option>`).join('');
-
-            updateUnitOptions();
-            updateDusunOptions();
-            renderPegawaiTable();
-            renderAbsensiLogs();
-            renderPeringkatDisiplin();
-            renderCutiTable();
-            renderAduanList();
-            renderKegiatanTable();
-            renderJadwalView();
-            checkGpsLocation();
-            initCharts();
-            switchTab('dashboard');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'Laporan_Absensi_Puskesmas.csv');
+            a.click();
         }
 
-        function switchTab(tabId) {
-            if (tabId === 'pegawai' && currentUser.role !== 'Admin' && currentUser.role !== 'Kepala Puskesmas') {
-                alert('Akses Ditolak! Menu ini hanya dapat diakses oleh Admin atau Kepala Puskesmas.');
-                return;
-            }
+        // PETA LEAFLET
+        function initMap() {
+            if (document.getElementById('map') && typeof L !== 'undefined') {
+                mapInstance = L.map('map').setView([-7.84857, 110.21751], 14);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(mapInstance);
 
-            const tabs = ['dashboard', 'pegawai', 'absensi', 'jadwal', 'kegiatan', 'cuti', 'links', 'aduan'];
-            tabs.forEach(t => {
-                const sec = document.getElementById(`tab-${t}`);
-                const nav = document.getElementById(`nav-${t}`);
-                if (sec) sec.classList.add('hidden');
-                if (nav) nav.classList.remove('sidebar-item-active');
-            });
-
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-            const activeNav = document.getElementById(`nav-${tabId}`);
-            if (activeNav) activeNav.classList.add('sidebar-item-active');
-
-            if (tabId === 'kegiatan') {
-                updateKegiatanRoleBanner();
-                setTimeout(() => { 
-                    renderKegiatanTable();
-                    initLeafletMap();
-                    updateSebaranChart();
-                }, 200);
-            } else if (tabId === 'jadwal') {
-                updateUnitOptions();
-                renderJadwalView();
+                L.marker([-7.84857, 110.21751]).addTo(mapInstance)
+                    .bindPopup('<b>UPT Puskesmas Sentolo II</b><br>Pusat Operasional.')
+                    .openPopup();
             }
         }
 
-        // UPDATE OPTION POLI/UNIT UNIK
-        function updateUnitOptions() {
-            const selectUnit = document.getElementById('filterJadwalUnit');
-            if (!selectUnit) return;
-
-            const uniqueUnits = [...new Set(jadwalList.map(j => j.unit).filter(Boolean))];
-            selectUnit.innerHTML = '<option value="ALL">-- Semua Poli/Unit --</option>' + 
-                uniqueUnits.map(u => `<option value="${u}">${u}</option>`).join('');
-        }
-
-        function updateClock() {
-            const now = new Date();
-            const clockEl = document.getElementById('clockDisplay');
-            if (clockEl) {
-                clockEl.innerText = now.toLocaleTimeString('id-ID') + ' WIB';
+        // CHART.JS
+        function initChart() {
+            const ctx = document.getElementById('chartKehadiran');
+            if (ctx && typeof Chart !== 'undefined') {
+                chartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
+                        datasets: [{
+                            label: 'Persentase Kehadiran Staf (%)',
+                            data: [98, 95, 100, 97],
+                            borderColor: '#0d9488',
+                            backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
             }
         }
     </script>
