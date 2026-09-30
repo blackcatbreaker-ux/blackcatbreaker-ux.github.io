@@ -1211,7 +1211,929 @@
             { id: 38, nama: "Annisa Kurnia Ningrum, A.Md.Kes", jabatan: "Perawat Gigi", role: "Perawat", username: "annisa", pass: "annisa123", status: "Aktif" },
             { id: 39, nama: "Sadiyem", jabatan: "Pengelola Linen", role: "Staf", username: "sadiyem", pass: "sadiyem123", status: "Aktif" },
             { id: 40, nama: "Anggi Mustika Maylani", jabatan: "Kasir", role: "Staf", username: "anggi", pass: "anggi123", status: "Aktif" },
-            { id: 41, nama: "Reda Trilaksana", jabatan: "Jaga Malam", role: "Staf", username: "reda", pass: "reda123", status: "Aktif" }
+         <!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Portal Puskesmas Modern - UPT Puskesmas Sentolo II</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Leaflet OpenStreetMap CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(226, 232, 240, 0.8); }
+        .sidebar-item-active { background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%); color: white; font-weight: 600; box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25); }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        #map { height: 320px; border-radius: 1rem; z-index: 1; cursor: crosshair; }
+
+        @media print {
+            body { background: white !important; color: black !important; font-size: 11pt; }
+            #appContainer, #loginOverlay, header, aside, button, select, input, .no-print { display: none !important; }
+            #printSection { display: block !important; position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 15px; }
+            table { width: 100% !important; border-collapse: collapse !important; margin-top: 10px; }
+            th, td { border: 1px solid #000 !important; padding: 6px 8px !important; text-align: left; }
+            th { background-color: #f0f0f0 !important; font-weight: bold; }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col bg-slate-50">
+
+    <!-- LOGIN OVERLAY -->
+    <div id="loginOverlay" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="glass-card bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 border border-slate-100 relative overflow-hidden">
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl"></div>
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-gradient-to-tr from-teal-600 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg shadow-teal-500/30 text-white text-2xl font-bold">
+                    <i class="fa-solid fa-notes-medical"></i>
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-800">E-Portal Puskesmas</h2>
+                <p class="text-xs text-slate-500 mt-1 font-medium">UPT Puskesmas Sentolo II - Kulon Progo, DIY</p>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">Username / NIP / Nama</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="text" id="loginUsername" placeholder="Masukkan username" required class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">Password</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="password" id="loginPassword" placeholder="••••••••" required class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:bg-white transition-all">
+                    </div>
+                </div>
+
+                <div id="loginError" class="hidden p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-600 font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span id="loginErrorMsg">Username atau Password salah!</span>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-semibold rounded-xl shadow-lg shadow-teal-600/30 transition-all flex items-center justify-center gap-2">
+                    <span>Masuk ke Portal</span>
+                    <i class="fa-solid fa-arrow-right text-sm"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div id="appContainer" class="flex-1 flex overflow-hidden hidden">
+        <!-- SIDEBAR -->
+        <aside id="mainSidebar" class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 transition-all duration-300">
+            <div>
+                <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+                    <div class="flex items-center gap-3 sidebar-text">
+                        <div class="w-10 h-10 bg-teal-600 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-md shadow-teal-600/20 shrink-0">
+                            <i class="fa-solid fa-clinic-medical"></i>
+                        </div>
+                        <div class="truncate">
+                            <h1 class="font-extrabold text-slate-800 text-sm leading-tight truncate">E-Portal Sentolo II</h1>
+                            <span class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase">Kulon Progo, DIY</span>
+                        </div>
+                    </div>
+                    <button onclick="toggleSidebar()" class="p-2 rounded-xl text-slate-400 hover:text-teal-600 hover:bg-teal-50 transition-all" title="Sembunyikan/Munculkan Sidebar">
+                        <i id="sidebarToggleIcon" class="fa-solid fa-chevron-left text-xs"></i>
+                    </button>
+                </div>
+
+                <nav class="p-3 space-y-1">
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all sidebar-item-active">
+                        <i class="fa-solid fa-chart-pie w-5 text-center shrink-0"></i>
+                        <span class="sidebar-text truncate">Dashboard & Analisa</span>
+                    </button>
+
+                    <button onclick="switchTab('absensi')" id="nav-absensi" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                        <i class="fa-solid fa-user-check w-5 text-center shrink-0"></i>
+                        <span class="sidebar-text truncate">Portal Absensi Staf</span>
+                    </button>
+
+                    <button onclick="switchTab('jadwal')" id="nav-jadwal" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                        <i class="fa-solid fa-calendar-days w-5 text-center text-teal-600 shrink-0"></i>
+                        <span class="sidebar-text truncate">Jadwal Pegawai</span>
+                    </button>
+
+                    <button onclick="switchTab('kegiatan')" id="nav-kegiatan" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                        <i class="fa-solid fa-map-location-dot w-5 text-center text-emerald-600 shrink-0"></i>
+                        <span class="sidebar-text truncate">Laporan Kegiatan & Maps</span>
+                    </button>
+
+                    <button onclick="switchTab('cuti')" id="nav-cuti" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                        <i class="fa-solid fa-calendar-minus w-5 text-center shrink-0"></i>
+                        <span class="sidebar-text truncate">Cuti & Pelimpahan</span>
+                    </button>
+
+                    <button onclick="switchTab('aduan')" id="nav-aduan" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                        <i class="fa-solid fa-comment-dots w-5 text-center shrink-0"></i>
+                        <span class="sidebar-text truncate">Saran & Aduan</span>
+                    </button>
+
+                    <button onclick="switchTab('links')" id="nav-links" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                        <i class="fa-solid fa-cubes w-5 text-center shrink-0"></i>
+                        <span class="sidebar-text truncate">Shortcut Aplikasi</span>
+                    </button>
+
+                    <div id="adminNavGroup" class="pt-3 mt-3 border-t border-slate-100 hidden">
+                        <span class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider sidebar-text">Manajemen Pimpinan</span>
+                        <button onclick="switchTab('pegawai')" id="nav-pegawai" class="w-full flex items-center gap-3 px-3.5 py-2.5 mt-1 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                            <i class="fa-solid fa-users-gear w-5 text-center text-teal-600 shrink-0"></i>
+                            <span class="sidebar-text truncate">Daftar Pegawai & Akses</span>
+                        </button>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="p-3 border-t border-slate-100 bg-slate-50/50">
+                <div class="flex items-center justify-between p-2 rounded-xl bg-white border border-slate-200">
+                    <div class="flex items-center gap-2.5 overflow-hidden">
+                        <div id="userAvatar" class="w-8 h-8 bg-teal-100 text-teal-700 font-bold rounded-lg flex items-center justify-center text-xs shrink-0">US</div>
+                        <div class="truncate sidebar-text">
+                            <p id="userNameDisplay" class="text-xs font-bold text-slate-700 truncate">Nama User</p>
+                            <p id="userRoleBadge" class="text-[10px] font-medium text-slate-500 capitalize">Role</p>
+                        </div>
+                    </div>
+                    <button onclick="handleLogout()" class="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-all" title="Keluar">
+                        <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CONTENT AREA -->
+        <main class="flex-1 overflow-y-auto custom-scrollbar flex flex-col">
+            <header class="bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 transition-all md:hidden">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div>
+                        <h2 id="pageTitle" class="text-xl font-bold text-slate-800">Dashboard & Analisa</h2>
+                        <p id="pageSubtitle" class="text-xs text-slate-500">Ringkasan statistik & indikator kinerja Puskesmas Hari Ini</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <button onclick="syncDataFromSpreadsheet()" class="px-3 py-1.5 bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-200 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all" title="Refresh Data dari Google Sheets">
+                        <i id="syncSpinIcon" class="fa-solid fa-rotate text-teal-600"></i>
+                        <span>Sync DB</span>
+                    </button>
+
+                    <div id="dbSyncBadge" class="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-full text-xs text-emerald-700 font-medium">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span id="dbSyncText">Spreadsheet Connected</span>
+                    </div>
+
+                    <button id="btnDriveSettingHeader" onclick="openDriveConfigModal()" class="hidden px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold items-center gap-1.5 transition-all">
+                        <i class="fa-solid fa-database text-teal-600"></i>
+                        <span>Setting Web App URL</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="p-8 space-y-6 flex-1">
+
+                <!-- 1. TAB DASHBOARD -->
+                <section id="tab-dashboard" class="space-y-6">
+                    <div class="space-y-3">
+                        <div class="bg-gradient-to-r from-teal-700 to-emerald-700 text-white rounded-2xl px-4 py-2.5 shadow-md flex items-center justify-between gap-3 overflow-hidden text-xs">
+                            <div class="flex items-center gap-2 shrink-0 font-bold bg-white/20 px-2.5 py-1 rounded-lg backdrop-blur-sm uppercase tracking-wider text-[11px]">
+                                <i class="fa-solid fa-bullhorn text-amber-300 animate-bounce"></i> Pengumuman
+                            </div>
+                            <marquee id="marqueeTextDisplay" class="font-medium text-slate-100 tracking-wide text-xs">Selamat datang di E-Portal UPT Puskesmas Sentolo II. Utamakan pelayanan kesehatan yang cepat, tepat, dan empati!</marquee>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+                        <div class="glass-card p-5 rounded-2xl border border-slate-200 flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center text-xl font-bold">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-slate-400">Total Pegawai</p>
+                                <p class="text-2xl font-extrabold text-slate-800" id="statTotalPegawai">41</p>
+                                <p class="text-[10px] text-teal-600 font-medium mt-0.5"><i class="fa-solid fa-check"></i> UPT Sentolo II</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-5 rounded-2xl border border-slate-200 flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold">
+                                <i class="fa-solid fa-user-check"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-slate-400">Hadir Hari Ini</p>
+                                <p class="text-2xl font-extrabold text-slate-800" id="statHadir">0</p>
+                                <p class="text-[10px] text-emerald-600 font-medium mt-0.5"><i class="fa-solid fa-arrow-up"></i> Realtime Absensi</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-5 rounded-2xl border border-slate-200 flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold">
+                                <i class="fa-solid fa-map-pin"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-slate-400">Kegiatan Lapangan</p>
+                                <p class="text-2xl font-extrabold text-slate-800" id="statKegiatanCount">0</p>
+                                <p class="text-[10px] text-indigo-600 font-medium mt-0.5"><i class="fa-solid fa-location-dot"></i> Wilayah Kerja</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-5 rounded-2xl border border-slate-200 flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold">
+                                <i class="fa-solid fa-plane-departure"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-slate-400">Sedang Cuti / Ijin</p>
+                                <p class="text-2xl font-extrabold text-slate-800" id="statCuti">0</p>
+                                <p class="text-[10px] text-amber-600 font-medium mt-0.5"><i class="fa-solid fa-clock"></i> Pelimpahan Aktif</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200">
+                            <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-award text-amber-500 text-lg"></i>
+                                <span>10 Besar Pegawai Terajin (Disiplin Waktu Terbaik)</span>
+                            </h3>
+                            <div class="overflow-x-auto rounded-xl border border-slate-200">
+                                <table class="w-full text-left border-collapse text-xs">
+                                    <thead class="bg-emerald-50 text-[10px] font-bold text-emerald-800 uppercase">
+                                        <tr>
+                                            <th class="p-2.5 border-b">No</th>
+                                            <th class="p-2.5 border-b">Nama Pegawai</th>
+                                            <th class="p-2.5 border-b">Jabatan</th>
+                                            <th class="p-2.5 border-b text-center">Akumulasi Keterlambatan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="terajinTableBody" class="divide-y divide-slate-100"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200">
+                            <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-triangle-exclamation text-rose-500 text-lg"></i>
+                                <span>10 Besar Pegawai Kurang Rajin (Akumulasi Menit)</span>
+                            </h3>
+                            <div class="overflow-x-auto rounded-xl border border-slate-200">
+                                <table class="w-full text-left border-collapse text-xs">
+                                    <thead class="bg-rose-50 text-[10px] font-bold text-rose-800 uppercase">
+                                        <tr>
+                                            <th class="p-2.5 border-b">No</th>
+                                            <th class="p-2.5 border-b">Nama Pegawai</th>
+                                            <th class="p-2.5 border-b">Jabatan</th>
+                                            <th class="p-2.5 border-b text-center">Akumulasi Menit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="kurangRajinTableBody" class="divide-y divide-slate-100"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. TAB ABSENSI STAF -->
+                <section id="tab-absensi" class="space-y-6 hidden">
+                    <div class="p-4 bg-gradient-to-r from-teal-500/10 to-emerald-500/10 border border-teal-200/80 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-700">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-teal-600 text-white rounded-xl flex items-center justify-center text-lg shrink-0">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-extrabold text-slate-800">Ketentuan Jam Kerja UPT Puskesmas Sentolo II:</h4>
+                                <p class="text-slate-600 mt-0.5">
+                                    • <strong>Jam Masuk:</strong> Maksimal <strong>07:30 WIB</strong> (Setiap Hari) <br>
+                                    • <strong>Jam Pulang Minimal:</strong> Senin–Kamis: <strong>14:30 WIB</strong> | Jum'at: <strong>11:30 WIB</strong> | Sabtu: <strong>13:00 WIB</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200">
+                            <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-camera text-teal-600"></i> Form Presensi Staf
+                            </h3>
+
+                            <div id="gpsStatusBox" class="p-3.5 mb-4 rounded-xl text-xs font-semibold space-y-1 bg-amber-50 border border-amber-200 text-amber-800">
+                                <div class="flex items-center justify-between">
+                                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-spinner animate-spin"></i> Memeriksa GPS...</span>
+                                    <div class="flex items-center gap-2">
+                                        <span id="currentDistanceText" class="font-bold">-- m</span>
+                                        <button type="button" onclick="checkGpsLocation()" class="px-2 py-0.5 bg-teal-600 hover:bg-teal-700 text-white rounded text-[10px] font-bold transition-all flex items-center gap-1 shadow-sm">
+                                            <i class="fa-solid fa-rotate-right"></i> Refresh
+                                        </button>
+                                    </div>
+                                </div>
+                                <p id="gpsNotifMessage" class="text-[11px] font-normal text-slate-600">Mendeteksi koordinat Anda...</p>
+                            </div>
+
+                            <form onsubmit="submitAbsensi(event)" class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Status Kehadiran / Opsi Presensi</label>
+                                    <select id="absensiStatus" onchange="toggleSuratKeteranganFields()" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:ring-2 focus:ring-teal-500">
+                                        <option value="Hadir Masuk">Hadir Masuk (Pagi)</option>
+                                        <option value="Hadir Pulang">Hadir Pulang (Sore)</option>
+                                        <option value="Dinas Luar">Dinas Luar / Fieldwork</option>
+                                        <option value="Surat Keterangan">Surat Keterangan (Izin / Terlambat / Pulang Awal)</option>
+                                    </select>
+                                </div>
+
+                                <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+                                    <label class="block text-xs font-semibold text-slate-700"><i class="fa-solid fa-paperclip text-teal-600 mr-1"></i> Upload Dokumen Pendukung (Opsional)</label>
+                                    <input type="file" id="generalDokumen" accept="image/*,application/pdf" onchange="handleGeneralUpload(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-teal-100 file:text-teal-800">
+                                    <span id="generalFileName" class="text-[10px] text-teal-700 font-mono block"></span>
+                                </div>
+
+                                <div id="suratKeteranganGroup" class="hidden space-y-3 p-3 bg-amber-50/50 border border-amber-200 rounded-xl">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-amber-900 mb-1">Alasan Tidak Datang / Pulang Awal / Terlambat</label>
+                                        <textarea id="suratAlasan" rows="2" placeholder="Tuliskan alasan keperluan/sakit/dinas..." class="w-full px-3 py-2 border border-amber-200 rounded-xl text-xs focus:ring-2 focus:ring-amber-500"></textarea>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Catatan Kegiatan / Keterangan Tambahan</label>
+                                    <textarea id="absensiKet" rows="2" placeholder="Catatan tugas hari ini..." class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-teal-500"></textarea>
+                                </div>
+
+                                <div class="p-3 bg-slate-100 rounded-xl text-[11px] text-slate-500 space-y-1">
+                                    <p class="flex items-center justify-between">
+                                        <span><i class="fa-solid fa-building text-teal-600"></i> Puskesmas Sentolo II:</span>
+                                        <span class="font-mono text-slate-700">-7.84857, 110.21751</span>
+                                    </p>
+                                    <p class="flex items-center justify-between">
+                                        <span><i class="fa-solid fa-clock text-teal-600"></i> Waktu Server:</span>
+                                        <span id="clockDisplay" class="font-mono font-bold text-slate-800">--:--:-- WIB</span>
+                                    </p>
+                                </div>
+
+                                <button type="submit" id="btnSubmitAbsensi" disabled class="w-full py-2.5 bg-slate-300 text-slate-500 font-semibold rounded-xl text-xs transition-all cursor-not-allowed">
+                                    Kirim Presensi (Diluar Radius)
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200 md:col-span-2">
+                            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4">
+                                <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-list-check text-emerald-600 mr-2"></i> Log Presensi & Keterangan Waktu</h3>
+
+                                <div class="flex items-center gap-2 w-full sm:w-auto">
+                                    <select id="absensiFilterPegawai" onchange="renderAbsensiLogs()" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
+                                        <option value="ALL">-- Semua Pegawai --</option>
+                                    </select>
+                                    <button onclick="exportAbsensiCSV()" class="text-xs text-teal-600 hover:underline font-semibold whitespace-nowrap"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
+                                </div>
+                            </div>
+
+                            <div class="overflow-x-auto rounded-xl border border-slate-200 max-h-96 custom-scrollbar">
+                                <table class="w-full text-left border-collapse text-xs">
+                                    <thead class="bg-slate-100 text-[10px] font-bold text-slate-600 uppercase">
+                                        <tr>
+                                            <th class="p-2.5 border-b">Waktu</th>
+                                            <th class="p-2.5 border-b">Nama Staf</th>
+                                            <th class="p-2.5 border-b">Tipe</th>
+                                            <th class="p-2.5 border-b">Keterangan Jam Kerja</th>
+                                            <th class="p-2.5 border-b text-center">Akumulasi Disiplin</th>
+                                            <th class="p-2.5 border-b">Dokumen / Lampiran</th>
+                                            <th class="p-2.5 border-b text-center admin-only-col hidden">Aksi (Admin)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="absensiLogsBody" class="divide-y divide-slate-100"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. TAB JADWAL PEGAWAI -->
+                <section id="tab-jadwal" class="space-y-6 hidden">
+                    <div class="glass-card p-5 rounded-2xl border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+                            <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
+                                <button onclick="setJadwalViewMode('minggu')" id="btnJadwalMinggu" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-teal-700 shadow-sm">
+                                    <i class="fa-solid fa-calendar-week mr-1"></i> Per Minggu
+                                </button>
+                                <button onclick="setJadwalViewMode('bulan')" id="btnJadwalBulan" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-teal-700 transition-all">
+                                    <i class="fa-solid fa-calendar-days mr-1"></i> Per Bulan
+                                </button>
+                            </div>
+
+                            <select id="filterJadwalPegawai" onchange="onJadwalFilterChange()" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
+                                <option value="ALL">-- Semua Pegawai --</option>
+                            </select>
+
+                            <select id="filterJadwalUnit" onchange="renderJadwalView()" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
+                                <option value="ALL">-- Semua Poli/Unit --</option>
+                            </select>
+
+                            <button id="btnTambahJadwalModal" onclick="openJadwalModal()" class="hidden px-3.5 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition-all items-center gap-1.5">
+                                <i class="fa-solid fa-plus"></i> Tambah Shift (Khusus Admin)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl border border-slate-200">
+                        <div id="jadwalContainer" class="overflow-x-auto rounded-xl border border-slate-200"></div>
+                    </div>
+                </section>
+
+                <!-- 4. TAB LAPORAN KEGIATAN & MAPS -->
+                <section id="tab-kegiatan" class="space-y-6 hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200">
+                            <h3 class="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                <i class="fa-solid fa-file-pen text-emerald-600"></i> Form Laporkan Kegiatan
+                            </h3>
+
+                            <form onsubmit="submitKegiatan(event)" class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Kegiatan</label>
+                                    <input type="text" id="kegNama" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-600 mb-1">Kalurahan</label>
+                                        <select id="kegKalurahan" onchange="updateDusunOptions()" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white">
+                                            <option value="Salamrejo">Salamrejo</option>
+                                            <option value="Tuksono">Tuksono</option>
+                                            <option value="Srikayangan">Srikayangan</option>
+                                            <option value="Demangrejo">Demangrejo</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-600 mb-1">Dusun / Desa</label>
+                                        <select id="kegDusun" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white"></select>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Kegiatan</label>
+                                    <input type="date" id="kegTanggal" required class="w-full px-3 py-1.5 border border-slate-200 rounded-xl text-xs">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Pelaksana Kegiatan</label>
+                                    <select id="kegPelaksanaSelect" onchange="addPelaksana()" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white mb-2">
+                                        <option value="">-- Pilih Pegawai --</option>
+                                    </select>
+                                    <div id="selectedPelaksanaContainer" class="flex flex-wrap gap-1.5"></div>
+                                </div>
+
+                                <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs shadow-md">
+                                    Simpan Laporan Kegiatan
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200 lg:col-span-2">
+                            <h3 class="text-base font-bold text-slate-800 mb-2">Peta Sebaran Kegiatan</h3>
+                            <div id="map"></div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-2xl border border-slate-200">
+                        <h3 class="text-base font-bold text-slate-800 mb-4">Riwayat Laporan Kegiatan</h3>
+                        <div class="overflow-x-auto rounded-xl border border-slate-200">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead class="bg-slate-100 text-[10px] font-bold text-slate-600 uppercase">
+                                    <tr>
+                                        <th class="p-3 border-b">Tanggal</th>
+                                        <th class="p-3 border-b">Nama Kegiatan</th>
+                                        <th class="p-3 border-b">Wilayah</th>
+                                        <th class="p-3 border-b">Tim Pelaksana</th>
+                                        <th class="p-3 border-b text-center">Aksi (Edit / Revisi)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="kegiatanTableBody" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. TAB PEGAWAI -->
+                <section id="tab-pegawai" class="space-y-6 hidden">
+                    <div class="glass-card p-6 rounded-2xl border border-slate-200">
+                        <h3 class="text-base font-bold text-slate-800 mb-4">Daftar Pegawai UPT Puskesmas Sentolo II</h3>
+                        <div class="overflow-x-auto rounded-xl border border-slate-200">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-slate-100 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                                    <tr>
+                                        <th class="p-3 border-b">No</th>
+                                        <th class="p-3 border-b">Nama Pegawai</th>
+                                        <th class="p-3 border-b">Jabatan</th>
+                                        <th class="p-3 border-b">Username</th>
+                                        <th class="p-3 border-b">Role</th>
+                                        <th class="p-3 border-b text-center">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pegawaiTableBody" class="text-xs divide-y divide-slate-100 text-slate-700"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. TAB CUTI -->
+                <section id="tab-cuti" class="space-y-6 hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200">
+                            <h3 class="text-base font-bold text-slate-800 mb-4">Form Permohonan Cuti</h3>
+                            <form onsubmit="submitCuti(event)" class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Jenis Cuti</label>
+                                    <select id="cutiJenis" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white">
+                                        <option value="Cuti Tahunan">Cuti Tahunan</option>
+                                        <option value="Cuti Sakit">Cuti Sakit</option>
+                                        <option value="Cuti Melahirkan">Cuti Melahirkan</option>
+                                    </select>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-600 mb-1">Mulai</label>
+                                        <input type="date" id="cutiTglMulai" required class="w-full px-3 py-1.5 border border-slate-200 rounded-xl text-xs">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-600 mb-1">Selesai</label>
+                                        <input type="date" id="cutiTglSelesai" required class="w-full px-3 py-1.5 border border-slate-200 rounded-xl text-xs">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Pelimpahan Tugas Kepada</label>
+                                    <select id="cutiPelimpahanTo" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white"></select>
+                                </div>
+                                <button type="submit" class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md">
+                                    Ajukan Cuti
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200 md:col-span-2">
+                            <h3 class="text-base font-bold text-slate-800 mb-4">Daftar Pengajuan Cuti</h3>
+                            <div class="overflow-x-auto rounded-xl border border-slate-200">
+                                <table class="w-full text-left border-collapse text-xs">
+                                    <thead class="bg-slate-100 text-[10px] font-bold text-slate-600 uppercase">
+                                        <tr>
+                                            <th class="p-3 border-b">Pemohon</th>
+                                            <th class="p-3 border-b">Jenis</th>
+                                            <th class="p-3 border-b">Tanggal</th>
+                                            <th class="p-3 border-b">Penerima Tugas</th>
+                                            <th class="p-3 border-b text-center">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cutiTableBody" class="divide-y divide-slate-100"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7. TAB ADUAN -->
+                <section id="tab-aduan" class="space-y-6 hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200">
+                            <h3 class="text-base font-bold text-slate-800 mb-4">Form Saran & Aduan Internal</h3>
+                            <form onsubmit="submitAduan(event)" class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori</label>
+                                    <select id="aduanKategori" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white">
+                                        <option value="Fasilitas & Sarpras">Fasilitas & Sarpras</option>
+                                        <option value="Pelayanan">Pelayanan</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Isi Saran / Aduan</label>
+                                    <textarea id="aduanIsi" rows="4" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs"></textarea>
+                                </div>
+                                <button type="submit" class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md">
+                                    Kirim Aduan
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200 md:col-span-2">
+                            <h3 class="text-base font-bold text-slate-800 mb-4">Daftar Masukan</h3>
+                            <div id="aduanListContainer" class="space-y-3"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 8. TAB SHORTCUT LINKS -->
+                <section id="tab-links" class="space-y-6 hidden">
+                    <div class="glass-card p-6 rounded-2xl border border-slate-200">
+                        <h3 class="text-base font-bold text-slate-800 mb-4">Shortcut Aplikasi Kemenkes & Daerah</h3>
+                        <p class="text-xs text-slate-500">Seluruh tautan aplikasi terhubung ke portal resmi Kemenkes RI & Pemkab Kulon Progo.</p>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL EDIT LAPORAN KEGIATAN -->
+    <div id="editKegiatanModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-slate-100">
+            <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-file-pen text-teal-600"></i> Edit / Revisi Laporan Kegiatan
+            </h3>
+            <form onsubmit="saveKegiatanEdit(event)" class="space-y-3">
+                <input type="hidden" id="editKegId">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Kegiatan</label>
+                    <input type="text" id="editKegNama" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Kalurahan</label>
+                        <select id="editKegKalurahan" onchange="updateEditDusunOptions()" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white">
+                            <option value="Salamrejo">Salamrejo</option>
+                            <option value="Tuksono">Tuksono</option>
+                            <option value="Srikayangan">Srikayangan</option>
+                            <option value="Demangrejo">Demangrejo</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Dusun / Desa</label>
+                        <select id="editKegDusun" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white"></select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Kegiatan</label>
+                    <input type="date" id="editKegTanggal" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
+                </div>
+                <div class="flex items-center justify-end gap-2 pt-3">
+                    <button type="button" onclick="closeEditKegiatanModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL GOOGLE DRIVE / SPREADSHEET CONFIG -->
+    <div id="driveConfigModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-slate-100">
+            <h3 class="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
+                <i class="fa-brands fa-google-drive text-teal-600 text-xl"></i> Integrasi Google Spreadsheet DB
+            </h3>
+            <p class="text-xs text-slate-500 mb-4">Masukkan Web App URL Apps Script dari Google Spreadsheet <strong>DB_Portal_Puskesmas</strong> Anda.</p>
+
+            <form onsubmit="saveDriveConfig(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Google Web App Script URL</label>
+                    <input type="url" id="driveScriptUrl" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-teal-500" placeholder="https://script.google.com/macros/s/.../exec">
+                </div>
+                <div class="flex items-center justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeDriveConfigModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs">Tutup</button>
+                    <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md">Simpan Konfigurasi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const PUSKESMAS_COORDS = { lat: -7.8485695, lng: 110.2175086 };
+        const MAX_ABSENSI_RADIUS_METERS = 70;
+        
+        // MASUKKAN URL WEB APP SCRIPT HASIL DEPLOY DI SINI:
+        const DEFAULT_SPREADSHEET_URL = "https://script.google.com/macros/s/AKfycbxYOUR_SCRIPT_ID_HERE/exec";
+
+        const wilayahData = {
+            "Salamrejo": ["Klebakan", "Mentobayan", "Giyoso", "Karangwetan", "Kidulan", "Dhisil", "Salam", "Ngrandu"],
+            "Srikayangan": ["Pendem", "Kaliwinong Lor", "Kaliwinong Kidul", "Klumutan", "Malangan"],
+            "Demangrejo": ["Belik", "Demangan", "Banaran", "Karang Patihan", "Trukan"],
+            "Tuksono": ["Giling", "Karang", "Kalisono", "Wonobroto", "Bulak"]
+        };
+
+        const initialPegawaiData = [
+            { id: 1, nama: "drg. R. A. Hannie Permatasari", jabatan: "Ka Puskesmas", role: "Kepala Puskesmas", username: "hannie", pass: "hannie123", status: "Aktif" },
+            { id: 2, nama: "dr. AM Sajarwadi, M.Kes", jabatan: "Dokter umum", role: "Dokter", username: "sajarwadi", pass: "sajarwadi123", status: "Aktif" },
+            { id: 3, nama: "Endang Lestari P, SST", jabatan: "Bidan Madya", role: "Bidan", username: "endang", pass: "endang123", status: "Aktif" },
+            { id: 4, nama: "dr. Fathimatuzzahro", jabatan: "Dokter umum", role: "Dokter", username: "fathimatu", pass: "fathimatu123", status: "Aktif" },
+            { id: 5, nama: "Ihwan Nurul Hadi", jabatan: "Pengelola Teknologi Informasi", role: "Admin", username: "ihwan", pass: "ihwan123", status: "Aktif" }
+        ];
+
+        let currentPegawaiList = initialPegawaiData;
+        let currentUser = JSON.parse(localStorage.getItem('portal_logged_user')) || null;
+        
+        let absensiLogs = [];
+        let kegiatanList = [];
+        let cutiList = [];
+        let aduanList = [];
+        let jadwalList = [];
+        let driveScriptUrl = localStorage.getItem('portal_drive_url') || DEFAULT_SPREADSHEET_URL;
+
+        let currentDistanceMeters = 0;
+        let selectedPelaksanaList = [];
+        let selectedCoords = { lat: -7.8485695, lng: 110.2175086 };
+
+        window.onload = function() {
+            updateClock();
+            setInterval(updateClock, 1000);
+
+            if (driveScriptUrl) {
+                syncDataFromSpreadsheet();
+            }
+
+            if (currentUser) {
+                showApp();
+            } else {
+                document.getElementById('loginOverlay').classList.remove('hidden');
+            }
+        };
+
+        // INTEGRASI API GOOGLE SPREADSHEET
+        async function syncDataFromSpreadsheet() {
+            if (!driveScriptUrl || driveScriptUrl.includes('YOUR_SCRIPT_ID_HERE')) return;
+
+            const spinIcon = document.getElementById('syncSpinIcon');
+            const syncText = document.getElementById('dbSyncText');
+            if (spinIcon) spinIcon.classList.add('animate-spin');
+            if (syncText) syncText.innerText = "Syncing with Spreadsheet...";
+
+            try {
+                const res = await fetch(`${driveScriptUrl}?action=GET_ALL_DATA`);
+                const data = await res.json();
+
+                if (data) {
+                    if (data.pegawai && data.pegawai.length > 0) currentPegawaiList = data.pegawai;
+                    if (data.absensi) absensiLogs = data.absensi;
+                    if (data.kegiatan) kegiatanList = data.kegiatan;
+                    if (data.cuti) cutiList = data.cuti;
+                    if (data.aduan) aduanList = data.aduan;
+                    if (data.jadwal) jadwalList = data.jadwal;
+
+                    if (syncText) syncText.innerText = "Spreadsheet Live Connected";
+                    renderAllViews();
+                }
+            } catch (err) {
+                console.warn("Spreadsheet Sync Warning:", err);
+                if (syncText) syncText.innerText = "Offline Mode / Fallback";
+            } finally {
+                if (spinIcon) spinIcon.classList.remove('animate-spin');
+            }
+        }
+
+        function sendToGoogleSheet(action, payload) {
+            if (!driveScriptUrl || driveScriptUrl.includes('YOUR_SCRIPT_ID_HERE')) return;
+            try {
+                fetch(driveScriptUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: action, payload: payload })
+                });
+            } catch (err) {
+                console.error("Sheet Post Error:", err);
+            }
+        }
+
+        function renderAllViews() {
+            renderPegawaiTable();
+            renderAbsensiLogs();
+            renderCutiTable();
+            renderAduanList();
+            renderKegiatanTable();
+            renderJadwalView();
+            renderDashboardRealtimeStats();
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('loginUsername').value.trim().toLowerCase();
+            const p = document.getElementById('loginPassword').value.trim();
+
+            const found = currentPegawaiList.find(x => x.username.toLowerCase() === u && x.pass === p);
+            if (found) {
+                currentUser = found;
+                localStorage.setItem('portal_logged_user', JSON.stringify(currentUser));
+                document.getElementById('loginOverlay').classList.add('hidden');
+                showApp();
+            } else {
+                document.getElementById('loginError').classList.remove('hidden');
+            }
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('portal_logged_user');
+            document.getElementById('appContainer').classList.add('hidden');
+            document.getElementById('loginOverlay').classList.remove('hidden');
+        }
+
+        function showApp() {
+            document.getElementById('appContainer').classList.remove('hidden');
+            document.getElementById('userNameDisplay').innerText = currentUser.nama;
+            document.getElementById('userRoleBadge').innerText = `${currentUser.jabatan} (${currentUser.role})`;
+            document.getElementById('userAvatar').innerText = currentUser.nama.substring(0, 2).toUpperCase();
+
+            renderAllViews();
+            switchTab('dashboard');
+        }
+
+        function switchTab(tabId) {
+            const tabs = ['dashboard', 'pegawai', 'absensi', 'jadwal', 'kegiatan', 'cuti', 'links', 'aduan'];
+            tabs.forEach(t => {
+                const sec = document.getElementById(`tab-${t}`);
+                const nav = document.getElementById(`nav-${t}`);
+                if (sec) sec.classList.add('hidden');
+                if (nav) nav.classList.remove('sidebar-item-active');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) activeNav.classList.add('sidebar-item-active');
+        }
+
+        function submitAbsensi(e) {
+            e.preventDefault();
+            const statusType = document.getElementById('absensiStatus').value;
+            const now = new Date();
+
+            const newLog = {
+                id: Date.now(),
+                waktu: now.toLocaleTimeString('id-ID'),
+                tanggalStr: now.toLocaleDateString('id-ID'),
+                nama: currentUser.nama,
+                tipe: statusType,
+                keteranganJam: "Tepat Waktu",
+                menitPelanggaran: 0,
+                jarak: `${currentDistanceMeters}m`,
+                alasan: document.getElementById('absensiKet').value || '-',
+                dokumen: '-'
+            };
+
+            absensiLogs.unshift(newLog);
+            sendToGoogleSheet('ADD_ABSENSI', newLog);
+            renderAbsensiLogs();
+            alert('Presensi berhasil disimpan ke Google Spreadsheet DB!');
+        }
+
+        function renderAbsensiLogs() {
+            const tbody = document.getElementById('absensiLogsBody');
+            if (!tbody) return;
+            tbody.innerHTML = absensiLogs.slice(0, 20).map(l => `
+                <tr class="hover:bg-slate-50">
+                    <td class="p-2.5 font-mono text-slate-500">${l.waktu || ''}</td>
+                    <td class="p-2.5 font-bold text-slate-800">${l.nama || ''}</td>
+                    <td class="p-2.5"><span class="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-[10px] font-semibold">${l.tipe || ''}</span></td>
+                    <td class="p-2.5">${l.keteranganjam || l.keteranganJam || 'Hadir'}</td>
+                    <td class="p-2.5 text-center font-bold">${l.menitpelanggaran || 0} m</td>
+                    <td class="p-2.5 text-slate-600">${l.alasan || '-'}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderPegawaiTable() {
+            const tbody = document.getElementById('pegawaiTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = currentPegawaiList.map((p, idx) => `
+                <tr class="hover:bg-slate-50">
+                    <td class="p-3 font-semibold text-slate-400">${idx + 1}</td>
+                    <td class="p-3 font-bold text-slate-800">${p.nama}</td>
+                    <td class="p-3 text-slate-600">${p.jabatan}</td>
+                    <td class="p-3 font-mono text-teal-700">${p.username}</td>
+                    <td class="p-3"><span class="px-2.5 py-1 bg-teal-100 text-teal-800 rounded-full text-[10px] font-bold">${p.role}</span></td>
+                    <td class="p-3 text-center"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded text-[10px] font-bold">Aktif</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function openDriveConfigModal() {
+            document.getElementById('driveScriptUrl').value = driveScriptUrl;
+            document.getElementById('driveConfigModal').classList.remove('hidden');
+        }
+        function closeDriveConfigModal() { document.getElementById('driveConfigModal').classList.add('hidden'); }
+        function saveDriveConfig(e) {
+            e.preventDefault();
+            driveScriptUrl = document.getElementById('driveScriptUrl').value.trim();
+            localStorage.setItem('portal_drive_url', driveScriptUrl);
+            closeDriveConfigModal();
+            syncDataFromSpreadsheet();
+            alert('URL Web App Google Spreadsheet berhasil diperbarui!');
+        }
+
+        function updateClock() {
+            const el = document.getElementById('clockDisplay');
+            if (el) el.innerText = new Date().toLocaleTimeString('id-ID') + ' WIB';
+        }
+    </script>
+</body>
+</html>   { id: 41, nama: "Reda Trilaksana", jabatan: "Jaga Malam", role: "Staf", username: "reda", pass: "reda123", status: "Aktif" }
         ];
 
         let currentPegawaiList = JSON.parse(localStorage.getItem('portal_pegawai_db')) || initialPegawaiData;
@@ -1222,7 +2144,7 @@
         let cutiList = JSON.parse(localStorage.getItem('portal_cuti_list')) || [];
         let aduanList = JSON.parse(localStorage.getItem('portal_aduan_list')) || [];
         let jadwalList = JSON.parse(localStorage.getItem('portal_jadwal_list')) || [];
-        let driveScriptUrl = localStorage.getItem('portal_drive_url') || DEFAULT_SPREADSHEET_URL;
+        let driveScriptUrl = localStorage.getItem('portal_drive_url') || https://script.google.com/macros/s/AKfycbyRRfl4NJFi0z_bfrJ7kajd6R4gphcRr9MSE7uQeNt9zK9UTV-BxsJQUMbWN5ZRC-4ptw/exec;
 
         let marqueeText = localStorage.getItem('portal_marquee_text') || "Selamat datang di E-Portal UPT Puskesmas Sentolo II. Utamakan pelayanan kesehatan yang cepat, tepat, dan empati!";
         let flyerImageUrl = localStorage.getItem('portal_flyer_url') || "https://via.placeholder.com/1200x250/0d9488/ffffff?text=Banner+Pengumuman+%26+Informasi+Penting+UPT+Puskesmas+Sentolo+II";
