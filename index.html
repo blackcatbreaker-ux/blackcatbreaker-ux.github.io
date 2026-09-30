@@ -46,7 +46,7 @@
                     <i class="fa-solid fa-notes-medical"></i>
                 </div>
                 <h2 class="text-2xl font-extrabold text-slate-800">E-Portal Puskesmas</h2>
-                <p class="text-xs text-slate-500 mt-1 font-medium">UPT Puskesmas Sentolo II - Sistem Informasi & Manajemen</p>
+                <p class="text-xs text-slate-500 mt-1 font-medium">UPT Puskesmas Sentolo II - Google Spreadsheet Integrated</p>
             </div>
 
             <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
@@ -90,7 +90,7 @@
                         </div>
                         <div class="truncate">
                             <h1 class="font-extrabold text-slate-800 text-sm leading-tight truncate">E-Portal Sentolo II</h1>
-                            <span class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase">Puskesmas Digital</span>
+                            <span class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase">Google Sheets DB</span>
                         </div>
                     </div>
                     <button onclick="toggleSidebar()" class="p-2 rounded-xl text-slate-400 hover:text-teal-600 hover:bg-teal-50 transition-all" title="Sembunyikan/Munculkan Sidebar">
@@ -187,13 +187,9 @@
             </header>
 
             <div class="p-8 space-y-6 flex-1">
-
                 <!-- 1. TAB DASHBOARD -->
                 <section id="tab-dashboard" class="space-y-6">
-                    
-                    <!-- ROLLING TEKS & FLYER ANNOUNCEMENT (DI PALING ATAS DASHBOARD) -->
                     <div class="space-y-3">
-                        <!-- ROLLING / RUNNING TEXT -->
                         <div class="bg-gradient-to-r from-teal-700 to-emerald-700 text-white rounded-2xl px-4 py-2.5 shadow-md flex items-center justify-between gap-3 overflow-hidden text-xs">
                             <div class="flex items-center gap-2 shrink-0 font-bold bg-white/20 px-2.5 py-1 rounded-lg backdrop-blur-sm uppercase tracking-wider text-[11px]">
                                 <i class="fa-solid fa-bullhorn text-amber-300 animate-bounce"></i> Pengumuman
@@ -204,13 +200,11 @@
                             </button>
                         </div>
 
-                        <!-- BANNER FLYER PROMO / PENGUMUMAN -->
                         <div id="flyerBannerContainer" class="glass-card rounded-2xl overflow-hidden border border-slate-200 shadow-sm relative group">
                             <img id="flyerImageDisplay" src="https://via.placeholder.com/1200x250/0d9488/ffffff?text=Banner+Pengumuman+%26+Informasi+Penting+UPT+Puskesmas+Sentolo+II" class="w-full h-36 md:h-48 object-cover transition-all duration-300 group-hover:scale-[1.01]">
                         </div>
                     </div>
 
-                    <!-- STATISTIK REALTIME -->
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
                         <div class="glass-card p-5 rounded-2xl border border-slate-200 flex items-center gap-4">
                             <div class="w-12 h-12 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center text-xl font-bold">
@@ -257,7 +251,6 @@
                         </div>
                     </div>
 
-                    <!-- TABEL PERINGKAT KEDISIPLINAN PEGAWAI -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="glass-card p-6 rounded-2xl border border-slate-200">
                             <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
@@ -318,8 +311,7 @@
                     </div>
                 </section>
 
-
-                <!-- 2. TAB PORTAL ABSENSI STAF -->
+                <!-- TAB ABSENSI -->
                 <section id="tab-absensi" class="space-y-6 hidden">
                     <div class="p-4 bg-gradient-to-r from-teal-500/10 to-emerald-500/10 border border-teal-200/80 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-700">
                         <div class="flex items-center gap-3">
@@ -409,7 +401,6 @@
                                     <select id="absensiFilterPegawai" onchange="renderAbsensiLogs()" class="hidden px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
                                         <option value="ALL">-- Semua Pegawai --</option>
                                     </select>
-
                                     <button onclick="exportAbsensiCSV()" class="text-xs text-teal-600 hover:underline font-semibold whitespace-nowrap"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
                                 </div>
                             </div>
@@ -434,8 +425,7 @@
                     </div>
                 </section>
 
-
-                <!-- 3. TAB MENU JADWAL PEGAWAI -->
+                <!-- TAB JADWAL -->
                 <section id="tab-jadwal" class="space-y-6 hidden">
                     <div class="glass-card p-5 rounded-2xl border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
                         <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
@@ -503,8 +493,7 @@
                     </div>
                 </section>
 
-
-                <!-- 4. TAB LAPORAN KEGIATAN & VISUALISASI MAPS -->
+                <!-- TAB KEGIATAN -->
                 <section id="tab-kegiatan" class="space-y-6 hidden">
                     <div id="kegiatanRoleBanner" class="p-3 bg-teal-50 border border-teal-200 rounded-xl text-xs text-teal-800 flex items-center justify-between">
                         <span id="kegiatanRoleBannerText" class="font-medium"><i class="fa-solid fa-shield-halved text-teal-600 mr-1.5"></i> Menampilkan Laporan Kegiatan</span>
@@ -616,8 +605,7 @@
                     </div>
                 </section>
 
-
-                <!-- 5. TAB DAFTAR PEGAWAI & HAK AKSES -->
+                <!-- TAB PEGAWAI -->
                 <section id="tab-pegawai" class="space-y-6 hidden">
                     <div class="glass-card p-6 rounded-2xl border border-slate-200">
                         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
@@ -659,8 +647,7 @@
                     </div>
                 </section>
 
-
-                <!-- 6. TAB CUTI & PELIMPAHAN TUGAS -->
+                <!-- TAB CUTI -->
                 <section id="tab-cuti" class="space-y-6 hidden">
                     <div class="glass-card p-5 rounded-2xl border border-slate-200">
                         <div class="flex items-center justify-between cursor-pointer" onclick="toggleKopEditor()">
@@ -751,8 +738,7 @@
                     </div>
                 </section>
 
-
-                <!-- 7. TAB SARAN & ADUAN INTERNAL -->
+                <!-- TAB ADUAN -->
                 <section id="tab-aduan" class="space-y-6 hidden">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="glass-card p-6 rounded-2xl border border-slate-200">
@@ -788,8 +774,7 @@
                     </div>
                 </section>
 
-
-                <!-- 8. TAB SHORTCUT APLIKASI (DIPERBARUI SESUAI INSTRUKSI) -->
+                <!-- TAB SHORTCUT LINKS -->
                 <section id="tab-links" class="space-y-6 hidden">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
                         <a href="http://157.15.82.16:8081/j-care/" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
@@ -892,7 +877,6 @@
                         </a>
                     </div>
                 </section>
-
             </div>
         </main>
     </div>
@@ -1004,12 +988,12 @@
             <h3 class="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
                 <i class="fa-brands fa-google-drive text-teal-600 text-xl"></i> Integrasi Google Drive Spreadsheet
             </h3>
-            <p class="text-xs text-slate-500 mb-4">Aplikasi ini terhubung langsung ke Google Sheets DB_Portal_Puskesmas secara Realtime.</p>
+            <p class="text-xs text-slate-500 mb-4">Masukkan Google Apps Script Web App URL untuk mengintegrasikan database <strong>DB_Portal_Puskesmas</strong> secara realtime.</p>
 
             <form onsubmit="saveDriveConfig(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Google Spreadsheet Web App Script URL</label>
-                    <input type="url" id="driveScriptUrl" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-teal-500">
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Google Web App Script URL</label>
+                    <input type="url" id="driveScriptUrl" placeholder="https://script.google.com/macros/s/.../exec" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-teal-500">
                 </div>
                 <div class="flex items-center justify-end gap-2 pt-2">
                     <button type="button" onclick="closeDriveConfigModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs">Tutup</button>
@@ -1026,7 +1010,7 @@
     <script>
         const PUSKESMAS_COORDS = { lat: -7.8485695, lng: 110.2175086 };
         const MAX_ABSENSI_RADIUS_METERS = 70;
-        const DEFAULT_SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/1xopLSvYQCneF1mI-CUVkpm1Lx9_AAMYcVHad72Bx3K4/edit?gid=0#gid=0";
+        const DEFAULT_SPREADSHEET_URL = "";
 
         const wilayahData = {
             "Salamrejo": ["Klebakan", "Mentobayan", "Giyoso", "Karangwetan", "Kidulan", "Dhisil", "Salam", "Ngrandu"],
@@ -1133,15 +1117,15 @@
             localStorage.setItem('portal_flyer_url', flyerImageUrl);
         }
 
-        // PENGIRIMAN DATA REALTIME KE GOOGLE SPREADSHEET BACKEND
+        // INTEGRASI SPREADSHEET REALTIME (POST TO APPS SCRIPT)
         function sendToGoogleSheet(action, payload) {
-            if (!driveScriptUrl || driveScriptUrl === DEFAULT_SPREADSHEET_URL || !driveScriptUrl.startsWith('http')) return;
+            if (!driveScriptUrl || !driveScriptUrl.startsWith('http')) return;
             try {
                 fetch(driveScriptUrl, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: action, payload: payload, timestamp: new Date().toISOString() })
+                    body: JSON.stringify({ action: action, payload: payload })
                 });
             } catch (err) {
                 console.log("Sheet Sync Info:", err);
@@ -1389,26 +1373,21 @@
             }
         }
 
-        // PERBAIKAN DASHBOARD & ANALISA AGAR REALTIME
         function renderDashboardRealtimeStats() {
             const todayStr = new Date().toLocaleDateString('id-ID');
             
-            // 1. Total Pegawai
             const statTotal = document.getElementById('statTotalPegawai');
             if (statTotal) statTotal.innerText = currentPegawaiList.length;
 
-            // 2. Hadir Hari Ini (Pegawai Unik yang melakukan presensi hari ini)
             const hadirTodayNames = new Set(
                 absensiLogs.filter(l => l.tanggalStr === todayStr || l.waktu).map(l => l.nama)
             );
             const statHadir = document.getElementById('statHadir');
             if (statHadir) statHadir.innerText = hadirTodayNames.size;
 
-            // 3. Kegiatan Lapangan Hari Ini
             const statKeg = document.getElementById('statKegiatanCount');
             if (statKeg) statKeg.innerText = kegiatanList.length;
 
-            // 4. Sedang Cuti / Ijin
             const cutiAktif = cutiList.filter(c => c.status === "Disetujui");
             const statCuti = document.getElementById('statCuti');
             if (statCuti) statCuti.innerText = cutiAktif.length;
@@ -1458,7 +1437,6 @@
         }
 
         function updateDashboardChartsRealtime() {
-            // Update Donut Cuti Chart
             const cutiCounts = { 'Cuti Tahunan': 0, 'Cuti Sakit': 0, 'Cuti Melahirkan': 0, 'Cuti Alasan Penting': 0 };
             cutiList.forEach(c => { if (cutiCounts[c.jenis] !== undefined) cutiCounts[c.jenis]++; });
 
@@ -1467,14 +1445,12 @@
                 chartCutiInstance.update();
             }
 
-            // Update Kehadiran Line Chart
             if (chartKehadiranInstance) {
                 chartKehadiranInstance.data.datasets[0].data = [absensiLogs.length, absensiLogs.length + 2, absensiLogs.length + 5, absensiLogs.length + 8, absensiLogs.length + 10, absensiLogs.length + 12, absensiLogs.length + 15];
                 chartKehadiranInstance.update();
             }
         }
 
-        // LOGIN / LOGOUT
         function handleLogin(e) {
             e.preventDefault();
             const u = document.getElementById('loginUsername').value.trim().toLowerCase();
@@ -1903,8 +1879,6 @@
                 const newPass = document.getElementById('editPassword').value.trim();
                 if (newPass) p.pass = newPass;
                 saveToStorage();
-                sendToGoogleSheet('UPDATE_PEGAWAI', p);
-                
                 renderPegawaiTable();
                 closeEditPegawaiModal();
                 alert(`Setting Hak Akses untuk ${p.nama} Disimpan!`);
@@ -2237,7 +2211,6 @@
             if (item) {
                 item.status = "Disetujui";
                 saveToStorage();
-                sendToGoogleSheet('UPDATE_CUTI_STATUS', { id: id, status: 'Disetujui' });
                 renderCutiTable();
                 renderDashboardRealtimeStats();
             }
@@ -2408,7 +2381,7 @@
             driveScriptUrl = document.getElementById('driveScriptUrl').value.trim();
             localStorage.setItem('portal_drive_url', driveScriptUrl);
             closeDriveConfigModal();
-            alert('Konfigurasi Disimpan!');
+            alert('Konfigurasi Web App URL Berhasil Disimpan!');
         }
 
         function updateClock() {
