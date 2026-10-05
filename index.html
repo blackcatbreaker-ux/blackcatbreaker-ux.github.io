@@ -294,6 +294,7 @@
                 </section>
 
                 <!-- 2. TAB ABSENSI STAF -->
+                <!-- 2. TAB PORTAL ABSENSI STAF -->
                 <section id="tab-absensi" class="space-y-6 hidden">
                     <div class="p-4 bg-gradient-to-r from-teal-500/10 to-emerald-500/10 border border-teal-200/80 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-700">
                         <div class="flex items-center gap-3">
@@ -319,12 +320,7 @@
                             <div id="gpsStatusBox" class="p-3.5 mb-4 rounded-xl text-xs font-semibold space-y-1 bg-amber-50 border border-amber-200 text-amber-800">
                                 <div class="flex items-center justify-between">
                                     <span class="flex items-center gap-1.5"><i class="fa-solid fa-spinner animate-spin"></i> Memeriksa GPS...</span>
-                                    <div class="flex items-center gap-2">
-                                        <span id="currentDistanceText" class="font-bold">-- m</span>
-                                        <button type="button" onclick="checkGpsLocation()" class="px-2 py-0.5 bg-teal-600 hover:bg-teal-700 text-white rounded text-[10px] font-bold transition-all flex items-center gap-1 shadow-sm">
-                                            <i class="fa-solid fa-rotate-right"></i> Refresh
-                                        </button>
-                                    </div>
+                                    <span id="currentDistanceText" class="font-bold">-- m</span>
                                 </div>
                                 <p id="gpsNotifMessage" class="text-[11px] font-normal text-slate-600">Mendeteksi koordinat Anda...</p>
                             </div>
@@ -380,9 +376,10 @@
                                 <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-list-check text-emerald-600 mr-2"></i> Log Presensi & Keterangan Waktu</h3>
 
                                 <div class="flex items-center gap-2 w-full sm:w-auto">
-                                    <select id="absensiFilterPegawai" onchange="renderAbsensiLogs()" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
+                                    <select id="absensiFilterPegawai" onchange="renderAbsensiLogs()" class="hidden px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
                                         <option value="ALL">-- Semua Pegawai --</option>
                                     </select>
+
                                     <button onclick="exportAbsensiCSV()" class="text-xs text-teal-600 hover:underline font-semibold whitespace-nowrap"><i class="fa-solid fa-file-csv"></i> Export CSV</button>
                                 </div>
                             </div>
@@ -407,10 +404,12 @@
                     </div>
                 </section>
 
-                <!-- 3. TAB JADWAL PEGAWAI -->
+
+                <!-- 3. TAB MENU JADWAL PEGAWAI (DENGAN FILTER POLI, JABATAN, TAMPILAN BAKU & PRINT FIX) -->
                 <section id="tab-jadwal" class="space-y-6 hidden">
                     <div class="glass-card p-5 rounded-2xl border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
                         <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+                            <!-- View Toggle (Mingguan / Bulanan) -->
                             <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
                                 <button onclick="setJadwalViewMode('minggu')" id="btnJadwalMinggu" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-teal-700 shadow-sm">
                                     <i class="fa-solid fa-calendar-week mr-1"></i> Per Minggu
@@ -420,39 +419,107 @@
                                 </button>
                             </div>
 
+                            <!-- Filter Pegawai -->
                             <select id="filterJadwalPegawai" onchange="onJadwalFilterChange()" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
                                 <option value="ALL">-- Semua Pegawai --</option>
                             </select>
 
+                            <!-- Filter Poli / Unit / Lokasi Tugas -->
                             <select id="filterJadwalUnit" onchange="renderJadwalView()" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
                                 <option value="ALL">-- Semua Poli/Unit --</option>
                             </select>
 
+                            <!-- FILTER JABATAN BARU -->
+                            <select id="filterJadwalJabatan" onchange="renderJadwalView()" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white text-slate-700 font-medium">
+                                <option value="ALL">-- Semua Jabatan --</option>
+                                <option value="Dokter">Dokter</option>
+                                <option value="Perawat">Perawat</option>
+                                <option value="Bidan">Bidan</option>
+                                <option value="Apoteker">Apoteker</option>
+                                <option value="Nutrisionis">Nutrisionis</option>
+                                <option value="Rekam Medis/Pendaftaran">Rekam Medis/Pendaftaran</option>
+                                <option value="Pranata Laboratorium">Pranata Laboratorium</option>
+                                <option value="Kasir">Kasir</option>
+                                <option value="Jaga Malam">Jaga Malam</option>
+                                <option value="Staf">Staf / Administrasi</option>
+                            </select>
+
+                            <!-- TOMBOL TAMPILAN BAKU (SORT ID AWAL) -->
+                            <button onclick="resetJadwalDefaultOrder()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1" title="Urutan Baku Database">
+                                <i class="fa-solid fa-rotate-left text-teal-600"></i> Tampilan Baku
+                            </button>
+
+                            <!-- Sort Alfabetis A-Z -->
+                            <button onclick="toggleJadwalSort()" id="btnSortJadwal" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-arrow-down-a-z text-teal-600"></i> <span id="sortOrderText">Sort: A-Z</span>
+                            </button>
+
+                            <!-- Tombol Tambah Shift Jadwal -->
                             <button id="btnTambahJadwalModal" onclick="openJadwalModal()" class="hidden px-3.5 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition-all items-center gap-1.5">
-                                <i class="fa-solid fa-plus"></i> Tambah Shift (Khusus Admin)
+                                <i class="fa-solid fa-plus"></i> Tambah Shift
+                            </button>
+                        </div>
+
+                        <!-- Opsi Cetak Dokumen Jadwal -->
+                        <div class="flex items-center gap-2 w-full md:w-auto justify-end shrink-0">
+                            <span class="text-xs font-bold text-slate-500"><i class="fa-solid fa-print text-teal-600 mr-1"></i> Cetak:</span>
+                            <select id="printRangeOption" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-white font-semibold">
+                                <option value="MingguIni">Minggu Ini</option>
+                                <option value="BulanIni">Per Bulan Ini (<span id="printCurrentMonthName"></span>)</option>
+                                <option value="3Bulan">Per 3 Bulan (Triwulan)</option>
+                                <option value="Semester">Per Semester (6 Bulan)</option>
+                                <option value="Tahun">Per 1 Tahun</option>
+                            </select>
+                            <button onclick="printJadwalDocument()" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-file-pdf"></i> Cetak / Print
                             </button>
                         </div>
                     </div>
 
+                    <!-- Tampilan Tabel Jadwal -->
                     <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                        <div id="jadwalContainer" class="overflow-x-auto rounded-xl border border-slate-200"></div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-base font-bold text-slate-800" id="jadwalTitleHeader">Jadwal Shift Kerja Staf Puskesmas</h3>
+                            <span class="text-xs text-slate-400 font-mono" id="jadwalDateSubtitle">Minggu Ini</span>
+                        </div>
+
+                        <div id="jadwalContainer" class="overflow-x-auto rounded-xl border border-slate-200">
+                            <!-- Container Tabel Jadwal -->
+                        </div>
                     </div>
                 </section>
 
-                <!-- 4. TAB LAPORAN KEGIATAN & MAPS -->
+
+                <!-- 4. TAB LAPORAN KEGIATAN & VISUALISASI MAPS (DENGAN PEMBARUAN KALURAHAN & DUSUN) -->
                 <section id="tab-kegiatan" class="space-y-6 hidden">
+                    <div id="kegiatanRoleBanner" class="p-3 bg-teal-50 border border-teal-200 rounded-xl text-xs text-teal-800 flex items-center justify-between">
+                        <span id="kegiatanRoleBannerText" class="font-medium"><i class="fa-solid fa-shield-halved text-teal-600 mr-1.5"></i> Menampilkan Laporan Kegiatan</span>
+                        <span id="kegiatanRoleBadge" class="px-2 py-0.5 bg-teal-200 text-teal-900 rounded font-bold text-[10px] uppercase">Role: Staf</span>
+                    </div>
+
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Form Laporkan Kegiatan -->
                         <div class="glass-card p-6 rounded-2xl border border-slate-200">
                             <h3 class="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
                                 <i class="fa-solid fa-file-pen text-emerald-600"></i> Form Laporkan Kegiatan
                             </h3>
+                            <p class="text-[11px] text-slate-500 mb-4">Pilih titik lokasi kegiatan dengan <strong>mengeklik area pada peta</strong> di samping kanan.</p>
 
                             <form onsubmit="submitKegiatan(event)" class="space-y-3">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Kegiatan</label>
-                                    <input type="text" id="kegNama" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
+                                    <input type="text" id="kegNama" placeholder="Contoh: Posyandu Lansia / Penyelidikan PTM" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
                                 </div>
 
+                                <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs flex items-center justify-between">
+                                    <div>
+                                        <span class="text-[10px] font-bold text-emerald-800 block uppercase"><i class="fa-solid fa-location-dot text-rose-500 mr-1"></i> Titik Lokasi Dipilih:</span>
+                                        <span id="selectedCoordsText" class="font-mono text-emerald-900 text-[11px] font-bold">-7.84857, 110.21751</span>
+                                    </div>
+                                    <span class="text-[10px] bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded font-semibold">Map Clicked</span>
+                                </div>
+
+                                <!-- PILIHAN KALURAHAN PEMBARUAN -->
                                 <div class="grid grid-cols-2 gap-2">
                                     <div>
                                         <label class="block text-xs font-semibold text-slate-600 mb-1">Kalurahan</label>
@@ -461,10 +528,11 @@
                                             <option value="Tuksono">Tuksono</option>
                                             <option value="Srikayangan">Srikayangan</option>
                                             <option value="Demangrejo">Demangrejo</option>
+                                            <option value="Di Luar Wilayah">Di Luar Wilayah</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-semibold text-slate-600 mb-1">Dusun / Desa</label>
+                                        <label class="block text-xs font-semibold text-slate-600 mb-1">Dusun / Desa / Lokasi</label>
                                         <select id="kegDusun" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white"></select>
                                     </div>
                                 </div>
@@ -475,11 +543,20 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Pelaksana Kegiatan</label>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Foto Kegiatan</label>
+                                    <input type="file" id="kegFoto" accept="image/*" onchange="previewImage(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700">
+                                    <div id="fotoPreviewContainer" class="mt-2 hidden">
+                                        <img id="fotoPreview" class="h-28 w-full object-cover rounded-xl border border-slate-200">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Pelaksana Kegiatan (Maks. 5 Pegawai)</label>
                                     <select id="kegPelaksanaSelect" onchange="addPelaksana()" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white mb-2">
                                         <option value="">-- Pilih Pegawai --</option>
                                     </select>
                                     <div id="selectedPelaksanaContainer" class="flex flex-wrap gap-1.5"></div>
+                                    <span class="text-[10px] text-slate-400 font-medium">Terpilih: <span id="pelaksanaCount">0</span>/5 pegawai</span>
                                 </div>
 
                                 <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs shadow-md">
@@ -488,23 +565,39 @@
                             </form>
                         </div>
 
-                        <div class="glass-card p-6 rounded-2xl border border-slate-200 lg:col-span-2">
-                            <h3 class="text-base font-bold text-slate-800 mb-2">Peta Sebaran Kegiatan</h3>
-                            <div id="map"></div>
+                        <!-- Dashboard Map & Grafik -->
+                        <div class="glass-card p-6 rounded-2xl border border-slate-200 lg:col-span-2 space-y-5">
+                            <div>
+                                <h3 class="text-base font-bold text-slate-800 mb-1 flex items-center justify-between">
+                                    <span><i class="fa-solid fa-map-marked-alt text-teal-600 mr-2"></i> Peta Pilihan Lokasi & Sebaran Kegiatan</span>
+                                    <span class="text-xs text-teal-600 font-bold bg-teal-50 px-2.5 py-1 rounded-lg border border-teal-200"><i class="fa-solid fa-hand-pointer mr-1"></i> Klik Pada Peta Untuk Memilih Lokasi</span>
+                                </h3>
+                                <div id="map"></div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-800 mb-3"><i class="fa-solid fa-chart-column text-indigo-600 mr-2"></i> Sebaran Kegiatan per Kalurahan</h3>
+                                <div class="h-44"><canvas id="chartSebaranKegiatan"></canvas></div>
+                            </div>
                         </div>
                     </div>
 
+                    <!-- TABEL RIWAYAT KEGIATAN -->
                     <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                        <h3 class="text-base font-bold text-slate-800 mb-4">Riwayat Laporan Kegiatan</h3>
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
+                            <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-list-check text-teal-600 mr-2"></i> Riwayat Laporan Kegiatan</h3>
+                            <input type="text" id="searchKegiatan" oninput="renderKegiatanTable()" placeholder="Cari kegiatan / lokasi..." class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs w-full sm:w-64">
+                        </div>
                         <div class="overflow-x-auto rounded-xl border border-slate-200">
                             <table class="w-full text-left border-collapse text-xs">
                                 <thead class="bg-slate-100 text-[10px] font-bold text-slate-600 uppercase">
                                     <tr>
                                         <th class="p-3 border-b">Tanggal</th>
+                                        <th class="p-3 border-b">Foto</th>
                                         <th class="p-3 border-b">Nama Kegiatan</th>
-                                        <th class="p-3 border-b">Wilayah</th>
-                                        <th class="p-3 border-b">Tim Pelaksana</th>
-                                        <th class="p-3 border-b text-center">Aksi (Edit / Hapus)</th>
+                                        <th class="p-3 border-b">Wilayah & Koordinat (Map)</th>
+                                        <th class="p-3 border-b">Tim Pelaksana (Maks 5)</th>
+                                        <th class="p-3 border-b text-center admin-only-col hidden">Aksi (Admin)</th>
                                     </tr>
                                 </thead>
                                 <tbody id="kegiatanTableBody" class="divide-y divide-slate-100"></tbody>
@@ -513,20 +606,41 @@
                     </div>
                 </section>
 
-                <!-- 5. TAB PEGAWAI -->
+
+                <!-- 5. TAB DAFTAR PEGAWAI & HAK AKSES -->
                 <section id="tab-pegawai" class="space-y-6 hidden">
                     <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                        <h3 class="text-base font-bold text-slate-800 mb-4">Daftar Pegawai UPT Puskesmas Sentolo II</h3>
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+                            <div>
+                                <h3 class="text-base font-bold text-slate-800">Daftar Pegawai UPT Puskesmas Sentolo II</h3>
+                                <p class="text-xs text-slate-500">Master Data Pegawai dari Excel Japel September 2026 & Setting Access Control</p>
+                            </div>
+                            <div class="flex items-center gap-2 w-full sm:w-auto">
+                                <input type="text" id="searchPegawai" oninput="filterPegawaiTable()" placeholder="Cari nama / jabatan..." class="px-3.5 py-2 border border-slate-200 rounded-xl text-xs w-full sm:w-64 focus:ring-2 focus:ring-teal-500">
+                                <select id="filterRole" onchange="filterPegawaiTable()" class="px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white">
+                                    <option value="ALL">Semua Role</option>
+                                    <option value="Kepala Puskesmas">Kepala Puskesmas</option>
+                                    <option value="Admin">Admin / Ka TU</option>
+                                    <option value="Dokter">Dokter</option>
+                                    <option value="Perawat">Perawat</option>
+                                    <option value="Bidan">Bidan</option>
+                                    <option value="Apoteker">Apoteker</option>
+                                    <option value="Staf">Staf/Lainnya</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="overflow-x-auto rounded-xl border border-slate-200">
                             <table class="w-full text-left border-collapse">
                                 <thead class="bg-slate-100 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
                                     <tr>
                                         <th class="p-3 border-b">No</th>
-                                        <th class="p-3 border-b">Nama Pegawai</th>
-                                        <th class="p-3 border-b">Jabatan</th>
-                                        <th class="p-3 border-b">Username</th>
-                                        <th class="p-3 border-b">Role</th>
+                                        <th class="p-3 border-b">Nama Pegawai (Excel)</th>
+                                        <th class="p-3 border-b">Jabatan Official</th>
+                                        <th class="p-3 border-b">Username Login</th>
+                                        <th class="p-3 border-b">Role Hak Akses</th>
                                         <th class="p-3 border-b text-center">Status</th>
+                                        <th class="p-3 border-b text-center">Aksi Setting</th>
                                     </tr>
                                 </thead>
                                 <tbody id="pegawaiTableBody" class="text-xs divide-y divide-slate-100 text-slate-700"></tbody>
@@ -535,11 +649,42 @@
                     </div>
                 </section>
 
-                <!-- 6. TAB CUTI -->
+
+                <!-- 6. TAB CUTI & PELIMPAHAN TUGAS -->
                 <section id="tab-cuti" class="space-y-6 hidden">
+                    <div class="glass-card p-5 rounded-2xl border border-slate-200">
+                        <div class="flex items-center justify-between cursor-pointer" onclick="toggleKopEditor()">
+                            <h4 class="text-xs font-bold text-slate-700 flex items-center gap-2">
+                                <i class="fa-solid fa-file-signature text-teal-600"></i>
+                                <span>Pengaturan Kop Surat Dokumen Cuti & Pelimpahan (Bisa Diedit)</span>
+                            </h4>
+                            <i id="kopChevronIcon" class="fa-solid fa-chevron-down text-slate-400 text-xs"></i>
+                        </div>
+                        <div id="kopEditorContainer" class="mt-4 pt-4 border-t border-slate-200 space-y-3 hidden">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nama Instansi Pemprov / Pemkab</label>
+                                    <input type="text" id="kopInstansiAtas" value="PEMERINTAH KABUPATEN KULON PROGO" class="w-full px-3 py-1.5 border border-slate-200 rounded-xl text-xs">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nama Dinas Kesehatan</label>
+                                    <input type="text" id="kopDinas" value="DINAS KESEHATAN" class="w-full px-3 py-1.5 border border-slate-200 rounded-xl text-xs">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nama UPT Puskesmas</label>
+                                    <input type="text" id="kopPuskesmas" value="UPT PUSKESMAS SENTOLO II" class="w-full px-3 py-1.5 border border-slate-200 rounded-xl text-xs font-bold">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Alamat & Kontak Resmi Kop</label>
+                                    <input type="text" id="kopAlamat" value="Jl. Lendah - Sentolo, Salamrejo, Sentolo, Kulon Progo, DIY 55664" class="w-full px-3 py-1.5 border border-slate-200 rounded-xl text-xs">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                            <h3 class="text-base font-bold text-slate-800 mb-4">Form Permohonan Cuti</h3>
+                            <h3 class="text-base font-bold text-slate-800 mb-4"><i class="fa-solid fa-file-pen text-teal-600 mr-2"></i> Form Permohonan Cuti</h3>
                             <form onsubmit="submitCuti(event)" class="space-y-3">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-600 mb-1">Jenis Cuti</label>
@@ -547,6 +692,7 @@
                                         <option value="Cuti Tahunan">Cuti Tahunan</option>
                                         <option value="Cuti Sakit">Cuti Sakit</option>
                                         <option value="Cuti Melahirkan">Cuti Melahirkan</option>
+                                        <option value="Cuti Alasan Penting">Cuti Alasan Penting</option>
                                     </select>
                                 </div>
                                 <div class="grid grid-cols-2 gap-2">
@@ -560,17 +706,21 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Pelimpahan Tugas Kepada</label>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Pelimpahan Tugas Kepada (Pegawai Excel)</label>
                                     <select id="cutiPelimpahanTo" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white"></select>
                                 </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Rincian Tugas Dikelimpahkan</label>
+                                    <textarea id="cutiRincianTugas" rows="2" placeholder="Pelayanan poli umum, laporan bulanan..." class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs"></textarea>
+                                </div>
                                 <button type="submit" class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md">
-                                    Ajukan Cuti
+                                    Ajukan Permohonan Cuti
                                 </button>
                             </form>
                         </div>
 
                         <div class="glass-card p-6 rounded-2xl border border-slate-200 md:col-span-2">
-                            <h3 class="text-base font-bold text-slate-800 mb-4">Daftar Pengajuan Cuti</h3>
+                            <h3 class="text-base font-bold text-slate-800 mb-4"><i class="fa-solid fa-list text-teal-600 mr-2"></i> Daftar Pengajuan Cuti & Status Approval</h3>
                             <div class="overflow-x-auto rounded-xl border border-slate-200">
                                 <table class="w-full text-left border-collapse text-xs">
                                     <thead class="bg-slate-100 text-[10px] font-bold text-slate-600 uppercase">
@@ -580,6 +730,8 @@
                                             <th class="p-3 border-b">Tanggal</th>
                                             <th class="p-3 border-b">Penerima Tugas</th>
                                             <th class="p-3 border-b text-center">Status</th>
+                                            <th class="p-3 border-b text-center">Aksi / Cetak Dokumen</th>
+                                            <th class="p-3 border-b text-center admin-only-col hidden">Aksi (Admin)</th>
                                         </tr>
                                     </thead>
                                     <tbody id="cutiTableBody" class="divide-y divide-slate-100"></tbody>
@@ -589,47 +741,225 @@
                     </div>
                 </section>
 
-                <!-- 7. TAB ADUAN -->
+
+                <!-- 7. TAB SARAN & ADUAN INTERNAL -->
                 <section id="tab-aduan" class="space-y-6 hidden">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                            <h3 class="text-base font-bold text-slate-800 mb-4">Form Saran & Aduan Internal</h3>
+                            <h3 class="text-base font-bold text-slate-800 mb-4"><i class="fa-solid fa-paper-plane text-teal-600 mr-2"></i> Form Saran & Aduan Internal</h3>
                             <form onsubmit="submitAduan(event)" class="space-y-3">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori</label>
                                     <select id="aduanKategori" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white">
                                         <option value="Fasilitas & Sarpras">Fasilitas & Sarpras</option>
-                                        <option value="Pelayanan">Pelayanan</option>
+                                        <option value="Pelayanan / Alur Work">Pelayanan / Alur Kerja</option>
+                                        <option value="K3 & Lingkungan">K3 & Lingkungan Kerja</option>
+                                        <option value="Lainnya">Lainnya</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-600 mb-1">Isi Saran / Aduan</label>
-                                    <textarea id="aduanIsi" rows="4" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs"></textarea>
+                                    <textarea id="aduanIsi" rows="4" placeholder="Tuliskan masukan atau kendala secara rinci..." required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs"></textarea>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <input type="checkbox" id="aduanAnonim" class="rounded border-slate-300 text-teal-600">
+                                    <label for="aduanAnonim" class="text-xs text-slate-600 font-medium">Kirim secara Anonim (Tanpa Nama)</label>
                                 </div>
                                 <button type="submit" class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md">
-                                    Kirim Aduan
+                                    Kirim Aduan Internal
                                 </button>
                             </form>
                         </div>
 
                         <div class="glass-card p-6 rounded-2xl border border-slate-200 md:col-span-2">
-                            <h3 class="text-base font-bold text-slate-800 mb-4">Daftar Masukan</h3>
+                            <h3 class="text-base font-bold text-slate-800 mb-4"><i class="fa-solid fa-comments text-indigo-600 mr-2"></i> Daftar Masukan & Status Tindak Lanjut</h3>
                             <div id="aduanListContainer" class="space-y-3"></div>
                         </div>
                     </div>
                 </section>
 
-                <!-- 8. TAB SHORTCUT LINKS -->
+
+                <!-- 8. TAB SHORTCUT APLIKASI -->
                 <section id="tab-links" class="space-y-6 hidden">
-                    <div class="glass-card p-6 rounded-2xl border border-slate-200">
-                        <h3 class="text-base font-bold text-slate-800 mb-4">Shortcut Aplikasi Kemenkes & Daerah</h3>
-                        <p class="text-xs text-slate-500">Seluruh tautan aplikasi terhubung ke portal resmi Kemenkes RI & Pemkab Kulon Progo.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                        <a href="http://157.15.82.16:8081/j-care/" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
+                            <div>
+                                <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
+                                    <i class="fa-solid fa-id-card-clip"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-800 text-sm">SIMPUS PUSKESMAS</h4>
+                                <p class="text-xs text-slate-500 mt-1">Simpus Puskesmas Online.</p>
+                            </div>
+                            <span class="mt-4 text-xs font-semibold text-emerald-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
+                        </a>
+                        <a href="https://sehatindonesiaku.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
+                            <div>
+                                <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
+                                    <i class="fa-solid fa-syringe"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-800 text-sm">ASIK Kemenkes</h4>
+                                <p class="text-xs text-slate-500 mt-1">Aplikasi Sehat IndonesiaKu untuk Imunisasi & PTM.</p>
+                            </div>
+                            <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
+                        </a>
+                         <a href="https://linktr.ee/SKRININ_SendaKU" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
+                            <div>
+                                <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
+                                    <i class="fa-solid fa-syringe"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-800 text-sm">SKRINING ILP</h4>
+                                <p class="text-xs text-slate-500 mt-1">Aplikasi Skrining ILP.</p>
+                            </div>
+                            <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
+                        </a>
+                         <a href="https://linktr.ee/senda_ku" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
+                            <div>
+                                <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
+                                    <i class="fa-solid fa-syringe"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-800 text-sm">Portal G.Drive Puskesmas</h4>
+                                <p class="text-xs text-slate-500 mt-1">Aplikasi G.Drive Puskesmas.</p>
+                            </div>
+                            <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
+                        </a>
+                         <a href="https://linktr.ee/ILP_Kunjungan_Rumah" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
+                            <div>
+                                <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
+                                    <i class="fa-solid fa-syringe"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-800 text-sm">ILP Kunjungan Rumah</h4>
+                                <p class="text-xs text-slate-500 mt-1">Aplikasi ILP Kunjungan Rumah.</p>
+                            </div>
+                            <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
+                        </a>
+                        <a href="https://linktr.ee/Puskesmas_Sentolo_II" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
+                            <div>
+                                <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
+                                    <i class="fa-solid fa-syringe"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-800 text-sm">Puskesmas Sentolo II</h4>
+                                <p class="text-xs text-slate-500 mt-1">Aplikasi Kritik Saran dan Media Sosial Puskesmas.</p>
+                            </div>
+                            <span class="mt-4 text-xs font-semibold text-indigo-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
+                        </a>
+                        <a href="https://epuskesmas.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
+                            <div>
+                                <div class="w-12 h-12 bg-teal-100 text-teal-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
+                                    <i class="fa-solid fa-laptop-medical"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-800 text-sm">ePuskesmas Indonesia</h4>
+                                <p class="text-xs text-slate-500 mt-1">Sistem Rekam Medis Elektronik (RME) Pelayanan Pasien.</p>
+                            </div>
+                            <span class="mt-4 text-xs font-semibold text-teal-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
+                        </a>
+ 
+                        <a href="https://pcarejkn.bpjs-kesehatan.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
+                            <div>
+                                <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
+                                    <i class="fa-solid fa-id-card-clip"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-800 text-sm">P-Care BPJS Kesehatan</h4>
+                                <p class="text-xs text-slate-500 mt-1">Entri Klaim & Rujukan Fasilitas Kesehatan Tingkat Pertama.</p>
+                            </div>
+                            <span class="mt-4 text-xs font-semibold text-emerald-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
+                        </a>
+
+                        
+
+                        <a href="https://sisrute.kemkes.go.id" target="_blank" class="glass-card p-5 rounded-2xl border border-slate-200 hover:shadow-xl transition-all group flex flex-col justify-between">
+                            <div>
+                                <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center text-2xl font-bold mb-3 group-hover:scale-110 transition-all">
+                                    <i class="fa-solid fa-truck-medical"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-800 text-sm">SISRUTE Kemenkes</h4>
+                                <p class="text-xs text-slate-500 mt-1">Sistem Informasi Rujukan Terintegrasi Antar Faskes.</p>
+                            </div>
+                            <span class="mt-4 text-xs font-semibold text-amber-600 flex items-center gap-1">Buka Aplikasi <i class="fa-solid fa-external-link text-[10px]"></i></span>
+                        </a>
                     </div>
                 </section>
 
             </div>
         </main>
     </div>
+
+    <!-- MODAL EDIT PEGAWAI / HAK AKSES -->
+    <div id="editPegawaiModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-100">
+            <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-user-gear text-teal-600"></i> Setting Hak Akses Pegawai
+            </h3>
+            <form onsubmit="savePegawaiSetting(event)" class="space-y-3">
+                <input type="hidden" id="editPegawaiId">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Pegawai</label>
+                    <input type="text" id="editNama" readonly class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-700">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Jabatan Official</label>
+                    <input type="text" id="editJabatan" readonly class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs text-slate-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Role / Hak Akses System</label>
+                    <select id="editRole" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:ring-2 focus:ring-teal-500">
+                        <option value="Kepala Puskesmas">Kepala Puskesmas (Full Approval & Analisa)</option>
+                        <option value="Admin">Admin / Ka TU (Full System Control)</option>
+                        <option value="Dokter">Dokter (Portal Pegawai + Fitur Medis)</option>
+                        <option value="Perawat">Perawat (Portal Pegawai)</option>
+                        <option value="Bidan">Bidan (Portal Pegawai)</option>
+                        <option value="Apoteker">Apoteker (Portal Pegawai)</option>
+                        <option value="Staf">Staf Non-Medis / Administrasi</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Reset Password User</label>
+                    <input type="text" id="editPassword" placeholder="Masukkan password baru" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-teal-500">
+                </div>
+                <div class="flex items-center justify-end gap-2 pt-3">
+                    <button type="button" onclick="closeEditPegawaiModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL TAMBAH JADWAL -->
+    <div id="jadwalModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-100">
+            <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-calendar-plus text-teal-600"></i> Tambah / Edit Shift Jadwal Pegawai
+            </h3>
+            <form onsubmit="saveJadwalItem(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Pegawai</label>
+                    <select id="jadwalModalPegawai" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white"></select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal</label>
+                    <input type="date" id="jadwalModalTanggal" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Shift / Status Tugas</label>
+                    <select id="jadwalModalShift" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white">
+                        <option value="Pagi (07:30 - 14:30)">Pagi (07:30 - 14:30)</option>
+                        <option value="Sore (14:00 - 20:00)">Sore (14:00 - 20:00)</option>
+                        <option value="Malam (20:00 - 07:30)">Malam (20:00 - 07:30)</option>
+                        <option value="Dinas Luar / Fieldwork">Dinas Luar / Fieldwork</option>
+                        <option value="Libur / Off">Libur / Off</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Poli / Unit / Lokasi Tugas</label>
+                    <input type="text" id="jadwalModalUnit" placeholder="Contoh: Poli Umum / Pustu Sukoreno / IGD" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs">
+                </div>
+                <div class="flex items-center justify-end gap-2 pt-3">
+                    <button type="button" onclick="closeJadwalModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-xs">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md">Simpan Jadwal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
     <!-- MODAL EDIT LAPORAN KEGIATAN -->
     <div id="editKegiatanModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
@@ -699,19 +1029,57 @@
         // DEFAULT SPREADSHEET URL AKTIF:
         const DEFAULT_SPREADSHEET_URL = "https://script.google.com/macros/s/AKfycbyRRfl4NJFi0z_bfrJ7kajd6R4gphcRr9MSE7uQeNt9zK9UTV-BxsJQUMbWN5ZRC-4ptw/exec";
 
+        // WILAYAH DATA
         const wilayahData = {
-            "Salamrejo": ["Klebakan", "Mentobayan", "Giyoso", "Karangwetan", "Kidulan", "Dhisil", "Salam", "Ngrandu"],
-            "Srikayangan": ["Pendem", "Kaliwinong Lor", "Kaliwinong Kidul", "Klumutan", "Malangan"],
-            "Demangrejo": ["Belik", "Demangan", "Banaran", "Karang Patihan", "Trukan"],
-            "Tuksono": ["Giling", "Karang", "Kalisono", "Wonobroto", "Bulak"]
+            "Salamrejo": ["Klebakan", "Mentobayan", "Giyoso","Karangwetan", "Kidulan", "Dhisil","Salam", "Ngrandu"],
+            "Srikayangan": ["Pendem", "Kaliwinong Lor", "Kaliwinong Kidul","Klumutan", "Malangan", "Gowangsan","Panjul", "Pergiwatu Kulon", "Pergiwatu Wetan","Karangasem Kulon", "Karangasem Wetan", "Karangasem Tengah","Gunung Puyuh", "Kradenan", "Kagok"],
+            "Demangrejo": ["Belik", "Demangan", "Banaran","Karang Patihan", "Trukan"],
+            "Tuksono": ["Giling", "Karang", "Kalisono","Wonobroto", "Bulak", "Taruban Wetan","Taruban Kulon", "Kalisoko", "Krebet","Kaliwiru", "Paten", "Gunung Duk"],
+            "Di Luar Wilayah": ["Kapanewon Lain", "Kabupaten Lain", "Dinas Kesehatan", "Luar Daerah / Provinsi"]
         };
 
         const initialPegawaiData = [
             { id: 1, nama: "drg. R. A. Hannie Permatasari", jabatan: "Ka Puskesmas", role: "Kepala Puskesmas", username: "hannie", pass: "hannie123", status: "Aktif" },
             { id: 2, nama: "dr. AM Sajarwadi, M.Kes", jabatan: "Dokter umum", role: "Dokter", username: "sajarwadi", pass: "sajarwadi123", status: "Aktif" },
             { id: 3, nama: "Endang Lestari P, SST", jabatan: "Bidan Madya", role: "Bidan", username: "endang", pass: "endang123", status: "Aktif" },
-            { id: 4, nama: "dr. Fathimatuzzahro", jabatan: "Dokter umum", role: "Dokter", username: "fathimatu", pass: "fathimatu123", status: "Aktif" },
-            { id: 5, nama: "Ihwan Nurul Hadi", jabatan: "Pengelola Teknologi Informasi", role: "Admin", username: "ihwan", pass: "ihwan123", status: "Aktif" }
+            { id: 4, nama: "drg. Diyah Sugiyarti", jabatan: "Dokter gigi", role: "Dokter", username: "diyah", pass: "diyah123", status: "Aktif" },
+            { id: 5, nama: "Taufik Hurrohman, AMK", jabatan: "Perawat", role: "Perawat", username: "taufik", pass: "taufik123", status: "Aktif" },
+            { id: 6, nama: "Ngatini, AMK", jabatan: "Perawat", role: "Perawat", username: "ngatini", pass: "ngatini123", status: "Aktif" },
+            { id: 7, nama: "Nur Fatimah, AMK", jabatan: "Perawat", role: "Perawat", username: "nurfatimah", pass: "nurfatimah123", status: "Aktif" },
+            { id: 8, nama: "Sayekti Suciani, AMAK", jabatan: "Pranata lab", role: "Staf", username: "sayekti", pass: "sayekti123", status: "Aktif" },
+            { id: 9, nama: "Heni Trapsilowati, S.Tr.Keb", jabatan: "Bidan", role: "Bidan", username: "heni", pass: "heni123", status: "Aktif" },
+            { id: 10, nama: "Sri Juniati, Amd.Keb", jabatan: "Bidan", role: "Bidan", username: "srijuniati", pass: "srijuniati123", status: "Aktif" },
+            { id: 11, nama: "Indra Darma Setiawan, A.Md", jabatan: "Administrasi", role: "Admin", username: "indra", pass: "indra123", status: "Aktif" },
+            { id: 12, nama: "Bambang Wahyuli P, AMK", jabatan: "Perawat", role: "Perawat", username: "bambang", pass: "bambang123", status: "Aktif" },
+            { id: 13, nama: "Padniasih, AMKG", jabatan: "Administrasi", role: "Staf", username: "padniasih", pass: "padniasih123", status: "Aktif" },
+            { id: 14, nama: "Siti Aminah, S.Tr.Keb", jabatan: "Bidan", role: "Bidan", username: "sitiaminah", pass: "sitiaminah123", status: "Aktif" },
+            { id: 15, nama: "Elizabeth Rahayu P, S.Farm. Apt", jabatan: "Apoteker", role: "Apoteker", username: "elizabeth", pass: "elizabeth123", status: "Aktif" },
+            { id: 16, nama: "Kadri Sriyono, AMK", jabatan: "Perawat", role: "Perawat", username: "kadri", pass: "kadri123", status: "Aktif" },
+            { id: 17, nama: "Anggraeni Purbaningtyas, S.Farm, APT", jabatan: "Ka TU", role: "Apoteker", username: "anggraeni", pass: "anggraeni123", status: "Aktif" },
+            { id: 18, nama: "Sri Wahyuni, Amd.Keb", jabatan: "Bidan", role: "Bidan", username: "sriwahyuni", pass: "sriwahyuni123", status: "Aktif" },
+            { id: 19, nama: "Nurhayati Winarsih, Amd.Keb", jabatan: "Bidan", role: "Bidan", username: "nurhayati", pass: "nurhayati123", status: "Aktif" },
+            { id: 20, nama: "Yuliatun Aryadi, Amd.Far", jabatan: "Tenaga Teknis Kefarmasian", role: "Staf", username: "yuliatun", pass: "yuliatun123", status: "Aktif" },
+            { id: 21, nama: "Dwi Haryani, AMK", jabatan: "Perawat", role: "Perawat", username: "dwiharyani", pass: "dwiharyani123", status: "Aktif" },
+            { id: 22, nama: "dr. Fathimatuzzahro", jabatan: "Dokter umum", role: "Dokter", username: "fathimatu", pass: "fathimatu123", status: "Aktif" },
+            { id: 23, nama: "Raras Wibi R, S.Farm. Apt", jabatan: "Apoteker", role: "Apoteker", username: "raras", pass: "raras123", status: "Aktif" },
+            { id: 24, nama: "Ceria Hardianwarsari, S.KM", jabatan: "Survailans", role: "Staf", username: "ceria", pass: "ceria123", status: "Aktif" },
+            { id: 25, nama: "Suryanti, AMKL", jabatan: "Sanitarian", role: "Staf", username: "suryanti", pass: "suryanti123", status: "Aktif" },
+            { id: 26, nama: "Rizki Intan Maharyani, Amd.Gz", jabatan: "Nutrisionis", role: "Staf", username: "rizki", pass: "rizki123", status: "Aktif" },
+            { id: 27, nama: "Irma Apriyanti, Amd", jabatan: "Rekam Medis", role: "Staf", username: "irma", pass: "irma123", status: "Aktif" },
+            { id: 28, nama: "Bekti Nugroho, AMKL", jabatan: "Penyuluh kesmas", role: "Staf", username: "bekti", pass: "bekti123", status: "Aktif" },
+            { id: 29, nama: "Novi Susilowati, Amd.Akt", jabatan: "Akuntan", role: "Staf", username: "novisusi", pass: "novisusi123", status: "Aktif" },
+            { id: 30, nama: "Adeani K Permana, Amd.Keb", jabatan: "Bidan", role: "Bidan", username: "adeani", pass: "adeani123", status: "Aktif" },
+            { id: 31, nama: "Nasrullah Fatkhanudin", jabatan: "Kepegawaian", role: "Staf", username: "nasrullah", pass: "nasrullah123", status: "Aktif" },
+            { id: 32, nama: "Diah Nastiti, Amd.Ak", jabatan: "Pengelola Keuangan", role: "Staf", username: "diahnastiti", pass: "diahnastiti123", status: "Aktif" },
+            { id: 33, nama: "Novi Chyntia Prisma D, S.Gz", jabatan: "Nutrisions", role: "Staf", username: "novichyntia", pass: "novichyntia123", status: "Aktif" },
+            { id: 34, nama: "Fahreza Yoga Pratama, S.Tr.KL", jabatan: "Pengelola Jaminan Kesehatan", role: "Staf", username: "fahreza", pass: "fahreza123", status: "Aktif" },
+            { id: 35, nama: "Agung Hariyanto", jabatan: "Pranata Laboratorium", role: "Staf", username: "agung", pass: "agung123", status: "Aktif" },
+            { id: 36, nama: "Ihwan Nurul Hadi", jabatan: "Pengelola Teknologi Informasi", role: "Staf", username: "ihwan", pass: "ihwan123", status: "Aktif" },
+            { id: 37, nama: "dr. Tigris Thursina Putri", jabatan: "Dokter Umum", role: "Dokter", username: "tigris", pass: "tigris123", status: "Aktif" },
+            { id: 38, nama: "Annisa Kurnia Ningrum, A.Md.Kes", jabatan: "Perawat Gigi", role: "Perawat", username: "annisa", pass: "annisa123", status: "Aktif" },
+            { id: 39, nama: "Sadiyem", jabatan: "Pengelola Linen", role: "Staf", username: "sadiyem", pass: "sadiyem123", status: "Aktif" },
+            { id: 40, nama: "Anggi Mustika Maylani", jabatan: "Kasir", role: "Staf", username: "anggi", pass: "anggi123", status: "Aktif" },
+            { id: 41, nama: "Reda Trilaksana", jabatan: "Jaga Malam", role: "Staf", username: "reda", pass: "reda123", status: "Aktif" }
         ];
 
         let currentPegawaiList = initialPegawaiData;
