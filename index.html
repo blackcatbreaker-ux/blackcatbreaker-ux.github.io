@@ -2574,5 +2574,74 @@
             }
         }
     </script>
+    
+    <!-- SCRIPT TAMBAHAN: HANDLER SINKRONISASI REALTIME & CORS MOBILE -->
+<script>
+    // 1. Endpoint Google Apps Script
+    const MOBILE_SPREADSHEET_URL = typeof DEFAULT_SPREADSHEET_URL !== 'undefined' 
+        ? DEFAULT_SPREADSHEET_URL 
+        : "https://script.google.com/macros/s/AKfycbyRRfl4NJFi0z_bfrJ7kajd6R4gphcRr9MSE7uQeNt9zK9UTV-BxsJQUMbWN5ZRC-4ptw/exec";
+
+    // 2. Fungsi Pengiriman Data (POST) Khusus Peramban HP (Bypass Restriksi CORS)
+    async function sendDataToSpreadsheetMobile(actionType, payloadData) {
+        try {
+            const bodyPayload = {
+                action: actionType,
+                payload: payloadData,
+                timestamp: new Date().toISOString()
+            };
+
+            // Header text/plain mencegah request OPTIONS (CORS preflight) yang sering diblokir peramban HP
+            const response = await fetch(MOBILE_SPREADSHEET_URL, {
+                method: "POST",
+                mode: "cors",
+                redirect: "follow",
+                headers: {
+                    "Content-Type": "text/plain;charset=utf-8"
+                },
+                body: JSON.stringify(bodyPayload)
+            });
+
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            console.error("Gagal mengirim data dari peramban HP:", error);
+            return { status: "error", message: error.toString() };
+        }
+    }
+
+    // 3. Fungsi Pengambilan Data Realtime (GET)
+    async function fetchSpreadsheetRealtime() {
+        try {
+            const response = await fetch(`${MOBILE_SPREADSHEET_URL}?action=getData&nocache=${Date.now()}`, {
+                method: "GET",
+                mode: "cors",
+                redirect: "follow"
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                
+                // Memperbarui tampilan UI jika fungsi pembaru lokal tersedia
+                if (typeof updateLocalData === "function") {
+                    updateLocalData(data);
+                }
+
+                const dbBadge = document.getElementById("dbSyncText");
+                if (dbBadge) {
+                    dbBadge.innerText = "Spreadsheet Live (Realtime HP)";
+                }
+            }
+        } catch (error) {
+            console.warn("Gagal sinkronisasi data realtime di HP:", error);
+        }
+    }
+
+    // 4. Inisialisasi Otomatis & Realtime Polling Tiap 10 Detik
+    document.addEventListener("DOMContentLoaded", function () {
+        fetchSpreadsheetRealtime();
+        setInterval(fetchSpreadsheetRealtime, 10000);
+    });
+</script>
 </body>
 </html>
