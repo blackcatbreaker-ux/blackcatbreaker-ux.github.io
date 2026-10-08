@@ -16,14 +16,28 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; transition: background-color 0.3s, color 0.3s; }
         .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(226, 232, 240, 0.8); }
         .sidebar-item-active { background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%); color: white; font-weight: 600; box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25); }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        #map { height: 320px; border-radius: 1rem; z-index: 1; cursor: crosshair; }
+        #map { height: 320px; border-radius: 1rem; z-index: 1; }
+
+        /* Style Tema Gelap */
+        body.theme-dark { background-color: #0f172a !important; color: #f8fafc !important; }
+        body.theme-dark .glass-card, body.theme-dark aside, body.theme-dark header, body.theme-dark .bg-white { background-color: #1e293b !important; color: #f8fafc !important; border-color: #334155 !important; }
+        body.theme-dark .text-slate-800, body.theme-dark .text-slate-700, body.theme-dark .text-slate-600 { color: #f1f5f9 !important; }
+        body.theme-dark .text-slate-500, body.theme-dark .text-slate-400 { color: #94a3b8 !important; }
+        body.theme-dark input, body.theme-dark select, body.theme-dark textarea { background-color: #334155 !important; color: #ffffff !important; border-color: #475569 !important; }
+
+        /* Style Tema Futuristik */
+        body.theme-futuristic { background-color: #030712 !important; color: #e0f2fe !important; }
+        body.theme-futuristic .glass-card, body.theme-futuristic aside, body.theme-futuristic header, body.theme-futuristic .bg-white { background-color: rgba(15, 23, 42, 0.95) !important; color: #e0f2fe !important; border-color: #06b6d4 !important; box-shadow: 0 0 15px rgba(6, 182, 212, 0.15) !important; }
+        body.theme-futuristic .text-slate-800, body.theme-futuristic .text-slate-700, body.theme-futuristic .text-slate-600 { color: #cffafe !important; }
+        body.theme-futuristic .text-slate-500, body.theme-futuristic .text-slate-400 { color: #67e8f9 !important; }
+        body.theme-futuristic input, body.theme-futuristic select, body.theme-futuristic textarea { background-color: #0f172a !important; color: #22d3ee !important; border-color: #0891b2 !important; }
 
         @media print {
             body { background: white !important; color: black !important; font-size: 11pt; }
@@ -133,10 +147,6 @@
                         <i class="fa-solid fa-cubes w-5 text-center shrink-0"></i>
                         <span class="sidebar-text truncate">Shortcut Aplikasi</span>
                     </button>
-                    <button onclick="switchTab('ckg')" id="nav-cuti" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
-                        <i class="fa-solid fa-calendar-minus w-5 text-center shrink-0"></i>
-                        <span class="sidebar-text truncate">CKG</span>
-                    </button>
 
                     <div id="adminNavGroup" class="pt-3 mt-3 border-t border-slate-100 hidden">
                         <span class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider sidebar-text">Manajemen Pimpinan</span>
@@ -178,6 +188,19 @@
                 </div>
 
                 <div class="flex items-center gap-3">
+                    <!-- POIN 4: TOMBOL TEMA DI POJOK KANAN ATAS -->
+                    <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs">
+                        <button onclick="setTheme('light')" id="themeBtnLight" class="px-2.5 py-1 rounded-lg font-bold transition-all bg-white text-teal-700 shadow-sm" title="Tema Terang">
+                            <i class="fa-solid fa-sun mr-1"></i>Terang
+                        </button>
+                        <button onclick="setTheme('dark')" id="themeBtnDark" class="px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:text-teal-600 transition-all" title="Tema Gelap">
+                            <i class="fa-solid fa-moon mr-1"></i>Gelap
+                        </button>
+                        <button onclick="setTheme('futuristic')" id="themeBtnFuturistic" class="px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:text-cyan-400 transition-all" title="Tema Futuristik">
+                            <i class="fa-solid fa-robot mr-1"></i>Futuristik
+                        </button>
+                    </div>
+
                     <div id="dbSyncBadge" class="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-full text-xs text-emerald-700 font-medium">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                         <span id="dbSyncText">Spreadsheet Connected</span>
@@ -498,7 +521,7 @@
                     </div>
                 </section>
 
-                <!-- 4. TAB LAPORAN KEGIATAN & MAPS -->
+                <!-- 4. TAB LAPORAN KEGIATAN & MAPS (POIN 5: LOKASI DENGAN GPS LAPANGAN) -->
                 <section id="tab-kegiatan" class="space-y-6 hidden">
                     <div id="kegiatanRoleBanner" class="p-3 bg-teal-50 border border-teal-200 rounded-xl text-xs text-teal-800 flex items-center justify-between">
                         <span id="kegiatanRoleBannerText" class="font-medium"><i class="fa-solid fa-shield-halved text-teal-600 mr-1.5"></i> Menampilkan Laporan Kegiatan Puskesmas</span>
@@ -510,7 +533,7 @@
                             <h3 class="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
                                 <i class="fa-solid fa-file-pen text-emerald-600"></i> Form Laporkan Kegiatan
                             </h3>
-                            <p class="text-[11px] text-slate-500 mb-4">Pilih titik lokasi kegiatan dengan <strong>mengeklik area pada peta</strong> di samping kanan.</p>
+                            <p class="text-[11px] text-slate-500 mb-4">Titik lokasi kegiatan ditentukan otomatis sesuai <strong>GPS lokasi Anda di lapangan</strong>.</p>
 
                             <form onsubmit="submitKegiatan(event)" class="space-y-3">
                                 <div>
@@ -520,10 +543,12 @@
 
                                 <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs flex items-center justify-between">
                                     <div>
-                                        <span class="text-[10px] font-bold text-emerald-800 block uppercase"><i class="fa-solid fa-location-dot text-rose-500 mr-1"></i> Titik Lokasi Dipilih:</span>
+                                        <span class="text-[10px] font-bold text-emerald-800 block uppercase"><i class="fa-solid fa-location-dot text-rose-500 mr-1"></i> Titik Lokasi GPS Lapangan:</span>
                                         <span id="selectedCoordsText" class="font-mono text-emerald-900 text-[11px] font-bold">-7.84857, 110.21751</span>
                                     </div>
-                                    <span class="text-[10px] bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded font-semibold">Map Clicked</span>
+                                    <button type="button" onclick="getKegiatanGpsLocation()" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-bold transition-all flex items-center gap-1 shadow-sm">
+                                        <i class="fa-solid fa-location-crosshairs"></i> Ambil GPS
+                                    </button>
                                 </div>
 
                                 <div class="grid grid-cols-2 gap-2">
@@ -574,8 +599,8 @@
                         <div class="glass-card p-6 rounded-2xl border border-slate-200 lg:col-span-2 space-y-5">
                             <div>
                                 <h3 class="text-base font-bold text-slate-800 mb-1 flex items-center justify-between">
-                                    <span><i class="fa-solid fa-map-marked-alt text-teal-600 mr-2"></i> Peta Pilihan Lokasi & Sebaran Kegiatan</span>
-                                    <span class="text-xs text-teal-600 font-bold bg-teal-50 px-2.5 py-1 rounded-lg border border-teal-200"><i class="fa-solid fa-hand-pointer mr-1"></i> Klik Pada Peta Untuk Memilih Lokasi</span>
+                                    <span><i class="fa-solid fa-map-marked-alt text-teal-600 mr-2"></i> Peta Sebaran & Lokasi GPS Lapangan</span>
+                                    <span class="text-xs text-teal-600 font-bold bg-teal-50 px-2.5 py-1 rounded-lg border border-teal-200"><i class="fa-solid fa-location-arrow mr-1"></i> Berbasis GPS Lapangan Real-time</span>
                                 </h3>
                                 <div id="map"></div>
                             </div>
@@ -587,6 +612,7 @@
                         </div>
                     </div>
 
+                    <!-- POIN 1: AKSI EDIT & HAPUS LAPORAN KEGIATAN -->
                     <div class="glass-card p-6 rounded-2xl border border-slate-200">
                         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
                             <h3 class="text-base font-bold text-slate-800"><i class="fa-solid fa-list-check text-teal-600 mr-2"></i> Riwayat Laporan Kegiatan</h3>
@@ -599,9 +625,9 @@
                                         <th class="p-3 border-b">Tanggal</th>
                                         <th class="p-3 border-b">Foto</th>
                                         <th class="p-3 border-b">Nama Kegiatan</th>
-                                        <th class="p-3 border-b">Wilayah & Koordinat (Map)</th>
+                                        <th class="p-3 border-b">Wilayah & Koordinat GPS</th>
                                         <th class="p-3 border-b">Tim Pelaksana</th>
-                                        <th class="p-3 border-b text-center">Aksi (Edit / Revisi)</th>
+                                        <th class="p-3 border-b text-center">Aksi (Edit / Hapus)</th>
                                     </tr>
                                 </thead>
                                 <tbody id="kegiatanTableBody" class="divide-y divide-slate-100"></tbody>
@@ -732,7 +758,7 @@
                                             <th class="p-3 border-b">Tanggal</th>
                                             <th class="p-3 border-b">Penerima Tugas</th>
                                             <th class="p-3 border-b text-center">Status</th>
-                                            <th class="p-3 border-b text-center">Aksi / Cetak Dokumen</th>
+                                            <th class="p-3 border-b text-center">Aksi / Status</th>
                                             <th class="p-3 border-b text-center admin-only-col hidden">Aksi (Admin)</th>
                                         </tr>
                                     </thead>
@@ -779,10 +805,8 @@
                     </div>
                 </section>
 
-                <!-- 8. TAB SHORTCUT APLIKASI (LENGKAP) -->
+                <!-- 8. TAB SHORTCUT APLIKASI -->
                 <section id="tab-links" class="space-y-8 hidden">
-                    
-                    <!-- KATEGORI A: UTAMA & REKAM MEDIS -->
                     <div>
                         <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
                             <i class="fa-solid fa-star text-amber-500"></i> Portal Utama & Rekam Medis
@@ -825,175 +849,6 @@
                             </a>
                         </div>
                     </div>
-
-                    <!-- KATEGORI B: SISTEM INFORMASI & APLIKASI KESEHATAN KEMENKES -->
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
-                            <i class="fa-solid fa-notes-medical text-teal-600"></i> 1. Sistem Informasi & Aplikasi Kesehatan Kemenkes
-                        </h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            <a href="https://skdr.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">APLIKASI SKDR</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Sistem Kewaspadaan Dini dan Respon.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-
-                            <a href="https://sigizi.kemkes.go.id/e-ppgbm/" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">e-PPGBM</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Pencatatan & Pelaporan Gizi Masyarakat.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-
-                            <a href="https://siptm.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">SIPTM Kemenkes</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Sistem Informasi Penyakit Tidak Menular.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-
-                            <a href="https://sitb.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">SITKO / SITB</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Sistem Informasi Tuberkulosis Indonesia.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-
-                            <a href="https://kesga.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">WEBKESGA</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Sistem Informasi Kesehatan Keluarga.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-
-                            <a href="https://siha.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">SIHA Kemenkes</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Sistem Informasi HIV/AIDS & IMS.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-
-                            <a href="https://aspak.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">ASPAK</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Aplikasi Sarana, Prasarana, & Alat Kesehatan.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-
-                            <a href="https://smile.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">SMILE Imunisasi</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Monitoring Imunisasi & Logistik Elektronik.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-
-                            <a href="https://sismal.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">ESISMAL Malaria</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Sistem Informasi Surveilans Malaria.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-
-                            <a href="https://e-monevobat.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">SELENA / E-MONEV OBAT</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Sistem Logistik Obat dan Alkes.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-teal-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- KATEGORI C: KOMUNIKASI DATA, STP & PORTAL DAERAH -->
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
-                            <i class="fa-solid fa-share-nodes text-indigo-600"></i> 2. Komunikasi Data, STP & Portal Daerah / Internal
-                        </h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            <a href="https://komdat.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">KOMDAT MICROSITE</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Komunikasi Data Kemenkes RI.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-indigo-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-
-                            <a href="https://surveilans.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">APLIKASI STP</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Surveilans Terpadu Puskesmas.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-indigo-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-
-                            <a href="https://zoonosis.kemkes.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">SIARVI (Rabies & Antrabes)</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Aplikasi Internal Zoonosis.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-indigo-600 flex items-center gap-1">Buka Web <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-
-                            <a href="https://simada.kulonprogokab.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">SIM ASET (SIMADA Kulon Progo)</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Manajemen Aset BPKAD Daerah.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-indigo-600 flex items-center gap-1">Buka Portal <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- KATEGORI D: PORTAL APLIKASI LOKAL KULON PROGO & SURVEILANS -->
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
-                            <i class="fa-solid fa-map-location-dot text-emerald-600"></i> 3. Portal Aplikasi Lokal / Khusus Kulon Progo & Formulir Surveilans
-                        </h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            <a href="https://dinkes.kulonprogokab.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">E-LING KU</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Elektronik Lingkungan Kulon Progo.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-emerald-600 flex items-center gap-1">Buka Dinkes <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-
-                            <a href="https://kulonprogokab.go.id" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">SIMOKU Kulon Progo</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Otomatisasi Sistem Pemkab Kulon Progo.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-emerald-600 flex items-center gap-1">Buka Pemkab <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-
-                            <a href="https://docs.google.com/forms" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">Form Surveilans ISPA</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Google Forms Subdin P2P Dinkes.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-emerald-600 flex items-center gap-1">Buka GForm <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-
-                            <a href="https://docs.google.com/forms" target="_blank" class="glass-card p-4 rounded-2xl border border-slate-200 hover:shadow-lg transition-all flex flex-col justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800 text-xs">GForm KUSTA & FRAMBUSIA</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">Pelaporan Digital P2P Kulon Progo.</p>
-                                </div>
-                                <span class="mt-3 text-[11px] font-semibold text-emerald-600 flex items-center gap-1">Buka GForm <i class="fa-solid fa-external-link text-[9px]"></i></span>
-                            </a>
-                        </div>
-                    </div>
-
                 </section>
 
             </div>
@@ -1159,7 +1014,8 @@
 
     <!-- PRINT SECTION HIDDEN -->
     <div id="printSection" class="p-8 hidden"></div>
-<!-- JAVASCRIPT LOGIC UNIFIED & DIRECT SPREADSHEET SYNC -->
+
+    <!-- JAVASCRIPT LOGIC UNIFIED -->
     <script>
         // =========================================================================
         // 1. KONFIGURASI GLOBAL & KOORDINAT PUSKESMAS SENTOLO II
@@ -1220,7 +1076,6 @@
             { id: 41, nama: "Reda Trilaksana", jabatan: "Jaga Malam", role: "Staf", username: "reda", pass: "reda123", status: "Aktif" }
         ];
 
-        // State Aplikasi (Live In-Memory)
         let currentPegawaiList = initialPegawaiData;
         let currentUser = JSON.parse(localStorage.getItem('portal_logged_user')) || null;
         let absensiLogs = [];
@@ -1248,13 +1103,31 @@
         let jadwalSortType = 'default';
         let sidebarCollapsed = false;
 
-        // Nonaktifkan Penyimpanan LocalStorage
-        window.saveToStorage = function() {
-            if (driveScriptUrl) localStorage.setItem('portal_drive_url', driveScriptUrl);
-        };
+        // POIN 4: FUNGSI GANTI TEMA (TERANG, GELAP, FUTURISTIK)
+        function setTheme(theme) {
+            document.body.classList.remove('theme-dark', 'theme-futuristic');
+            
+            const btnLight = document.getElementById('themeBtnLight');
+            const btnDark = document.getElementById('themeBtnDark');
+            const btnFuturistic = document.getElementById('themeBtnFuturistic');
+
+            if (btnLight) btnLight.className = "px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:text-teal-600 transition-all";
+            if (btnDark) btnDark.className = "px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:text-teal-600 transition-all";
+            if (btnFuturistic) btnFuturistic.className = "px-2.5 py-1 rounded-lg font-medium text-slate-600 hover:text-cyan-400 transition-all";
+
+            if (theme === 'dark') {
+                document.body.classList.add('theme-dark');
+                if (btnDark) btnDark.className = "px-2.5 py-1 rounded-lg font-bold transition-all bg-slate-700 text-teal-400 shadow-sm";
+            } else if (theme === 'futuristic') {
+                document.body.classList.add('theme-futuristic');
+                if (btnFuturistic) btnFuturistic.className = "px-2.5 py-1 rounded-lg font-bold transition-all bg-cyan-900/50 text-cyan-300 border border-cyan-500/50 shadow-sm shadow-cyan-500/20";
+            } else {
+                if (btnLight) btnLight.className = "px-2.5 py-1 rounded-lg font-bold transition-all bg-white text-teal-700 shadow-sm";
+            }
+        }
 
         // =========================================================================
-        // 2. ENGINE INTEGRASI DIRECT SPREADSHEET (READ & WRITE)
+        // 2. ENGINE INTEGRASI SPREADSHEET (READ & WRITE)
         // =========================================================================
         async function fetchDirectFromSpreadsheet() {
             const scriptUrl = driveScriptUrl || DEFAULT_SPREADSHEET_URL;
@@ -1277,7 +1150,6 @@
                     if (result.marqueeText) marqueeText = result.marqueeText;
                     if (result.flyerImageUrl) flyerImageUrl = result.flyerImageUrl;
 
-                    // Re-render UI secara otomatis dari data spreadsheet terbaru
                     renderDashboardRealtimeStats();
                     renderAbsensiLogs();
                     renderJadwalView();
@@ -1300,7 +1172,6 @@
             const scriptUrl = driveScriptUrl || DEFAULT_SPREADSHEET_URL;
             if (!scriptUrl) return;
 
-            // Memakai text/plain agar bebas kendala CORS pada GitHub Pages & Mobile
             fetch(scriptUrl, {
                 method: 'POST',
                 mode: 'no-cors',
@@ -1320,10 +1191,7 @@
             updateClock();
             setInterval(updateClock, 1000);
 
-            // Sinkronkan data langsung dari spreadsheet saat pertama kali dibuka
             fetchDirectFromSpreadsheet();
-
-            // Polling otomatis setiap 4 detik untuk keterbaruan data
             setInterval(fetchDirectFromSpreadsheet, 4000);
 
             if (currentUser) {
@@ -1431,6 +1299,7 @@
                 setTimeout(() => { 
                     renderKegiatanTable();
                     initLeafletMap();
+                    getKegiatanGpsLocation(); // POIN 5: Deteksi GPS Otomatis
                     updateSebaranChart();
                 }, 200);
             } else if (tabId === 'jadwal') {
@@ -1440,7 +1309,7 @@
         }
 
         // =========================================================================
-        // 4. LOGIKA JADWAL SHIFT, FILTERING NAMA PEGAWAI, DAN HAPUS ADMIN
+        // 4. LOGIKA JADWAL PEGAWAI & CETAK / PRINT (POIN 2 & POIN 3)
         // =========================================================================
         function updateUnitOptions() {
             const selectUnit = document.getElementById('filterJadwalUnit');
@@ -1534,9 +1403,10 @@
             updateUnitOptions();
             renderJadwalView();
             closeJadwalModal();
-            alert('Jadwal Shift Berhasil Disimpan ke Spreadsheet DB!');
+            alert('Jadwal Shift Berhasil Disimpan!');
         }
 
+        // POIN 1: FUNGSI HAPUS JADWAL
         function deleteJadwalItem(id) {
             const canDelete = currentUser && (
                 currentUser.role === 'Admin' || 
@@ -1545,7 +1415,7 @@
             );
 
             if (!canDelete) {
-                alert('Akses Ditolak! Hanya Admin/Pimpinan yang memiliki akses menghapus jadwal.');
+                alert('Akses Ditolak! Hanya Admin/Pimpinan yang dapat menghapus jadwal.');
                 return;
             }
 
@@ -1694,784 +1564,42 @@
             renderJadwalView();
         }
 
+        // POIN 2 & POIN 3: PERBAIKAN LOGIKA CETAK JADWAL (PRINT OUT)
         function printJadwalDocument() {
             const printSec = document.getElementById('printSection');
             const rangeOpt = document.getElementById('printRangeOption').value;
             const selectedPeg = document.getElementById('filterJadwalPegawai').value;
             const selectedUnit = document.getElementById('filterJadwalUnit').value;
+            const selectedJabatan = document.getElementById('filterJadwalJabatan').value;
 
-            const printData = jadwalList.filter(j => (selectedPeg === 'ALL' || j.pegawai === selectedPeg) && (selectedUnit === 'ALL' || j.unit === selectedUnit));
+            let printData = jadwalList.filter(j => {
+                const matchPeg = selectedPeg === 'ALL' || j.pegawai === selectedPeg;
+                const matchUnit = selectedUnit === 'ALL' || j.unit === selectedUnit;
+                const pegObj = currentPegawaiList.find(p => p.nama === j.pegawai);
+                const matchJab = selectedJabatan === 'ALL' || (pegObj && (pegObj.role.includes(selectedJabatan) || (pegObj.jabatan && pegObj.jabatan.toLowerCase().includes(selectedJabatan.toLowerCase()))));
+                return matchPeg && matchUnit && matchJab;
+            });
 
-            printSec.innerHTML = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <h2 style="font-size: 14pt; font-weight: bold; margin: 0;">UPT PUSKESMAS SENTOLO II</h2>
-                    <h3 style="font-size: 12pt; font-weight: bold; margin: 5px 0;">DOKUMEN RESMI JADWAL SHIFT KERJA PEGAWAI</h3>
-                    <p style="font-size: 9pt; color: #555; margin: 0;">Rentang: ${rangeOpt} | Filter Pegawai: ${selectedPeg} | Unit: ${selectedUnit}</p>
-                    <hr style="border-top: 2px solid #000; margin-top: 10px;">
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="width: 5%;">No</th>
-                            <th style="width: 30%;">Nama Pegawai</th>
-                            <th style="width: 20%;">Tanggal / Hari</th>
-                            <th style="width: 25%;">Poli / Unit / Lokasi</th>
-                            <th style="width: 20%;">Shift Jam Kerja</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${printData.length === 0 ? '<tr><td colspan="5" style="text-align:center;">Tidak ada data jadwal untuk dicetak.</td></tr>' : 
-                        printData.map((j, idx) => `
-                            <tr>
-                                <td style="text-align:center;">${idx + 1}</td>
-                                <td><strong>${j.pegawai}</strong></td>
-                                <td>${j.tanggal} (${j.hari})</td>
-                                <td><strong>${j.unit}</strong></td>
-                                <td>${j.shift}</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-            window.print();
-        }
+            let tableHtml = "";
 
-        // =========================================================================
-        // 5. FITUR ABSENSI, KEGIATAN, CUTI, ADUAN & LAINNYA
-        // =========================================================================
-        function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371e3;
-            const φ1 = lat1 * Math.PI/180;
-            const φ2 = lat2 * Math.PI/180;
-            const Δφ = (lat2-lat1) * Math.PI/180;
-            const Δλ = (lon2-lon1) * Math.PI/180;
-
-            const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-                      Math.cos(φ1) * Math.cos(φ2) *
-                      Math.sin(Δλ/2) * Math.sin(Δλ/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c;
-        }
-
-        function checkGpsLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        const dist = calculateHaversineDistance(pos.coords.latitude, pos.coords.longitude, PUSKESMAS_COORDS.lat, PUSKESMAS_COORDS.lng);
-                        updateAbsensiGpsUI(dist);
-                    },
-                    (err) => { updateAbsensiGpsUI(0); },
-                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-                );
-            } else { updateAbsensiGpsUI(0); }
-        }
-
-        function updateAbsensiGpsUI(distanceMeters) {
-            currentDistanceMeters = Math.round(distanceMeters * 10) / 10;
-            const statusBox = document.getElementById('gpsStatusBox');
-            const msgEl = document.getElementById('gpsNotifMessage');
-            const distText = document.getElementById('currentDistanceText');
-            const btnSubmit = document.getElementById('btnSubmitAbsensi');
-            const absensiStatus = document.getElementById('absensiStatus')?.value;
-
-            if (distText) distText.innerText = `${currentDistanceMeters} m`;
-
-            if (absensiStatus === 'Surat Keterangan' || currentDistanceMeters <= MAX_ABSENSI_RADIUS_METERS) {
-                if (statusBox) statusBox.className = "p-3.5 mb-4 rounded-xl text-xs font-semibold space-y-1 bg-emerald-50 border border-emerald-200 text-emerald-800";
-                if (msgEl) msgEl.innerHTML = absensiStatus === 'Surat Keterangan' 
-                    ? `<i class="fa-solid fa-file-check text-emerald-600 mr-1"></i> Opsi Surat Keterangan / Izin Aktif.`
-                    : `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Lokasi valid! Anda berada dalam radius absensi (${MAX_ABSENSI_RADIUS_METERS}m).`;
+            if (selectedPeg !== 'ALL') {
+                // POIN 2: BY NAME -> Urutkan dari tanggal kecil ke besar & tampilkan Nama Pegawai di Atas Tabel
+                printData.sort((a, b) => new Date(a.tanggal || '1970-01-01') - new Date(b.tanggal || '1970-01-01'));
                 
-                if (btnSubmit) {
-                    btnSubmit.disabled = false;
-                    btnSubmit.className = "w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-xs shadow-md cursor-pointer transition-all";
-                    btnSubmit.innerText = "Kirim Presensi";
-                }
-            } else {
-                if (statusBox) statusBox.className = "p-3.5 mb-4 rounded-xl text-xs font-semibold space-y-1 bg-rose-50 border border-rose-200 text-rose-800";
-                if (msgEl) msgEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600 mr-1"></i> <strong>Anda diluar batas absensi</strong> (Jarak: ${currentDistanceMeters}m dari Puskesmas, Maks. ${MAX_ABSENSI_RADIUS_METERS}m).`;
-                if (btnSubmit) {
-                    btnSubmit.disabled = true;
-                    btnSubmit.className = "w-full py-2.5 bg-slate-300 text-slate-500 font-semibold rounded-xl text-xs transition-all cursor-not-allowed";
-                    btnSubmit.innerText = "Kirim Presensi (Diluar Radius)";
-                }
-            }
-        }
-
-        function toggleSuratKeteranganFields() {
-            const status = document.getElementById('absensiStatus').value;
-            const group = document.getElementById('suratKeteranganGroup');
-            if (status === 'Surat Keterangan') group.classList.remove('hidden');
-            else group.classList.add('hidden');
-            updateAbsensiGpsUI(currentDistanceMeters);
-        }
-
-        function handleGeneralUpload(e) {
-            const file = e.target.files[0];
-            if (file) {
-                currentGeneralDocName = file.name;
-                document.getElementById('generalFileName').innerText = `📎 ${file.name}`;
-            }
-        }
-
-        function evaluateWorkTimeStatus(statusType, now) {
-            const hours = now.getHours();
-            const mins = now.getMinutes();
-            const totalMins = hours * 60 + mins;
-            const dayOfWeek = now.getDay();
-            let minutesLateOrEarly = 0;
-
-            if (statusType === "Hadir Masuk") {
-                const maxMasukMins = 7 * 60 + 30;
-                if (totalMins > maxMasukMins) {
-                    minutesLateOrEarly = totalMins - maxMasukMins;
-                    return { text: `Terlambat (${minutesLateOrEarly}m)`, badgeClass: "bg-rose-100 text-rose-700 font-bold", minutes: minutesLateOrEarly };
-                } else {
-                    return { text: "Tepat Waktu", badgeClass: "bg-emerald-100 text-emerald-700 font-bold", minutes: 0 };
-                }
-            } else if (statusType === "Hadir Pulang") {
-                let minPulangMins = 14 * 60 + 30;
-                if (dayOfWeek === 5) minPulangMins = 11 * 60 + 30;
-                else if (dayOfWeek === 6) minPulangMins = 13 * 60;
-
-                if (totalMins < minPulangMins) {
-                    minutesLateOrEarly = minPulangMins - totalMins;
-                    return { text: `Pulang Mendahului (${minutesLateOrEarly}m)`, badgeClass: "bg-amber-100 text-amber-700 font-bold", minutes: minutesLateOrEarly };
-                } else {
-                    return { text: "Tepat Waktu", badgeClass: "bg-emerald-100 text-emerald-700 font-bold", minutes: 0 };
-                }
-            } else if (statusType === "Surat Keterangan") {
-                return { text: "Izin / Surat Keterangan", badgeClass: "bg-indigo-100 text-indigo-700 font-bold", minutes: 0 };
-            } else {
-                return { text: "Dinas Luar", badgeClass: "bg-teal-100 text-teal-700 font-bold", minutes: 0 };
-            }
-        }
-
-        function submitAbsensi(e) {
-            e.preventDefault();
-            const statusType = document.getElementById('absensiStatus').value;
-            const now = new Date();
-
-            if (statusType !== 'Surat Keterangan' && currentDistanceMeters > MAX_ABSENSI_RADIUS_METERS) {
-                alert(`Anda diluar batas absensi! Jarak Anda ${currentDistanceMeters} meter (Maksimal ${MAX_ABSENSI_RADIUS_METERS}m).`);
-                return;
-            }
-
-            const timeEval = evaluateWorkTimeStatus(statusType, now);
-            const alasan = document.getElementById('suratAlasan')?.value || '';
-            const ketUser = document.getElementById('absensiKet')?.value || '';
-
-            const newLog = {
-                id: Date.now(),
-                waktu: now.toLocaleTimeString('id-ID'),
-                tanggalStr: now.toLocaleDateString('id-ID'),
-                nama: currentUser.nama,
-                tipe: statusType,
-                keteranganJam: timeEval.text,
-                badgeClass: timeEval.badgeClass,
-                menitPelanggaran: timeEval.minutes,
-                jarak: `${currentDistanceMeters}m`,
-                alasan: statusType === 'Surat Keterangan' ? alasan : ketUser,
-                dokumen: currentGeneralDocName ? `📎 ${currentGeneralDocName}` : '-'
-            };
-
-            absensiLogs.unshift(newLog);
-            sendToGoogleSheet('ADD_ABSENSI', newLog);
-            
-            renderAbsensiLogs();
-            renderDashboardRealtimeStats();
-
-            document.getElementById('absensiKet').value = '';
-            if (document.getElementById('suratAlasan')) document.getElementById('suratAlasan').value = '';
-            currentGeneralDocName = '';
-            document.getElementById('generalFileName').innerText = '';
-
-            alert(`Presensi berhasil disimpan! Status: ${timeEval.text}`);
-        }
-
-        function renderAbsensiLogs() {
-            const tbody = document.getElementById('absensiLogsBody');
-            if (!tbody) return;
-
-            const filterPeg = document.getElementById('absensiFilterPegawai')?.value || 'ALL';
-            const isAdmin = currentUser.role === 'Admin' || currentUser.role === 'Kepala Puskesmas';
-
-            const filteredLogs = absensiLogs.filter(l => filterPeg === 'ALL' || l.nama === filterPeg);
-
-            if (filteredLogs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${isAdmin ? 7 : 6}" class="p-4 text-center text-slate-400 italic">Belum ada data presensi tersimpan.</td></tr>`;
-            } else {
-                tbody.innerHTML = filteredLogs.slice(0, 30).map(l => `
-                    <tr class="hover:bg-slate-50">
-                        <td class="p-2.5 font-mono text-slate-500">${l.waktu}</td>
-                        <td class="p-2.5 font-bold text-slate-800">${l.nama}</td>
-                        <td class="p-2.5"><span class="px-2 py-0.5 bg-teal-100 text-teal-700 rounded text-[10px] font-semibold">${l.tipe}</span></td>
-                        <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[10px] ${l.badgeClass}">${l.keteranganJam}</span></td>
-                        <td class="p-2.5 text-center font-bold text-slate-700">${l.menitPelanggaran > 0 ? `<span class="text-rose-600">+${l.menitPelanggaran} m</span>` : '<span class="text-emerald-600">0 m</span>'}</td>
-                        <td class="p-2.5 text-slate-600 font-medium">${l.dokumen !== '-' ? `<span class="text-teal-600 font-bold">${l.dokumen}</span> (${l.alasan})` : (l.alasan || '-')}</td>
-                        ${isAdmin ? `<td class="p-2.5 text-center"><button onclick="deleteAbsensiLog(${l.id})" class="p-1 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded"><i class="fa-solid fa-trash-can text-xs"></i></button></td>` : ''}
-                    </tr>
-                `).join('');
-            }
-        }
-
-        function deleteAbsensiLog(id) {
-            if (currentUser.role !== 'Admin' && currentUser.role !== 'Kepala Puskesmas') {
-                alert('Akses Ditolak!');
-                return;
-            }
-            if (confirm('Apakah Anda yakin ingin menghapus log presensi ini?')) {
-                absensiLogs = absensiLogs.filter(l => l.id !== id);
-                renderAbsensiLogs();
-                renderDashboardRealtimeStats();
-            }
-        }
-
-        function renderDashboardRealtimeStats() {
-            const todayStr = new Date().toLocaleDateString('id-ID');
-            
-            const statTotal = document.getElementById('statTotalPegawai');
-            if (statTotal) statTotal.innerText = currentPegawaiList.length;
-
-            const hadirTodayNames = new Set(
-                absensiLogs.filter(l => l.tanggalStr === todayStr || l.waktu).map(l => l.nama)
-            );
-            const statHadir = document.getElementById('statHadir');
-            if (statHadir) statHadir.innerText = hadirTodayNames.size;
-
-            const statKeg = document.getElementById('statKegiatanCount');
-            if (statKeg) statKeg.innerText = kegiatanList.length;
-
-            const cutiAktif = cutiList.filter(c => c.status === "Disetujui");
-            const statCuti = document.getElementById('statCuti');
-            if (statCuti) statCuti.innerText = cutiAktif.length;
-
-            renderPeringkatDisiplin();
-            updateDashboardChartsRealtime();
-        }
-
-        function renderPeringkatDisiplin() {
-            const terajinBody = document.getElementById('terajinTableBody');
-            const kurangRajinBody = document.getElementById('kurangRajinTableBody');
-            if (!terajinBody || !kurangRajinBody) return;
-
-            const statsMap = {};
-            currentPegawaiList.forEach(p => {
-                statsMap[p.nama] = { pegawai: p, totalMenit: 0, totalHadir: 0 };
-            });
-
-            absensiLogs.forEach(log => {
-                if (statsMap[log.nama]) {
-                    statsMap[log.nama].totalMenit += (log.menitPelanggaran || 0);
-                    statsMap[log.nama].totalHadir += 1;
-                }
-            });
-
-            const sortedList = Object.values(statsMap);
-
-            const terajinList = [...sortedList].sort((a, b) => a.totalMenit - b.totalMenit || b.totalHadir - a.totalHadir).slice(0, 10);
-            terajinBody.innerHTML = terajinList.map((item, idx) => `
-                <tr class="hover:bg-slate-50">
-                    <td class="p-2.5 font-bold text-emerald-700">${idx + 1}</td>
-                    <td class="p-2.5 font-bold text-slate-800">${item.pegawai.nama}</td>
-                    <td class="p-2.5 text-slate-500">${item.pegawai.jabatan}</td>
-                    <td class="p-2.5 text-center font-bold text-emerald-600">${item.totalMenit} Menit</td>
-                </tr>
-            `).join('');
-
-            const kurangRajinList = [...sortedList].sort((a, b) => b.totalMenit - a.totalMenit).slice(0, 10);
-            kurangRajinBody.innerHTML = kurangRajinList.map((item, idx) => `
-                <tr class="hover:bg-slate-50">
-                    <td class="p-2.5 font-bold text-rose-700">${idx + 1}</td>
-                    <td class="p-2.5 font-bold text-slate-800">${item.pegawai.nama}</td>
-                    <td class="p-2.5 text-slate-500">${item.pegawai.jabatan}</td>
-                    <td class="p-2.5 text-center font-bold ${item.totalMenit > 0 ? 'text-rose-600' : 'text-slate-400'}">${item.totalMenit} Menit</td>
-                </tr>
-            `).join('');
-        }
-
-        function updateDashboardChartsRealtime() {
-            const cutiCounts = { 'Cuti Tahunan': 0, 'Cuti Sakit': 0, 'Cuti Melahirkan': 0, 'Cuti Alasan Penting': 0 };
-            cutiList.forEach(c => { if (cutiCounts[c.jenis] !== undefined) cutiCounts[c.jenis]++; });
-
-            if (chartCutiInstance) {
-                chartCutiInstance.data.datasets[0].data = Object.values(cutiCounts);
-                chartCutiInstance.update();
-            }
-
-            if (chartKehadiranInstance) {
-                chartKehadiranInstance.data.datasets[0].data = [absensiLogs.length, absensiLogs.length + 2, absensiLogs.length + 5, absensiLogs.length + 8, absensiLogs.length + 10, absensiLogs.length + 12, absensiLogs.length + 15];
-                chartKehadiranInstance.update();
-            }
-        }
-
-        function renderPegawaiTable() {
-            const tbody = document.getElementById('pegawaiTableBody');
-            if (!tbody) return;
-            const search = (document.getElementById('searchPegawai')?.value || '').toLowerCase();
-            const filter = document.getElementById('filterRole')?.value || 'ALL';
-
-            const filtered = currentPegawaiList.filter(p => {
-                const matchSearch = p.nama.toLowerCase().includes(search) || (p.jabatan && p.jabatan.toLowerCase().includes(search));
-                const matchRole = filter === 'ALL' || p.role === filter;
-                return matchSearch && matchRole;
-            });
-
-            tbody.innerHTML = filtered.map((p, idx) => `
-                <tr class="hover:bg-slate-50">
-                    <td class="p-3 font-semibold text-slate-400">${idx + 1}</td>
-                    <td class="p-3 font-bold text-slate-800">${p.nama}</td>
-                    <td class="p-3 text-slate-600 font-medium">${p.jabatan}</td>
-                    <td class="p-3 font-mono text-teal-700 bg-teal-50/50 rounded-lg">${p.username}</td>
-                    <td class="p-3"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${getRoleBadgeClass(p.role)}">${p.role}</span></td>
-                    <td class="p-3 text-center"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded text-[10px] font-bold">${p.status}</span></td>
-                    <td class="p-3 text-center">
-                        <button onclick="openEditPegawaiModal(${p.id})" class="px-2.5 py-1 bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-600 rounded-lg text-xs font-semibold">
-                            <i class="fa-solid fa-user-pen mr-1"></i> Edit Akses
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function getRoleBadgeClass(role) {
-            switch(role) {
-                case 'Kepala Puskesmas': return 'bg-purple-100 text-purple-700';
-                case 'Admin': return 'bg-rose-100 text-rose-700';
-                case 'Dokter': return 'bg-indigo-100 text-indigo-700';
-                case 'Perawat': return 'bg-teal-100 text-teal-700';
-                case 'Bidan': return 'bg-pink-100 text-pink-700';
-                case 'Staf': return 'bg-amber-100 text-amber-700';
-                default: return 'bg-slate-100 text-slate-700';
-            }
-        }
-
-        function filterPegawaiTable() { renderPegawaiTable(); }
-
-        function openEditPegawaiModal(id) {
-            const p = currentPegawaiList.find(x => x.id === id);
-            if (!p) return;
-            document.getElementById('editPegawaiId').value = p.id;
-            document.getElementById('editNama').value = p.nama;
-            document.getElementById('editRole').value = p.role;
-            document.getElementById('editPassword').value = p.pass;
-            document.getElementById('editPegawaiModal').classList.remove('hidden');
-        }
-
-        function closeEditPegawaiModal() { document.getElementById('editPegawaiModal').classList.add('hidden'); }
-
-        function savePegawaiSetting(e) {
-            e.preventDefault();
-            const id = parseInt(document.getElementById('editPegawaiId').value);
-            const p = currentPegawaiList.find(x => x.id === id);
-            if (p) {
-                p.role = document.getElementById('editRole').value;
-                const newPass = document.getElementById('editPassword').value.trim();
-                if (newPass) p.pass = newPass;
-                renderPegawaiTable();
-                closeEditPegawaiModal();
-                alert(`Setting Hak Akses untuk ${p.nama} Disimpan!`);
-            }
-        }
-
-        function submitKegiatan(e) {
-            e.preventDefault();
-            if (selectedPelaksanaList.length === 0) {
-                alert('Pilih minimal 1 pegawai pelaksana kegiatan!');
-                return;
-            }
-
-            const kal = document.getElementById('kegKalurahan').value;
-            const dusun = document.getElementById('kegDusun').value;
-
-            const newKeg = {
-                id: Date.now(),
-                nama: document.getElementById('kegNama').value,
-                kalurahan: kal,
-                dusun: dusun,
-                tanggal: document.getElementById('kegTanggal').value,
-                foto: currentFotoBase64 || 'https://via.placeholder.com/150?text=Foto+Kegiatan',
-                pelaksana: [...selectedPelaksanaList],
-                lat: selectedCoords.lat,
-                lng: selectedCoords.lng
-            };
-
-            kegiatanList.unshift(newKeg);
-            sendToGoogleSheet('ADD_KEGIATAN', newKeg);
-
-            document.getElementById('kegNama').value = '';
-            selectedPelaksanaList = [];
-            currentFotoBase64 = '';
-            document.getElementById('fotoPreviewContainer').classList.add('hidden');
-            renderSelectedPelaksana();
-            renderKegiatanTable();
-            initLeafletMap();
-            updateSebaranChart();
-            renderDashboardRealtimeStats();
-            alert(`Laporan Kegiatan Berhasil Disimpan ke Spreadsheet DB!`);
-        }
-
-        function renderKegiatanTable() {
-            const tbody = document.getElementById('kegiatanTableBody');
-            if (!tbody) return;
-            const search = (document.getElementById('searchKegiatan')?.value || '').toLowerCase();
-
-            const filtered = kegiatanList.filter(k =>
-                k.nama.toLowerCase().includes(search) ||
-                k.kalurahan.toLowerCase().includes(search) ||
-                k.dusun.toLowerCase().includes(search)
-            );
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400 italic">Belum ada laporan kegiatan tersimpan.</td></tr>`;
-            } else {
-                tbody.innerHTML = filtered.map(k => `
-                    <tr class="hover:bg-slate-50">
-                        <td class="p-3 font-mono text-slate-500">${k.tanggal}</td>
-                        <td class="p-3"><img src="${k.foto}" class="w-10 h-10 object-cover rounded-lg border border-slate-200"></td>
-                        <td class="p-3 font-bold text-slate-800">${k.nama}</td>
-                        <td class="p-3 text-slate-600">
-                            <span class="font-semibold text-teal-700">${k.dusun}</span>, Kal. ${k.kalurahan}<br>
-                            <span class="font-mono text-[10px] text-slate-400">📍 ${k.lat ? Number(k.lat).toFixed(5) : '-'}, ${k.lng ? Number(k.lng).toFixed(5) : '-'}</span>
-                        </td>
-                        <td class="p-3">
-                            <div class="flex flex-wrap gap-1">
-                                ${(Array.isArray(k.pelaksana) ? k.pelaksana : [k.pelaksana]).map(p => `<span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded text-[10px]">${p}</span>`).join('')}
-                            </div>
-                        </td>
-                        <td class="p-3 text-center">
-                            <button onclick="openEditKegiatanModal(${k.id})" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-xs font-semibold border border-amber-200">
-                                <i class="fa-solid fa-pen-to-square mr-1"></i> Edit
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
-            }
-        }
-
-        function submitCuti(e) {
-            e.preventDefault();
-            const newCuti = {
-                id: Date.now(),
-                pemohon: currentUser.nama,
-                jenis: document.getElementById('cutiJenis').value,
-                tgl: `${document.getElementById('cutiTglMulai').value} s/d ${document.getElementById('cutiTglSelesai').value}`,
-                penerima: document.getElementById('cutiPelimpahanTo').value,
-                rincian: document.getElementById('cutiRincianTugas').value || 'Pelayanan harian & tugas dinas',
-                status: "Pending Approval"
-            };
-
-            cutiList.unshift(newCuti);
-            sendToGoogleSheet('ADD_CUTI', newCuti);
-
-            renderCutiTable();
-            renderDashboardRealtimeStats();
-            alert('Permohonan Cuti Berhasil Dikirim!');
-        }
-
-        function renderCutiTable() {
-            const tbody = document.getElementById('cutiTableBody');
-            if (!tbody) return;
-            const isAdmin = currentUser.role === 'Admin' || currentUser.role === 'Kepala Puskesmas';
-
-            if (cutiList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="${isAdmin ? 7 : 6}" class="p-4 text-center text-slate-400 italic">Belum ada permohonan cuti tersimpan.</td></tr>`;
-            } else {
-                tbody.innerHTML = cutiList.map(c => `
-                    <tr class="hover:bg-slate-50">
-                        <td class="p-3 font-bold text-slate-800">${c.pemohon}</td>
-                        <td class="p-3 text-slate-600">${c.jenis}</td>
-                        <td class="p-3 text-slate-500">${c.tgl}</td>
-                        <td class="p-3 font-medium text-teal-700">${c.penerima}</td>
-                        <td class="p-3 text-center"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${c.status === 'Disetujui' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${c.status}</span></td>
-                        <td class="p-3 text-center">
-                            <div class="flex items-center justify-center gap-1.5">
-                                ${currentUser.role === 'Kepala Puskesmas' || currentUser.role === 'Admin' ? `<button onclick="approveCuti(${c.id})" class="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[10px] font-bold">Setujui</button>` : ''}
-                            </div>
-                        </td>
-                        ${isAdmin ? `<td class="p-3 text-center"><button onclick="deleteCutiItem(${c.id})" class="p-1 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded"><i class="fa-solid fa-trash-can text-xs"></i></button></td>` : ''}
-                    </tr>
-                `).join('');
-            }
-        }
-
-        function submitAduan(e) {
-            e.preventDefault();
-            const anon = document.getElementById('aduanAnonim').checked;
-            const newAduan = {
-                id: Date.now(),
-                pengirim: anon ? "Anonim Staf" : currentUser.nama,
-                kategori: document.getElementById('aduanKategori').value,
-                isi: document.getElementById('aduanIsi').value,
-                tgl: new Date().toLocaleDateString('id-ID'),
-                status: "Terkirim"
-            };
-
-            aduanList.unshift(newAduan);
-            sendToGoogleSheet('ADD_ADUAN', newAduan);
-
-            renderAduanList();
-            document.getElementById('aduanIsi').value = '';
-            alert('Aduan Internal Dikirim!');
-        }
-
-        function renderAduanList() {
-            const container = document.getElementById('aduanListContainer');
-            if (!container) return;
-            if (aduanList.length === 0) {
-                container.innerHTML = `<p class="p-4 text-center text-slate-400 italic text-xs">Belum ada aduan / saran internal yang dikirim.</p>`;
-            } else {
-                container.innerHTML = aduanList.map(a => `
-                    <div class="p-4 bg-white border border-slate-200 rounded-xl space-y-2">
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="font-bold text-slate-800">${a.pengirim}</span>
-                            <span class="text-[10px] px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded font-bold">${a.kategori}</span>
-                        </div>
-                        <p class="text-xs text-slate-600">${a.isi}</p>
-                        <div class="text-[10px] text-slate-400 flex items-center justify-between pt-1 border-t border-slate-100">
-                            <span><i class="fa-solid fa-clock mr-1"></i> ${a.tgl}</span>
-                            <span class="font-bold text-amber-600">${a.status}</span>
-                        </div>
+                tableHtml = `
+                    <div style="margin-bottom: 15px; font-size: 11pt; font-weight: bold; text-align: left; background-color: #f0fdf4; padding: 10px; border: 1px solid #bbf7d0; border-radius: 6px;">
+                        <span style="color: #166534;">Nama Pegawai:</span> ${selectedPeg}
                     </div>
-                `).join('');
-            }
-        }
-
-        function updateDusunOptions() {
-            const kal = document.getElementById('kegKalurahan').value;
-            const dusunSelect = document.getElementById('kegDusun');
-            if (!dusunSelect) return;
-            const list = wilayahData[kal] || [kal];
-            dusunSelect.innerHTML = list.map(d => `<option value="${d}">${d}</option>`).join('');
-        }
-
-        function updateEditDusunOptions() {
-            const kal = document.getElementById('editKegKalurahan').value;
-            const dusunSelect = document.getElementById('editKegDusun');
-            if (!dusunSelect) return;
-            const list = wilayahData[kal] || [kal];
-            dusunSelect.innerHTML = list.map(d => `<option value="${d}">${d}</option>`).join('');
-        }
-
-        function previewImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    currentFotoBase64 = e.target.result;
-                    document.getElementById('fotoPreview').src = currentFotoBase64;
-                    document.getElementById('fotoPreviewContainer').classList.remove('hidden');
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function addPelaksana() {
-            const select = document.getElementById('kegPelaksanaSelect');
-            const val = select.value;
-            if (!val) return;
-            if (selectedPelaksanaList.length >= 5) {
-                alert('Maksimal 5 pegawai pelaksana!');
-                select.value = '';
-                return;
-            }
-            if (!selectedPelaksanaList.includes(val)) {
-                selectedPelaksanaList.push(val);
-                renderSelectedPelaksana();
-            }
-            select.value = '';
-        }
-
-        function removePelaksana(nama) {
-            selectedPelaksanaList = selectedPelaksanaList.filter(p => p !== nama);
-            renderSelectedPelaksana();
-        }
-
-        function renderSelectedPelaksana() {
-            const container = document.getElementById('selectedPelaksanaContainer');
-            if (!container) return;
-            container.innerHTML = selectedPelaksanaList.map(p => `
-                <span class="px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-[11px] font-semibold flex items-center gap-1.5">
-                    ${p}
-                    <i class="fa-solid fa-xmark text-rose-500 cursor-pointer hover:text-rose-700" onclick="removePelaksana('${p}')"></i>
-                </span>
-            `).join('');
-            document.getElementById('pelaksanaCount').innerText = selectedPelaksanaList.length;
-        }
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('mainSidebar');
-            const toggleIcon = document.getElementById('sidebarToggleIcon');
-            const texts = document.querySelectorAll('.sidebar-text');
-
-            sidebarCollapsed = !sidebarCollapsed;
-            if (sidebarCollapsed) {
-                sidebar.classList.remove('w-64');
-                sidebar.classList.add('w-20');
-                toggleIcon.className = "fa-solid fa-chevron-right text-xs";
-                texts.forEach(t => t.classList.add('hidden'));
-            } else {
-                sidebar.classList.remove('w-20');
-                sidebar.classList.add('w-64');
-                toggleIcon.className = "fa-solid fa-chevron-left text-xs";
-                texts.forEach(t => t.classList.remove('hidden'));
-            }
-        }
-
-        function renderAnnouncementDisplay() {
-            const mText = document.getElementById('marqueeTextDisplay');
-            const fImg = document.getElementById('flyerImageDisplay');
-            if (mText) mText.innerText = marqueeText;
-            if (fImg) fImg.src = flyerImageUrl;
-        }
-
-        function openAnnouncementModal() {
-            document.getElementById('editMarqueeInput').value = marqueeText;
-            document.getElementById('editFlyerUrlInput').value = flyerImageUrl;
-            document.getElementById('announcementModal').classList.remove('hidden');
-        }
-
-        function closeAnnouncementModal() { document.getElementById('announcementModal').classList.add('hidden'); }
-
-        function saveAnnouncementConfig(e) {
-            e.preventDefault();
-            marqueeText = document.getElementById('editMarqueeInput').value.trim() || marqueeText;
-            flyerImageUrl = document.getElementById('editFlyerUrlInput').value.trim() || flyerImageUrl;
-            renderAnnouncementDisplay();
-            closeAnnouncementModal();
-            alert('Flyer & Running Text Berhasil Diperbarui!');
-        }
-
-        function exportAbsensiCSV() {
-            let csv = "Waktu,Nama,Tipe,Keterangan Jam Kerja,Akumulasi Menit,Dokumen/Lampiran\n";
-            absensiLogs.forEach(l => { csv += `"${l.waktu}","${l.nama}","${l.tipe}","${l.keteranganJam}","${l.menitPelanggaran || 0}","${l.dokumen}"\n`; });
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const a = document.createElement('a');
-            a.href = window.URL.createObjectURL(blob);
-            a.download = `Presensi_SentoloII_${new Date().toISOString().slice(0,10)}.csv`;
-            a.click();
-        }
-
-        function openDriveConfigModal() {
-            document.getElementById('driveScriptUrl').value = driveScriptUrl;
-            document.getElementById('driveConfigModal').classList.remove('hidden');
-        }
-        function closeDriveConfigModal() { document.getElementById('driveConfigModal').classList.add('hidden'); }
-        function saveDriveConfig(e) {
-            e.preventDefault();
-            driveScriptUrl = document.getElementById('driveScriptUrl').value.trim();
-            localStorage.setItem('portal_drive_url', driveScriptUrl);
-            closeDriveConfigModal();
-            alert('Konfigurasi Web App URL Berhasil Disimpan!');
-        }
-
-        function updateClock() {
-            const el = document.getElementById('clockDisplay');
-            if (el) el.innerText = new Date().toLocaleTimeString('id-ID') + ' WIB';
-        }
-
-        function initCharts() {
-            const ctx1 = document.getElementById('chartKehadiran')?.getContext('2d');
-            if (ctx1) {
-                chartKehadiranInstance = new Chart(ctx1, {
-                    type: 'line',
-                    data: {
-                        labels: ['Tgl 1', 'Tgl 2', 'Tgl 3', 'Tgl 4', 'Tgl 5', 'Tgl 6', 'Tgl 7'],
-                        datasets: [{ label: 'Kehadiran (Staf)', data: [0, 0, 0, 0, 0, 0, 0], borderColor: '#0d9488', backgroundColor: 'rgba(13, 148, 136, 0.1)', fill: true, tension: 0.3 }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false }
-                });
-            }
-
-            const ctx2 = document.getElementById('chartCuti')?.getContext('2d');
-            if (ctx2) {
-                chartCutiInstance = new Chart(ctx2, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Tahunan', 'Sakit', 'Melahirkan', 'Alasan Penting'],
-                        datasets: [{ data: [0, 0, 0, 0], backgroundColor: ['#0d9488', '#f59e0b', '#ec4899', '#6366f1'] }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false }
-                });
-            }
-
-            const ctx3 = document.getElementById('chartSebaranKegiatan')?.getContext('2d');
-            if (ctx3) {
-                chartSebaranInstance = new Chart(ctx3, {
-                    type: 'bar',
-                    data: {
-                        labels: Object.keys(wilayahData),
-                        datasets: [{ label: 'Jumlah Kegiatan', data: [0, 0, 0, 0, 0], backgroundColor: '#10b981' }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false }
-                });
-            }
-        }
-
-        function initLeafletMap() {
-            const container = document.getElementById('map');
-            if (!container) return;
-
-            if (!mapInstance) {
-                mapInstance = L.map('map').setView([PUSKESMAS_COORDS.lat, PUSKESMAS_COORDS.lng], 14);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap UPT Puskesmas Sentolo II'
-                }).addTo(mapInstance);
-
-                L.marker([PUSKESMAS_COORDS.lat, PUSKESMAS_COORDS.lng]).addTo(mapInstance)
-                    .bindPopup("<b>UPT Puskesmas Sentolo II</b><br>Kantor Utama")
-                    .openPopup();
-
-                mapInstance.on('click', function(e) {
-                    selectedCoords = { lat: e.latlng.lat, lng: e.latlng.lng };
-                    document.getElementById('selectedCoordsText').innerText = `${selectedCoords.lat.toFixed(5)}, ${selectedCoords.lng.toFixed(5)}`;
-
-                    if (pickedLocationMarker) mapInstance.removeLayer(pickedLocationMarker);
-
-                    const redIcon = L.icon({
-                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                        iconSize: [25, 41],
-                        iconAnchor: [12, 41],
-                        popupAnchor: [1, -34],
-                        shadowSize: [41, 41]
-                    });
-
-                    pickedLocationMarker = L.marker([selectedCoords.lat, selectedCoords.lng], { icon: redIcon }).addTo(mapInstance);
-                    pickedLocationMarker.bindPopup("<b>Titik Lokasi Kegiatan Dipilih!</b>").openPopup();
-                });
-            }
-
-            mapMarkers.forEach(m => mapInstance.removeLayer(m));
-            mapMarkers = [];
-
-            kegiatanList.forEach(k => {
-                if (k.lat && k.lng) {
-                    const marker = L.marker([k.lat, k.lng]).addTo(mapInstance);
-                    marker.bindPopup(`
-                        <div class="text-xs p-1">
-                            <img src="${k.foto}" class="w-full h-20 object-cover rounded mb-2">
-                            <strong class="text-teal-700">${k.nama}</strong><br>
-                            <span>📍 ${k.dusun}, Kal. ${k.kalurahan}</span><br>
-                            <span class="text-slate-500">🗓 ${k.tanggal}</span>
-                        </div>
-                    `);
-                    mapMarkers.push(marker);
-                }
-            });
-        }
-
-        function updateSebaranChart() {
-            const counts = {};
-            Object.keys(wilayahData).forEach(k => counts[k] = 0);
-            kegiatanList.forEach(k => { if (counts[k.kalurahan] !== undefined) counts[k.kalurahan]++; });
-
-            if (chartSebaranInstance) {
-                chartSebaranInstance.data.datasets[0].data = Object.values(counts);
-                chartSebaranInstance.update();
-            }
-        }
-    </script>
-    
-</body>
-</html>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 5%;">No</th>
+                                <th style="width: 25%;">Tanggal / Hari</th>
+                                <th style="width: 35%;">Poli / Unit / Lokasi Tugas</th>
+                                <th style="width: 35%;">Shift Jam Kerja</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${printData.length === 0 ? '<tr><td colspan="4" style="text-align:center;">Tidak ada data jadwal untuk pegawai ini.</td></tr>' : 
+                            printData.map((j, idx) => `
+                                <tr>
