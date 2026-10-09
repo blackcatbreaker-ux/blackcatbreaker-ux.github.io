@@ -1195,44 +1195,57 @@
         }
 
         async function fetchDirectFromSpreadsheet() {
-            const scriptUrl = driveScriptUrl || DEFAULT_SPREADSHEET_URL;
-            if (!scriptUrl) return;
+    const scriptUrl = driveScriptUrl || DEFAULT_SPREADSHEET_URL;
+    if (!scriptUrl) return;
 
-            try {
-                const cacheBusterUrl = `${scriptUrl}?action=getPortalData&t=${Date.now()}`;
-                const response = await fetch(cacheBusterUrl, { method: 'GET', mode: 'cors' });
-                
-                if (response.ok) {
-                    const result = await response.json();
+    try {
+        const cacheBusterUrl = `${scriptUrl}?action=getPortalData&t=${Date.now()}`;
+        const response = await fetch(cacheBusterUrl, { method: 'GET', mode: 'cors' });
+        
+        if (response.ok) {
+            const result = await response.json();
 
-                    if (result.pegawai && Array.isArray(result.pegawai) && result.pegawai.length > 0) currentPegawaiList = result.pegawai;
-                    if (result.jadwal && Array.isArray(result.jadwal)) jadwalList = result.jadwal;
-                    if (result.absensi && Array.isArray(result.absensi)) absensiLogs = result.absensi;
-                    if (result.kegiatan && Array.isArray(result.kegiatan)) kegiatanList = result.kegiatan;
-                    if (result.cuti && Array.isArray(result.cuti)) cutiList = result.cuti;
-                    if (result.aduan && Array.isArray(result.aduan)) aduanList = result.aduan;
-
-                    if (result.marqueeText) marqueeText = result.marqueeText;
-                    if (result.flyerImageUrl) flyerImageUrl = result.flyerImageUrl;
-
-                    renderDashboardRealtimeStats();
-                    renderAbsensiLogs();
-                    renderJadwalView();
-                    renderKegiatanTable();
-                    renderPegawaiTable();
-                    renderCutiTable();
-                    renderAduanList();
-                    renderAnnouncementDisplay();
-                    updateJadwalModalPegawaiOptions();
-
-                    const dbSyncText = document.getElementById('dbSyncText');
-                    if (dbSyncText) dbSyncText.innerText = "Spreadsheet Live Connected";
-                }
-            } catch (error) {
-                console.warn("Spreadsheet Sync Status:", error);
+            // Langsung tampilkan data dari Spreadsheet ke variabel portal
+            if (result.pegawai && Array.isArray(result.pegawai) && result.pegawai.length > 0) {
+                currentPegawaiList = result.pegawai;
             }
-        }
+            if (result.jadwal && Array.isArray(result.jadwal) && result.jadwal.length > 0) {
+                jadwalList = result.jadwal;
+            }
+            if (result.absensi && Array.isArray(result.absensi) && result.absensi.length > 0) {
+                absensiLogs = result.absensi;
+            }
+            if (result.kegiatan && Array.isArray(result.kegiatan) && result.kegiatan.length > 0) {
+                kegiatanList = result.kegiatan;
+            }
+            if (result.cuti && Array.isArray(result.cuti) && result.cuti.length > 0) {
+                cutiList = result.cuti;
+            }
+            if (result.aduan && Array.isArray(result.aduan) && result.aduan.length > 0) {
+                aduanList = result.aduan;
+            }
 
+            if (result.marqueeText) marqueeText = result.marqueeText;
+            if (result.flyerImageUrl) flyerImageUrl = result.flyerImageUrl;
+
+            // Render ulang tampilan UI secara menyeluruh
+            renderDashboardRealtimeStats();
+            renderAbsensiLogs();
+            renderJadwalView();
+            renderKegiatanTable();
+            renderPegawaiTable();
+            renderCutiTable();
+            renderAduanList();
+            renderAnnouncementDisplay();
+            updateJadwalModalPegawaiOptions();
+
+            const dbSyncText = document.getElementById('dbSyncText');
+            if (dbSyncText) dbSyncText.innerText = "Spreadsheet Live Connected";
+        }
+    } catch (error) {
+        console.warn("Spreadsheet Sync Status:", error);
+    }
+}
         function sendToGoogleSheet(action, payload) {
             const scriptUrl = driveScriptUrl || DEFAULT_SPREADSHEET_URL;
             if (!scriptUrl) return;
